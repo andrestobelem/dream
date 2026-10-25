@@ -1,0 +1,19 @@
+{
+  "reviewed_pairs": 24,
+  "source_candidates": 108,
+  "training_people": 24,
+  "clear_preferences": 14,
+  "ties": 10,
+  "reviewer": "assistant",
+  "independent_human_review": false,
+  "frozen": {
+    "packet_hash": "5de53230d5f4073aea6b33e22dff3ac3a94ea44797becdf10bfa736296be4d10",
+    "annotations_hash": "a399b3e8264736b196fea90b1f1f29c299704e37d857312885116c7d0c175643",
+    "pairs": 24,
+    "reviewer": "assistant",
+    "independent_human_review": false,
+    "candidate_indices_hidden_during_review": true,
+    "source_checkpoint_known": 32
+  },
+  "pairs_hash": "e541813fe53b6d6b0a7881224659f29fbe6aa49ee138b7092bfbbe131f02f466"
+}

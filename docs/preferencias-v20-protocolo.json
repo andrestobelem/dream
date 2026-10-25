@@ -1,0 +1,51 @@
+{
+  "source_run": "results/dream-v8/dream/paired/run.json",
+  "source_step": 32,
+  "dataset_hash": "2a97ab5c60ea1a0efdb397c38898a36b8f1e5b18da60fd2e16b3db1e7dd411c8",
+  "generation": {
+    "max_tokens": 2048,
+    "temperature": 0.8,
+    "top_p": 0.95,
+    "top_k": 0,
+    "min_p": 0.0
+  },
+  "train_candidates_initial": 4,
+  "train_candidates_max": 8,
+  "pair_selection": "Different normalized dreams; smallest max word-length ratio across both dream and answer, no quality scores. Extra four samples only if no pair with ratio <=1.5.",
+  "max_length_ratio": 1.5,
+  "training": {
+    "algorithm": "DPO sigmoid, completion token sums",
+    "beta": 0.1,
+    "learning_rate": 5e-06,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "epochs": 1,
+    "train_seed": 13,
+    "max_total_sequence_tokens": 1536,
+    "minimum_clear_preferences": 6,
+    "optimizer": "new AdamW, reset moments; source optimizer untouched",
+    "credit_assignment": "entire sampled continuation including dream and answer; prompt/prefill excluded",
+    "reference": "stationary checkpoint 32, scores cached before first update",
+    "selection": "Only explicit eligible reviewed preferences, no ties or uncertainty; at most 24 updates"
+  },
+  "evaluation": {
+    "samples_per_prompt": 2,
+    "seeds": [
+      4242,
+      4343
+    ],
+    "paired_before_after": true,
+    "primary": "assistant blind preference for dream quality, ties and uncertainty allowed",
+    "secondary": [
+      "format",
+      "diversity between two samples per prompt as exploratory proxy",
+      "dependency probes cached v19 before and matching after"
+    ]
+  },
+  "test_reports_used": 0,
+  "reference_in_generator_prompt": false,
+  "automatic_copy_penalty": false,
+  "automatic_length_penalty": false,
+  "independent_human_review": false,
+  "approval": "User authorized 24 new training pairs, assistant review, a brief preference pilot from checkpoint32 and comparison on separate development requests."
+}
