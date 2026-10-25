@@ -1,0 +1,141 @@
+{
+  "dataset_hash": "0560294db2bec293522d737580aba78edf63313851138e362841a93626038450",
+  "run_identity": "218b2b5e9a5c28eddd3fedf10b4d75332f049270c1f307704bd31255a4335b04",
+  "before": {
+    "n": 12,
+    "n_valid": 10,
+    "format_rate": 0.8333333333333334,
+    "reward_mean_all": 0.6386119909584522,
+    "source_cosine_valid_mean": 0.5326687783002854,
+    "answer_words_valid_mean": 201.7,
+    "relative_word_error_valid_mean": 0.6056636887252514,
+    "truncations": 1
+  },
+  "after": {
+    "n": 12,
+    "n_valid": 12,
+    "format_rate": 1.0,
+    "reward_mean_all": 0.7992776495714983,
+    "source_cosine_valid_mean": 0.5985552991429964,
+    "answer_words_valid_mean": 123.58333333333333,
+    "relative_word_error_valid_mean": 0.4929803137249809,
+    "truncations": 0
+  },
+  "n_common_valid_pairs": 10,
+  "common_valid_cosine_delta_mean": 0.038807690143585205,
+  "steps_recorded": 16,
+  "steps_with_nonzero_gradient": 16,
+  "groups_with_variable_reward": 16,
+  "limitation": "Cuatro relatos reservados y tres generaciones por caso. Comparación descriptiva; no demuestra eficacia generalizada.",
+  "per_report": [
+    {
+      "problem_id": "863b51027dc7ae1065ac87655fc8ee9b8f72ccfa7e8b5ac988e9833890bb5be1",
+      "target_words": 71,
+      "before": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.6947100708882014,
+        "source_cosine_valid_mean": 0.3894201417764028,
+        "answer_words_valid_mean": 141.33333333333334,
+        "relative_word_error_valid_mean": 0.9906103286384977,
+        "truncations": 0
+      },
+      "after": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.7609081119298935,
+        "source_cosine_valid_mean": 0.521816223859787,
+        "answer_words_valid_mean": 119.66666666666667,
+        "relative_word_error_valid_mean": 0.8826291079812206,
+        "truncations": 0
+      },
+      "reward_delta": 0.06619804104169213
+    },
+    {
+      "problem_id": "2013f9a8352e423b3c477a162ca638615e0fb5ab2227dd3832a2c86af2179ed9",
+      "target_words": 241,
+      "before": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.7906816403071085,
+        "source_cosine_valid_mean": 0.5813632806142172,
+        "answer_words_valid_mean": 339,
+        "relative_word_error_valid_mean": 0.4066390041493776,
+        "truncations": 0
+      },
+      "after": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.7765825490156809,
+        "source_cosine_valid_mean": 0.5531650980313619,
+        "answer_words_valid_mean": 175.33333333333334,
+        "relative_word_error_valid_mean": 0.36099585062240663,
+        "truncations": 0
+      },
+      "reward_delta": -0.014099091291427612
+    },
+    {
+      "problem_id": "f9b997666fd56082a57104b20490a4e97dc6f7c6edd598c1595bbfe075bed55e",
+      "target_words": 90,
+      "before": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.792545348405838,
+        "source_cosine_valid_mean": 0.585090696811676,
+        "answer_words_valid_mean": 134.66666666666666,
+        "relative_word_error_valid_mean": 0.4962962962962963,
+        "truncations": 0
+      },
+      "after": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.7969731787840525,
+        "source_cosine_valid_mean": 0.5939463575681051,
+        "answer_words_valid_mean": 120,
+        "relative_word_error_valid_mean": 0.362962962962963,
+        "truncations": 0
+      },
+      "reward_delta": 0.004427830378214481
+    },
+    {
+      "problem_id": "ac63f8fdf7e8cb3b1108544be5b9d947ece0845e9bf3be9eab653225288c19b7",
+      "target_words": 125,
+      "before": {
+        "n": 3,
+        "n_valid": 1,
+        "format_rate": 0.3333333333333333,
+        "reward_mean_all": 0.27651090423266095,
+        "source_cosine_valid_mean": 0.6590654253959656,
+        "answer_words_valid_mean": 172,
+        "relative_word_error_valid_mean": 0.376,
+        "truncations": 1
+      },
+      "after": {
+        "n": 3,
+        "n_valid": 3,
+        "format_rate": 1.0,
+        "reward_mean_all": 0.862646758556366,
+        "source_cosine_valid_mean": 0.7252935171127319,
+        "answer_words_valid_mean": 79.33333333333333,
+        "relative_word_error_valid_mean": 0.36533333333333334,
+        "truncations": 0
+      },
+      "reward_delta": 0.586135854323705
+    }
+  ],
+  "training": {
+    "steps_completed": 16,
+    "adapters_changed": true,
+    "base_unchanged": true,
+    "training_tokens": 25667,
+    "training_seconds": 433.16777945698414
+  },
+  "reload_identical": true,
+  "supervised_seconds_including_failed_attempts": 794.4511213750229
+}

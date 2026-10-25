@@ -1,6 +1,6 @@
 # Preparación del entrenamiento natural con longitud objetivo
 
-Estado: **semillas acortadas para revisión, entrenamiento no iniciado**. Solicitud del usuario: mostrar los datos
+Estado: **lote corto aprobado y entrenamiento completado**. [Resultados](resultado-entrenamiento-v6.md). Solicitud del usuario: mostrar los datos
 antes de entrenar e indicar el tamaño del relato esperado en palabras.
 
 El lote local revisable está en
@@ -9,8 +9,8 @@ El lote local revisable está en
 completos, referencias humanas separadas, procedencia y longitudes.
 
 El usuario autorizó 15 minutos adicionales y después pidió detener la ejecución para acortar
-las semillas. No se inició ningún proceso de entrenamiento. Se mantiene esa autorización,
-con la revisión del lote pendiente.
+las semillas. Después aprobó el lote corto; el ensayo completó sus 16 pasos y la evaluación
+antes/después dentro de los 900 segundos autorizados.
 
 Las doce semillas revisadas tienen entre 17 y 25 palabras. Criterio orientativo: unas 20–30
 palabras, cinco a siete anclas distintivas y una o dos relaciones importantes, sin reconstruir
@@ -51,6 +51,5 @@ en su directorio original; no se sobreescribió.
 
 El paquete contempla los 900 segundos adicionales autorizados. No se consumió presupuesto
 de inferencia al acortar estas semillas; fueron revisadas por el asistente. Se conservarán los consumos y
-resultados anteriores. La recompensa pareada y el nuevo flujo deben conectarse a este lote
-antes de ejecutar; el comando histórico de smoke todavía usa el vecino del banco y no es
-el comando de este ensayo. No se ejecutará como si ya implementara la nueva recompensa.
+resultados anteriores. La recompensa pareada se conectó a este lote y se ejecutó con `configs/dream-v6.yaml`.
+El comando histórico de smoke sigue siendo otro protocolo; la corrida pareada usa experiment.

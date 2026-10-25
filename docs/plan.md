@@ -1,132 +1,96 @@
 # Plan de implementación de Dream
 
-Actualizado el 25 de octubre de 2026 con el cambio acordado a DreamBank y embeddings.
+Estado al 25 de octubre de 2026: circuito implementado y ensayo aprobado completado.
 
-## Objetivo y decisiones vigentes
+## Alcance vigente
 
-El modelo sueña dentro de `<dream>` y después cuenta lo soñado dentro de `<answer>`.
-La única condición es D. No hay comparación con `<think>` ni experimento de aritmética.
-Conservamos **Qwen/Qwen3-1.7B-Base**, revisión
-`ea980cb0a6c2ae4b936e82123acc929f1cec04c1`, del primer piloto.
+Pedirle a Qwen3-1.7B-Base que sueñe dentro de `<dream>` y cuente lo soñado dentro de
+`<answer>`. Sólo D, sin comparación con think ni aritmética. El contenido del sueño queda
+libre. No se evalúa su significado ni la fidelidad detallada del relato respecto de él.
 
-1. **Corpus principal: DreamBank.** Se deduplican relatos y se separan personas y grupos reales
-   identificados en los metadatos públicos. Una serie no se considera automáticamente una persona.
-   Alias conocidos y hogares identificados permanecen juntos. Las colecciones colectivas sin
-   identificación individual se catalogan, pero quedan fuera del piloto.
-2. **Semillas mínimas extraídas por otro LLM.** Personajes, lugares, objetos, acciones y emociones:
-   el primer ensayo usa de tres a ocho frases, hasta cuatro palabras por frase y 24 palabras totales.
-   La riqueza adecuada queda abierta: esas cotas no son un requisito definitivo. No se extrae una
-   trama ni se entrega el relato humano al generador.
-3. **Prompt mínimo, sin ejemplo resuelto.** `<dream>` queda libre. No se evalúa su contenido ni
-   se exige fidelidad detallada entre bloques. El límite de tokens limita recursos, no prescribe
-   la longitud o el estilo del sueño.
-4. **Recompensa basada en embeddings de `<answer>` respecto del corpus.** Se aplica a toda la
-   secuencia generada, incluidos los tokens de `<dream>`. No interviene el juez histórico de
-   cumplimiento, fidelidad u oniricidad. La primera fórmula exploratoria está fijada: máximo coseno con el banco de entrenamiento,
-   reescalado a [0,1], usando MiniLM congelado. Fue comprobada operativamente, sin validar oniricidad.
-5. **La similitud alta es favorable.** No se penalizan automáticamente coincidencias textuales ni
-   se introduce evitar copias como objetivo. Una coincidencia literal no permite distinguir generación
-   y memorización previa: es una limitación interpretativa, no un castigo en la recompensa.
-6. **Generalización reservada.** El banco de recompensa se construye sólo con entrenamiento.
-   Las personas, semillas y referencias de validación y prueba no contribuyen a esa recompensa.
-   Los contrastes temáticos sirven para diagnosticar qué mide la fórmula, no constituyen una fórmula
-   ya aprobada ni un requisito de separar perfectamente sueños de relatos de vigilia.
+La consigna usa la plantilla de conversación propuesta por el usuario, semillas naturales
+cortas y el tamaño aproximado del relato esperado. La referencia humana completa se
+mantiene fuera del prompt. La apertura de dream pertenece a la entrada; el modelo genera
+el contenido, los cierres y el relato final, sin un ejemplo resuelto.
 
-## Implementado y comprobado
+El objetivo de la corrida aprobada es acercar answer a **su relato humano asociado** mediante
+embeddings. Esa recompensa alcanza todos los tokens muestreados. No hay castigo automático
+por similitud alta o copia, ni una recompensa adicional por longitud. Formato inválido: cero.
 
-- [x] Repositorio público, código MIT y entorno Python/MLX.
-- [x] Archivo DreamBank fijado por SHA-256; HTML leído sin ejecutarlo ni extraer rutas del tar.
-- [x] Registro explícito de 96 series; se admiten 71 series individuales en inglés, con alias
-  y hogares agrupados. Se excluyen del piloto 25 series colectivas o en otros idiomas.
-- [x] Importación real: 45.058 entradas de series, 11.463 excluidas por colección/idioma,
-  10.221 repeticiones normalizadas entre las admitidas. Quedan 23.374 relatos únicos antes
-  del filtro de longitud; 6.685 quedan fuera del intervalo de 40 a 350 palabras.
-- [x] Selección balanceada por grupo: 1.000/100/200 relatos en entrenamiento/validación/prueba,
-  sobre 30/6/7 grupos separados. Se conserva la procedencia de cada duplicado.
-- [x] Manifiesto congelado que verifica datos, configuración y registro de grupos al reutilizarlos.
-- [x] Prompt mínimo y validación de semillas implementados, sin acceso al relato original.
-- [x] Extracción local con Qwen3-8B congelado y temperatura cero: un relato de cada partición
-  produjo semillas válidas estructuralmente. Se conservan salida cruda, modelo, hash y selección.
-  Se seleccionan hasta ocho frases mediante rondas por categoría, sin escribir ni completar términos.
-  Estas tres extracciones comprueban el circuito; no validan la calidad semántica de las categorías.
-- [x] Perfil `configs/dream-v5.yaml` como predeterminado. La CLI impide ejecutar por accidente
-  el juez histórico con el nuevo protocolo.
-- [x] Encoder MiniLM versionado, procesamiento completo de fragmentos, caché y banco de 1.000
-  referencias de entrenamiento. Diagnóstico real de doce casos por grupo conservado.
-- [x] Recompensa del relato conectada a GRPO para todos los tokens. Las pruebas verifican
-  independencia respecto del contenido de dream y separación de las reservas.
-- [x] Prompt mínimo sin ejemplo probado: un formato válido de tres, una truncación, pesos base intactos.
-- [x] Informe local por CLI que distingue estado, diagnóstico y entrenamiento incompleto.
-- [x] Site publicado, versión 11, con DreamBank, embeddings, riqueza de semillas abierta y límites.
-- [x] Infraestructura histórica de GRPO, LoRA, checkpoints y cierre textual disponible para adaptar.
-  Su funcionamiento anterior no demuestra eficacia del nuevo protocolo.
+## Implementación comprobada
 
-## Resultados y siguiente trabajo
+- [x] Repositorio público `dream`, código MIT y configuración de Python.
+- [x] DreamBank como corpus principal; archivo fijado por SHA-256, importación sin ejecutar HTML.
+- [x] Registro de 96 series, alias y hogares; exclusión de colecciones colectivas sin identidad
+  individual resuelta y de idiomas fuera del primer piloto.
+- [x] Deduplicación y particiones de 1.000/100/200 relatos en 30/6/7 grupos separados.
+- [x] Generador original del piloto, revisión `ea980cb0a6c2ae4b936e82123acc929f1cec04c1`,
+  con texto plano y sin activar modo de razonamiento ni cargar adaptadores previos.
+- [x] Lote corto revisado antes de ejecutar: ocho referencias de entrenamiento y cuatro
+  reservadas, con semillas de 17–25 palabras y longitud esperada calculada por relato.
+  El asistente preparó las semillas; el usuario aprobó el lote corto y 900 segundos adicionales.
+- [x] Verificación del hash del lote, integridad de referencias, separación por persona y ausencia
+  del relato humano en el prompt. Lote: `0560294db2bec293522d737580aba78edf63313851138e362841a93626038450`.
+- [x] Encoder MiniLM congelado y versionado, pooling y tratamiento explícito de todos los
+  fragmentos largos; caché auditable.
+- [x] Recompensa pareada de answer, con referencias internas separadas de los datos del actor.
+  La validación se utiliza para evaluar y no para actualizar pesos.
+- [x] GRPO + LoRA con los tokens muestreados íntegros, checkpoints de cada actualización,
+  restauración de optimizador y estados aleatorios, límites efectivos de tiempo y memoria.
+- [x] Dieciséis pasos reales completados, cuatro candidatos por paso: 64 rollouts de entrenamiento.
+- [x] Evaluación de doce generaciones por fase, mismos prompts y semillas por consigna.
+- [x] Adaptadores modificados, pesos base intactos y recarga idéntica del checkpoint final.
+- [x] Auditoría final: lote, dieciséis pasos, referencias correctas, scores recalculados desde
+  vectores guardados, separación de validación y presupuesto dentro del autorizado.
+- [x] 133 pruebas aprobadas; informe local y resultados agregados preparados para el repositorio.
+- [ ] Publicación del site con los resultados de esta corrida: en preparación.
 
-- [x] El piloto con apertura de `<dream>` completó tres pasos. Cuatro de doce candidatos
-  cumplieron el formato; los pasos 2 y 3 tuvieron recompensas variables y gradientes no nulos.
-  Los adaptadores cambiaron y la base quedó intacta. La recarga reprodujo los pesos guardados.
-- [x] Continuidad real desde el paso 2: diez comprobaciones aprobadas, incluidas salidas,
-  adaptadores, optimizador y estados aleatorios. No se atribuye esto a la nueva plantilla natural.
-- [x] Evaluación antes y después: dos muestras reservadas por fase, todas con formato inválido.
-  No hay evidencia de mejora. El cero de formato no es un juicio semántico del sueño.
-- [x] Revisión de desarrollo asistida de las cinco consignas usadas: contenido conservado,
-  con omisiones de emociones y relaciones. No son anotaciones humanas independientes.
-- [x] Diagnóstico separado respecto del relato de origen, calculado con vectores ya guardados.
-  En dos candidatos el vecino más cercano del banco difiere del relato de origen.
-- [x] Site versión 12 publicado con resultados, continuidad y limitaciones del piloto anterior.
-- [x] Nueva plantilla pedida por el usuario y semillas en lenguaje natural probadas con el modelo
-  base, sin entrenamiento: dos formatos válidos de tres, uno interpretativo y otro narrativo;
-  un tercero truncado. Referencia humana fuera del prompt. [Detalle](plantilla-natural.md).
+## Resultado observado
 
-La nueva redacción cambia la consigna: sus pruebas se conservan separadas del piloto entrenado.
-Antes de atribuirle resultados de aprendizaje habría que entrenarla y evaluarla con su propia
-identidad. Ese entrenamiento no se ejecutó en esta prueba de plantilla.
+| Medida | Antes | Después |
+| --- | ---: | ---: |
+| Coseno medio al relato humano, respuestas válidas | 0,533 · n=10 | 0,599 · n=12 |
+| Formato válido | 10/12 | 12/12 |
+| Recompensa media incluyendo fallos de formato | 0,639 | 0,799 |
 
-Quedan abiertas la riqueza adecuada de las semillas y la estabilidad del formato. Comparar
-niveles breve, intermedio y rico es una propuesta, no un ensayo aprobado o ejecutado. La
-cercanía al relato de origen y al banco sigue registrada por separado; no se cambió la recompensa.
+En los diez pares válidos en ambas fases, el coseno aumentó 0,039 en promedio. En Green City
+pasó de 0,389 a 0,522. Tres medias por relato subieron y una bajó. Es una señal favorable en
+cuatro referencias de desarrollo; no demuestra eficacia generalizada. La longitud sigue
+presentando desvíos importantes. Los 200 relatos de prueba no se utilizaron.
 
-El diagnóstico del encoder encontró recompensa media 1,000 para referencias exactas, 0,777
-para relatos reservados y 0,793 para listas temáticas. Los grupos tienen distintos referentes;
-los números no prueban preferencia por listas frente a sueños. Sí advierten que la cercanía
-temática puede puntuar alto. [Método](recompensa-embeddings.md) y
-[validación del piloto](validacion-dreambank.md).
+[Resultados y límites](resultado-entrenamiento-v6.md), [datos numéricos](resultados-v6.json) y
+[método de la corrida](entrenamiento-pareado-v6.md).
 
-## Recursos y límites
+## Recursos y recuperación
 
-Se conservan todos los consumos previos: el presupuesto original es de 2.700 segundos de ejecución
-supervisada. Tras detener el último piloto quedaban aproximadamente 136 segundos. La prueba de extracción
-consumió 11,37 segundos adicionales, incluido el primer intento fallido. Junto con embeddings,
-pruebas de generación y el intento de piloto, el nuevo perfil acumula 111,52 de sus 120 segundos.
-El supervisor conserva diez segundos para detener el proceso. El usuario autorizó hasta cinco minutos adicionales desde el consumo actual;
-el perfil amplió su techo acumulado a 411 segundos, sin reiniciar el contador. El piloto y
-la continuidad llevaron el consumo a 332,51 segundos; la nueva prueba de plantilla lo llevó
-a 364,38 segundos. La preparación del corpus no realiza inferencias. No se reinician los
-contadores anteriores para simular un presupuesto nuevo. Si el piloto completo no cabe, se
-presentará el trabajo preparado y la necesidad concreta de ampliar recursos.
+Se consumieron 794,45 de los 900 segundos adicionales autorizados, incluidos tres procesos
+fallidos por Metal. La corrida se recuperó desde el checkpoint 7 sin cambiar lote, objetivo,
+semillas ni hiperparámetros. Un ajuste limitado al proceso del controlador de GPU permitió
+terminar. Se conservaron los presupuestos históricos y todos los intentos fallidos.
 
-DreamBank declara **CC BY-NC-SA 4.0**, con atribución a [dreambank.net](https://dreambank.net/).
-La licencia MIT del código no reemplaza la del corpus. Relatos, pesos y resultados locales quedan
-fuera de Git. No se necesitan textos surrealistas mientras el corpus alcance.
+Las copias inmutables del código y la configuración, el lote congelado, las evaluaciones,
+los tokens y los checkpoints se guardan en `results/dream-v6/`. No se publican referencias
+originales ni pesos automáticamente. DreamBank declara CC BY-NC-SA 4.0, atribución a
+[dreambank.net](https://dreambank.net/); MIT se aplica al código.
 
-Las agrupaciones se basan en las identidades públicas de la fuente; no descartan alias desconocidos.
-El carácter público de los relatos impide excluir memorización previa. La cercanía semántica no
-prueba experiencia subjetiva ni constituye por sí sola una medida validada de oniricidad.
+## Investigación posterior
 
-## Historia preservada
+La comparación de distintos niveles de riqueza de semillas sigue siendo una propuesta,
+no un experimento ejecutado. También quedan abiertas la generalización a más personas,
+la estabilidad del formato, el control de longitud y la distinción entre cercanía semántica
+y calidad onírica. Estas preguntas no se consideran resueltas por completar el circuito.
 
-DreamViews, el juez de cumplimiento/fidelidad y sus calibraciones quedan como antecedentes,
-no como requisitos del diseño actual. El trabajo previo está archivado en la rama
-`archive/dreamviews-judge-20261025`, commit `2f445fa`. El último piloto se interrumpió sin
-completar actualizaciones. Los resultados de SmolLM2 y de la comparación histórica se conservan
-separados. El piloto histórico Qwen tuvo cinco actualizaciones, sin evidencia de mejora.
+Una coincidencia alta es favorable; la posible memorización previa del corpus público
+limita su interpretación. Los resultados no prueban experiencia subjetiva del modelo.
 
-Detalles históricos: [modelo base](modelo-base.md), [rúbrica v4](rubrica-v4.md),
-[validación técnica](validacion-tecnica.md). Las diez respuestas con formato válido del protocolo
-anterior no validan el nuevo prompt sin ejemplo.
+## Historia conservada
 
-Verificación de esta etapa: importación real y primera extracción por partición, más 128 pruebas
-automatizadas de corpus, recompensa, conexión con GRPO e informes, incluidas identidad, fuga,
-duplicados, manifiestos, prompt y caché. La recompensa, el piloto anterior y su continuidad se ejecutaron; la plantilla natural nueva
-se probó sin entrenamiento. Los resultados no demuestran mejora.
+La extracción local de palabras clave, el score al vecino más próximo del banco y los
+pilotos anteriores quedan documentados por separado. El piloto anterior de tres pasos
+verificó recarga y continuidad exacta desde su checkpoint 2, sin demostrar mejora en sus
+dos muestras reservadas. No se trasladan sus resultados a la nueva plantilla.
+
+DreamViews y su juez de cumplimiento/fidelidad están archivados en
+`archive/dreamviews-judge-20261025`. Las condiciones A/B/C, otros generadores y aritmética
+son antecedentes. Inspect se conserva como integración opcional; no ejecutó el entrenamiento.
+No hicieron falta textos surrealistas porque DreamBank aportó suficientes relatos.
