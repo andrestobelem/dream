@@ -13,19 +13,19 @@ La única condición activa es **D: Soñar + `<dream>`**. Las variantes A/B/C y 
 - [x] Repositorio público con licencia MIT y configuración de Python.
 - [x] Corpus DreamViews: 1.000 relatos de entrenamiento, 100 de validación y 200 de prueba, separados por autor; categorías originales conservadas.
 - [x] Consignas derivadas de los relatos, con requisitos visibles para el generador y el evaluador.
-- [x] SmolLM2-1.7B base con revisión fijada; carga, tokenización y generación comprobadas. `<dream>` no es un token especial ni un modo de razonamiento del modelo.
+- [x] Retorno a Qwen3-1.7B-Base, el checkpoint del primer piloto, con revisión fijada y sin modo de razonamiento. Al usar sólo Dream, la diferencia de tokenización con think deja de ser un motivo para cambiar de generador. Los resultados de SmolLM2 se conservan separados.
 - [x] Generación en dos bloques y extracción de escena y relato.
 - [x] Configuración actual limitada a D; el piloto y el entrenamiento con esta configuración tampoco agregan la evaluación neutral.
-- [x] Implementación local de GRPO con LoRA, checkpoints y límites de recursos. El piloto ejecutado corresponde al modelo Qwen3 anterior, no demuestra aprendizaje en SmolLM2.
+- [x] Implementación local de GRPO con LoRA, checkpoints y límites de recursos. El primer piloto verificó entrenamiento y recarga con el Qwen3 base seleccionado; no demuestra mejora con la nueva evaluación v4.
 - [x] Integración del clasificador cerrado en cumplimiento y fidelidad; una abstención se conserva como ausencia de score. Un grupo con recompensa desconocida se detiene antes de actualizar adaptadores.
 - [x] Informes y revisión humana ciega preparados; los resultados históricos se pueden revisar con Inspect.
-- [x] [Presentación del proyecto publicada](https://del-think-al-drean.andrestobelem.chatgpt.site/proyecto-dream). La versión 8 acotó el método a D; la versión 9 registra los controles nuevos del juez y el diagnóstico de formato de diez generaciones.
+- [x] [Presentación del proyecto publicada](https://del-think-al-drean.andrestobelem.chatgpt.site/proyecto-dream). La versión 10 registra el retorno a Qwen base, el diagnóstico de formato de diez generaciones y la revisión asistida.
 
 ## Lo que falta para entrenar y evaluar Dream
 
 1. **Calibrar y comprobar la evaluación.** La variante con ejemplos del clasificador cerrado pasó siete de ocho controles conocidos y tres de cuatro nuevos. A pedido del usuario, el asistente revisó los 29 pares: conservó dos etiquetas preexistentes y anotó los otros 27; uno quedó ambiguo. También puntuó los seis relatos de carácter onírico. Las copias `revision-asistente.csv` y su manifiesto distinguen la procedencia de cada nota. Estas referencias permiten avanzar con una calibración de desarrollo asistida; no se presentan como validación humana independiente. Siguen pendientes errores relevantes del juez.
-2. **Estabilizar generación D.** La nueva prueba de diez consignas sintéticas obtuvo nueve respuestas completas y una sin cierre de `<dream>`; no aprobó el criterio fijado de 10/10. Falta revisar calidad, copia y diversidad con relatos del corpus.
-3. **Ejecutar un piloto pequeño de entrenamiento D con SmolLM2**, una vez que la evaluación sea utilizable. Comparar relatos antes y después, conservar componentes del score y comprobar que sólo cambien los adaptadores.
+2. **Revisar generación D con el modelo actual.** Qwen obtuvo 10/10 respuestas con formato completo después de corregir la detección del cierre textual, con pesos intactos y sin juez. La prueba anterior con SmolLM2 obtuvo 9/10. Falta revisar calidad, copia y diversidad con relatos del corpus; estas muestras no prueban eficacia del entrenamiento.
+3. **Ejecutar un piloto pequeño de entrenamiento D con Qwen3-1.7B-Base**, una vez que la evaluación sea utilizable. Comparar relatos antes y después, conservar componentes del score y comprobar que sólo cambien los adaptadores.
 4. **Verificar recuperación** del piloto de sueños y documentar resultados y límites. La prueba completa de interrupción y reanudación anterior corresponde a aritmética.
 5. **Publicar los resultados del piloto** en el repo y el site, distinguiendo pruebas de código y evidencia de aprendizaje.
 
@@ -45,4 +45,4 @@ DreamViews tiene suficientes relatos para esta etapa. Los textos surrealistas qu
 
 Detalles: [modelo base](modelo-base.md), [rúbrica actual](rubrica-v4.md) y [validación técnica histórica](validacion-tecnica.md).
 
-Verificación actual: 103 pruebas del proyecto y ocho de la integración opcional de Inspect aprobadas, incluyendo rotación de ejemplos y preservación de anotaciones humanas. La nueva inferencia a través de Inspect todavía no se probó con modelos reales y no es requisito del próximo piloto D.
+Verificación actual: 108 pruebas del proyecto y ocho de la integración opcional de Inspect aprobadas, incluyendo cierre con tokens fusionados, prefill compartido, conservación del cierre en los tokens de GRPO y separación de los locks de Qwen/SmolLM2. La nueva inferencia a través de Inspect todavía no se probó con modelos reales y no es requisito del próximo piloto D.

@@ -5,7 +5,7 @@ Entrenar un modelo para **imaginar una escena dentro de `<dream>` y después con
 El [plan actualizado](docs/plan.md) distingue implementación y validación pendiente.
 El protocolo actual en desarrollo es [dream-v4](docs/rubrica-v4.md): generador base sin
 posentrenamiento de razonamiento y juez de etiquetas cerradas. Su entrenamiento está
-deshabilitado hasta validar el evaluador. Los pilotos con Qwen3 son históricos.
+deshabilitado hasta calibrar el evaluador. El generador vuelve a ser el Qwen3 base del primer piloto.
 
 ## Diseño definido
 
@@ -13,7 +13,7 @@ El recorrido activo es únicamente **D: Soñar + `<dream>`**, seguido del relato
 
 - **Corpus principal:** [DreamViews, versión 1](https://zenodo.org/records/19161757), descrito en [Mallett, 2026](https://arxiv.org/abs/2603.26992). Conservamos las etiquetas originales de sus autores: lúcido, no lúcido, pesadilla, fragmento, memorable y falso despertar.
 - **Entrada:** requisitos visibles derivados de los relatos, guardados para generar y evaluar sueños. El evaluador de cumplimiento recibe los mismos requisitos, sin detalles ocultos del relato reservado.
-- **Generador actual:** [SmolLM2-1.7B base](docs/modelo-base.md), revisión fijada, sin plantilla de chat ni tokens especiales para think/dream. Carga y generación comprobadas, sin entrenamiento; falta el piloto de GRPO.
+- **Generador actual:** [Qwen3-1.7B-Base](docs/modelo-base.md), revisión del primer piloto, sin plantilla de chat aplicada ni modo de razonamiento. Sólo se usa Dream; la asimetría con el token think queda fuera del diseño actual. Falta el nuevo piloto con el evaluador v4.
 - **Juez:** `mlx-community/Qwen3-8B-4bit`, revisión fijada, congelado y temperatura cero. Toda la ejecución es local, sin APIs pagas ni envío de relatos.
 - **Piloto histórico:** baseline A/B/C/D y neutral; cinco actualizaciones de D con Qwen3, evaluación y recarga. La comparación de doce corridas quedó fuera del alcance actual.
 
@@ -70,17 +70,17 @@ uv run python -m think_dream_lab doctor
 uv run python -m think_dream_lab corpus
 uv run python -m think_dream_lab evaluate --condition D --limit 1
 uv run python -m think_dream_lab closed-check
-uv run python -m think_dream_lab report --results results/dream-v4
+uv run python -m think_dream_lab report --results results/dream-v4-qwen
 ```
 
 Configuración predeterminada de la CLI: `configs/dream-v4.yaml`; resultados en
-`results/dream-v4`. `configs/dream.yaml` conserva el protocolo histórico. La CLI bloquea
-nuevos entrenamientos con el generador anterior. El corpus ocupa unos 110 MB. Los pesos
+`results/dream-v4-qwen`. `configs/dream.yaml` conserva el protocolo histórico y
+`configs/dream-v4-smollm2.yaml` conserva la prueba con SmolLM2. El corpus ocupa unos 110 MB. Los pesos
 se guardan en la caché local de Hugging Face. `.venv` usa Python 3.11 y `uv.lock` fija las
 dependencias sin modificar el Python del sistema.
 
 El piloto histórico está en `results/dream/`; los diagnósticos nuevos están en
-`results/dream-v4/dream/`. Se conservan datos y hashes, auditorías, probabilidades y contexto.
+`results/dream-v4/dream/` para SmolLM2 y `results/dream-v4-qwen/dream/` para el retorno a Qwen. Se conservan datos y hashes, auditorías, probabilidades y contexto.
 
 ```text
 results/dream/report/informe.md
@@ -88,7 +88,7 @@ results/dream/report/examples.json
 ```
 
 El historial original tiene un presupuesto de 45 minutos en `results/budget.json`.
-Los diagnósticos de v4 tienen diez minutos acumulados en su propio `budget.json`; las
+El nuevo perfil Qwen v4 tiene 450 segundos acumulados en su propio `budget.json`; las
 ejecuciones anteriores y sus consumos se conservan. Se registran RSS, presión y swap;
 la ejecución se interrumpe ante presión crítica o crecimiento de swap superior a 2 GiB.
 Un límite conserva el último checkpoint completo y deja la prueba incompleta.
@@ -130,6 +130,9 @@ están en la [rúbrica actual](docs/rubrica-v4.md).
 
 La generación de sueños termina en `</answer>`, EOS o el límite de tokens, con el mismo
 criterio en todas las condiciones. Los tokens muestreados del cierre se conservan para GRPO.
+La detección del cierre es textual y admite que BPE lo fusione con puntuación; no recorta
+ni recodifica la salida muestreada. La comprobación actual de Qwen en D produjo 10/10
+respuestas con formato completo, con pesos intactos y sin llamadas al juez.
 
 ## Inspect AI e Inspect Flow
 

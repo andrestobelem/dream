@@ -1,6 +1,6 @@
 # Juez de etiquetas cerradas
 
-`dream-v4` incorpora el generador base SmolLM2 y un evaluador cerrado para cumplimiento y fidelidad. La integración está implementada; falta validar el evaluador y el entrenamiento permanece deshabilitado. El único recorrido activo es Soñar + `<dream>`, seguido de `<answer>`.
+`dream-v4` usa actualmente Qwen3-1.7B-Base, el generador del primer piloto, y un evaluador cerrado para cumplimiento y fidelidad. Los diagnósticos intermedios con SmolLM2 se conservan separados. La integración está implementada; falta calibrar el evaluador y el entrenamiento permanece deshabilitado. El único recorrido activo es Soñar + `<dream>`, seguido de `<answer>`.
 
 ## Clasificación sin generación
 
@@ -68,7 +68,7 @@ Se repitieron las doce situaciones, con el mismo prompt y ejemplos, usando `mlx-
 
 El resultado fue **cero de doce situaciones completas**, con 14 de 40 pares correctamente decididos, 17 abstenciones y nueve decisiones incorrectas. La repetición de logits tuvo diferencia cero y los pesos permanecieron intactos. Se comprobaron las tres etiquetas como continuaciones de un token. Esto tampoco lo habilita como juez de entrenamiento.
 
-Los resultados se guardaron separados en `results/dream-v4-phi/dream/closed-check.json`. Los 43,17 segundos de ejecución se cargaron al presupuesto Phi existente en `results/dream-v3-phi/budget.json`; no se creó un presupuesto nuevo ni se descargó otro modelo. El generador sigue siendo SmolLM2 y el juez configurado por defecto continúa siendo Qwen3, pendiente de validación.
+Los resultados se guardaron separados en `results/dream-v4-phi/dream/closed-check.json`. Los 43,17 segundos de ejecución se cargaron al presupuesto Phi existente en `results/dream-v3-phi/budget.json`; no se creó un presupuesto nuevo ni se descargó otro modelo. Durante ese contraste el generador seleccionado era SmolLM2; posteriormente se volvió a Qwen3-1.7B-Base. El juez configurado por defecto continúa siendo Qwen3-8B, pendiente de calibración.
 
 ## Próximos pasos
 
