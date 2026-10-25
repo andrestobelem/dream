@@ -121,6 +121,7 @@ def implementation_manifest():
         "workflow.py",
         "corpus.py",
         "dream_task.py",
+        "dream_generation.py",
         "dream_workflow.py",
         "judge.py",
         "judge_checks.py",

@@ -182,24 +182,32 @@ class Runner:
         ids = self.encode(prompt)
         g = self.config["generation"]
         start = time.perf_counter()
-        completions, texts, indices = generate_grpo(
-            self.model,
-            self.tokenizer,
-            [ids],
-            max_tokens=g["max_tokens"],
-            group_size=count,
-            batch_size=1,
-            end_token=self.stop_sequence(),
-            temperature=g["temperature"],
-            top_p=g["top_p"],
-            top_k=g["top_k"],
-            min_p=g["min_p"],
-        )
+        if self.stop_sequence():
+            from .dream_generation import generate_dream
+
+            completions, texts, indices = generate_dream(
+                self.model, self.tokenizer, ids, count, g, self.stop_sequence()
+            )
+        else:
+            completions, texts, indices = generate_grpo(
+                self.model,
+                self.tokenizer,
+                [ids],
+                max_tokens=g["max_tokens"],
+                group_size=count,
+                batch_size=1,
+                end_token="",
+                temperature=g["temperature"],
+                top_p=g["top_p"],
+                top_k=g["top_k"],
+                min_p=g["min_p"],
+            )
         mx.eval(completions)
         elapsed = time.perf_counter() - start
         records = []
         for index, (tokens, text) in enumerate(zip(completions, texts)):
             ended = bool(tokens.size and tokens[-1].item() in self.tokenizer.eos_token_ids)
+            delimiter = bool(self.stop_sequence() and self.stop_sequence() in text)
             records.append(
                 {
                     "problem_id": row["problem_id"],
@@ -215,7 +223,8 @@ class Runner:
                     "reward": self.completion_reward(text, row, condition),
                     "tokens": int(tokens.size),
                     "eos": ended,
-                    "truncated": not ended and tokens.size >= g["max_tokens"],
+                    "truncated": not ended and not delimiter and tokens.size >= g["max_tokens"],
+                    "finish_reason": "eos" if ended else "delimiter" if delimiter else "length",
                     "group_seconds": elapsed,
                     "latency_seconds": elapsed / count,
                     "mlx_peak_bytes": mx.get_peak_memory(),
