@@ -23,6 +23,7 @@ def parser():
         "seeds",
         "embedding-check",
         "prompt-check",
+        "continue-training",
         "holdout-prepare",
         "holdout-evaluate",
         "holdout-report",
@@ -39,6 +40,9 @@ def parser():
         cmd = commands.add_parser(command, **({"help": command} if command != "_worker" else {}))
         cmd.add_argument("--config", default="configs/dream-v5.yaml")
         cmd.add_argument("--results", type=Path, default=Path("results/dream-v5"))
+        if command in {"continue-training", "_worker"}:
+            cmd.add_argument("--source-run", type=Path)
+            cmd.add_argument("--target-step", type=int)
         if command in {"holdout-evaluate", "_worker"}:
             cmd.add_argument(
                 "--variant", choices=["base", "checkpoint"], required=command == "holdout-evaluate"
@@ -89,6 +93,7 @@ def parser():
                     "seeds",
                     "embedding-check",
                     "prompt-check",
+                    "continue-training",
                     "holdout-prepare",
                     "holdout-evaluate",
                     "judge",
@@ -132,6 +137,39 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
+    if args.command == "continue-training" or (
+        args.command == "_worker" and args.action == "continue-training"
+    ):
+        if args.source_run is None or args.target_step is None:
+            raise ValueError("La continuación requiere source-run y target-step.")
+        if args.command == "_worker":
+            from .continuation import run
+
+            def stop_continuation(_signal, _frame):
+                raise KeyboardInterrupt(
+                    "Continuación interrumpida; se conserva el último checkpoint."
+                )
+
+            signal.signal(signal.SIGTERM, stop_continuation)
+            run(config, args.results.resolve(), args.source_run.resolve(), args.target_step)
+            return 0
+        from .supervisor import supervise
+
+        return supervise(
+            config,
+            args.results.resolve(),
+            [
+                "continue-training",
+                "--config",
+                str(Path(args.config).resolve()),
+                "--results",
+                str(args.results.resolve()),
+                "--source-run",
+                str(args.source_run.resolve()),
+                "--target-step",
+                str(args.target_step),
+            ],
+        )
     if config.get("heldout_evaluation"):
         if args.command == "holdout-report":
             from .holdout_report import compare

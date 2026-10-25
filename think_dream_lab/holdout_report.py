@@ -188,9 +188,9 @@ def save_scatter(folder, result):
     ax.set(
         xlim=(0, 1),
         ylim=(0, 1),
-        xlabel="Modelo base · coseno al relato humano",
-        ylabel="Checkpoint 16 · coseno al relato humano",
-        title=f"Relatos reservados nuevos · {plotted}/{result['reports']} con pares válidos",
+        xlabel=f"{result.get('base_label', 'Modelo base')} · coseno al relato humano",
+        ylabel=f"{result.get('checkpoint_label', 'Checkpoint 16')} · coseno al relato humano",
+        title=f"{result.get('cohort_label', 'Relatos reservados nuevos')} · {plotted}/{result['reports']} con pares válidos",
     )
     ax.set_aspect("equal")
     ax.grid(alpha=0.15)

@@ -1,6 +1,6 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: circuito implementado y ensayo aprobado completado.
+Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 32 y evaluación completadas.
 
 ## Alcance vigente
 
@@ -76,6 +76,22 @@ Formato válido: 52/72 → 66/72. Coseno de los 48 pares válidos: cambio medio 
 La mejora principal corresponde al formato; la cercanía subió poco y de manera heterogénea.
 [Resultados nuevos y límites](evaluacion-ampliada-v7.md), [datos numéricos](resultados-v7.json).
 El site v13 conserva el piloto anterior; esta evaluación queda documentada en el repositorio.
+
+## Continuación completada: paso 16 → 32
+
+- [x] Restauración del checkpoint 16 completo, incluidos optimizador y estados aleatorios.
+- [x] Dieciséis pasos nuevos con el mismo lote de ocho relatos e hiperparámetros; 64 rollouts.
+- [x] Personas reservadas fuera de las actualizaciones; base y checkpoint fuente intactos.
+- [x] Recarga exacta del checkpoint 32 y evaluación congelada de las mismas 72 posiciones.
+- [x] Comparación con las salidas originales de base y paso 16, sin regenerarlas.
+- [x] Auditoría de 216 scores de evaluación y 64 de entrenamiento desde caché; 142 pruebas aprobadas.
+
+Paso 16 → 32: formato 66/72 → 70/72; truncamientos 2 → 0. En 64 pares válidos,
+coseno 0,6320 → 0,6398 (+0,0078). La media con igual peso por relato/persona es +0,0099,
+con intervalo exploratorio [-0,0100; +0,0284]. La señal de cercanía es pequeña e incierta.
+Los 24 relatos son validación de desarrollo ya observada, fuera del entrenamiento;
+los 200 de prueba permanecen sin usar. Se terminó en el paso 32.
+[Resultados y método](continuacion-v8.md), [datos numéricos](resultados-v8.json).
 
 ## Recursos y recuperación
 

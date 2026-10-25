@@ -314,10 +314,10 @@ def evaluate_variant(config, root, variant):
     state = read_json(checkpoint / "state.json")
     if (
         source["status"] != "complete"
-        or state["step"] != 16
+        or state["step"] != source["training_validation"]["steps_completed"]
         or state["identity"] != source["identity"]
     ):
-        raise ValueError("El checkpoint fuente no es el ensayo completo de 16 pasos.")
+        raise ValueError("El checkpoint fuente no coincide con su entrenamiento completo.")
     checkpoint_sha = sha256(checkpoint / "adapters.safetensors")
     reward = PairedReward({"validation": pack["rows"]}, Encoder(config["embeddings"], root))
     eval_id = digest(
@@ -345,6 +345,7 @@ def evaluate_variant(config, root, variant):
         "variant": variant,
         "cohort_hash": pack["rows_hash"],
         "checkpoint_sha256": checkpoint_sha,
+        "checkpoint_step": state["step"],
         "config": config,
         "training_updates": 0,
         "started_at": time.time(),
@@ -402,7 +403,7 @@ def evaluate_variant(config, root, variant):
                     candidate=candidate,
                     evaluation_seed=sample_seed,
                     author_group=row["author_group"],
-                    step=0 if variant == "base" else 16,
+                    step=0 if variant == "base" else state["step"],
                 )
                 if record["prompt"] != next(
                     r["prompt"] for r in pack["rows"] if r["problem_id"] == row["problem_id"]

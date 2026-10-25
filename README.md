@@ -15,24 +15,26 @@ coincidencias textuales ni por diferencias de longitud. Un formato inválido rec
 
 ## Resultado actual
 
-El checkpoint de 16 pasos GRPO + LoRA sobre ocho relatos se comparó con el modelo base
-en **24 relatos reservados nuevos de seis personas**, con tres generaciones por modelo y
-relato. No se siguió entrenando.
+Se continuó desde el checkpoint 16 hasta el **32**, con el mismo lote de ocho relatos,
+restaurando optimizador y aleatoriedad. Los **24 relatos reservados de seis personas**
+quedaron fuera del entrenamiento y se evaluaron con tres generaciones por modelo y relato.
 
-| Medida | Base | Checkpoint 16 |
-| --- | ---: | ---: |
-| Coseno medio al relato humano, sólo válidas | 0,6219 (n=52) | 0,6330 (n=66) |
-| Formato válido | 52/72 | 66/72 |
-| Score medio incluyendo fallos de formato | 0,5857 | 0,7485 |
-| Truncamientos | 11 | 2 |
+| Medida | Base | Paso 16 | Paso 32 |
+| --- | ---: | ---: | ---: |
+| Coseno, sólo respuestas válidas | 0,6219 (n=52) | 0,6330 (n=66) | 0,6453 (n=70) |
+| Formato válido | 52/72 | 66/72 | 70/72 |
+| Score incluyendo fallos de formato | 0,5857 | 0,7485 | 0,7998 |
+| Truncamientos | 11 | 2 | 0 |
 
-En los 48 pares válidos en ambos modelos, el coseno subió **0,0102** en promedio.
-La mejora principal está en completar el formato; la cercanía aumentó poco y de manera
-heterogénea. Trece medias pareadas por relato subieron y diez bajaron; uno no tuvo pares
-válidos. Los pesos quedaron intactos. [Evaluación ampliada y límites](docs/evaluacion-ampliada-v7.md).
+En los **64 pares válidos del paso 16 y el 32**, el coseno pasó de 0,6320 a 0,6398:
+ganancia de **+0,0078**. Dieciséis medias por relato mejoraron y ocho empeoraron.
+La incertidumbre por persona incluye empeoramiento: es una señal pequeña, sin evidencia
+sólida de mejora general. El formato sigue mejorando. Base y checkpoint 16 quedaron intactos.
+[Continuación y límites](docs/continuacion-v8.md), [datos numéricos](docs/resultados-v8.json).
 
-El [piloto anterior con cuatro relatos](docs/resultado-entrenamiento-v6.md) se conserva
-aparte; sus resultados no se mezclaron con esta cohorte.
+La [evaluación anterior del paso 16](docs/evaluacion-ampliada-v7.md) y el
+[piloto con cuatro relatos](docs/resultado-entrenamiento-v6.md) se conservan aparte.
+Los 24 casos son ahora validación de desarrollo ya observada; los 200 de prueba siguen sin usar.
 
 ## Datos y ejecución
 
@@ -42,7 +44,8 @@ y el piloto evaluó cuatro. La evaluación ampliada usa otros 24 relatos de vali
 los 200 de prueba no se utilizaron. El registro de
 alias y hogares está en [configs/dreambank-groups.json](configs/dreambank-groups.json).
 
-El perfil de esta corrida es [configs/dream-v6.yaml](configs/dream-v6.yaml). Con el lote
+El piloto original usa [configs/dream-v6.yaml](configs/dream-v6.yaml); los comandos para
+continuarlo están en [continuación v8](docs/continuacion-v8.md). Con el lote
 local aprobado y las dependencias instaladas:
 
 ```sh
@@ -64,6 +67,7 @@ locales antes de ejecutar este ensayo.
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Continuación hasta el paso 32](docs/continuacion-v8.md).
 - [Evaluación ampliada sin entrenar](docs/evaluacion-ampliada-v7.md), [datos numéricos](docs/resultados-v7.json).
 - [Preparación del lote corto](docs/preparacion-natural-v6.md).
 - [Entrenamiento pareado](docs/entrenamiento-pareado-v6.md).
