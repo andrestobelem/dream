@@ -28,7 +28,11 @@ class DreamRunner(Runner):
         super().__init__(config, lock, folder)
 
     def render_prompt(self, row, condition):
-        return render_dream(self.briefs[row["problem_id"]], condition)
+        return render_dream(
+            self.briefs[row["problem_id"]],
+            condition,
+            format_example=self.config["generation"].get("format_example", False),
+        )
 
     def stop_sequence(self):
         return "</answer>"

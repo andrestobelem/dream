@@ -18,12 +18,46 @@ NEUTRAL = (
     "Use English, about 60-100 words, and put the account inside <answer>...</answer>. "
     "Include no text outside that block.\nBrief: {brief}\nAccount:"
 )
+EXAMPLE_SCENE = (
+    "At dusk I stand on a wooden pier beside a friend. We step off the edge and the dark "
+    "water holds us. I see small lights moving beneath my feet. The pier moves away while "
+    "we keep walking. My friend points toward an island, but it slides sideways whenever "
+    "we approach. I feel calm as the shore disappears behind us."
+)
+EXAMPLE_ANSWER = (
+    "I remember being on a pier with a friend as daylight faded. We walked onto the water "
+    "without sinking, watching lights underneath it. Behind us, the pier drifted farther "
+    "away. We tried to reach an island, but it kept sliding to the side. I wasn't afraid, "
+    "even when I could no longer see the shore. We continued walking together."
+)
+FORMAT_EXAMPLE = (
+    "Complete the written task. The writer first {verb}s about the requested dream inside "
+    "<{tag}>...</{tag}>, then retells that same dream in first person inside <answer>...</answer>. "
+    "Write concrete scenes, not instructions. Use English and about 60-100 words per block. "
+    "Include no text outside the two blocks.\n\n"
+    "Example brief: A pier at dusk, a friend, walking on water, an elusive island, and calm.\n"
+    "Example response:\n<{tag}>{scene}</{tag}>\n<answer>{account}</answer>\n\n"
+    "Now complete this task with the same format.\nBrief: {brief}\nResponse:\n"
+)
+NEUTRAL_EXAMPLE = (
+    "Write a first-person account of an imagined sleep experience from the brief. "
+    "Use English, about 60-100 words, inside <answer>...</answer> with no text outside.\n\n"
+    "Example brief: A pier at dusk, a friend, walking on water, an elusive island, and calm.\n"
+    "Example response:\n<answer>{account}</answer>\n\n"
+    "Now complete this task with the same format.\nBrief: {brief}\nResponse:\n"
+)
 
 
-def render_dream(brief, condition):
+def render_dream(brief, condition, *, format_example=False):
     if condition == "neutral":
+        if format_example:
+            return NEUTRAL_EXAMPLE.format(brief=brief, account=EXAMPLE_ANSWER)
         return NEUTRAL.format(brief=brief)
     verb, tag = CONDITIONS[condition]
+    if format_example:
+        return FORMAT_EXAMPLE.format(
+            brief=brief, verb=verb, tag=tag, scene=EXAMPLE_SCENE, account=EXAMPLE_ANSWER
+        )
     return TEMPLATE.format(brief=brief, verb=verb, tag=tag)
 
 

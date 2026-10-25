@@ -8,7 +8,11 @@ from .storage import append_jsonl, write_json
 
 class BaseProbe(Runner):
     def render_prompt(self, row, condition):
-        return render_dream(row["brief"], condition)
+        return render_dream(
+            row["brief"],
+            condition,
+            format_example=self.config["generation"].get("format_example", False),
+        )
 
     def stop_sequence(self):
         return "</answer>"
@@ -48,6 +52,7 @@ def check_base(config, root):
         print("Generación de la base:", condition, "formato:", formats[condition], flush=True)
     result = {
         "model": lock,
+        "config": config,
         "implementation": implementation,
         "base_unchanged": before == fingerprint(runner.model.parameters()),
         "format_by_condition": formats,
