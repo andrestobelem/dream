@@ -1,0 +1,1160 @@
+{
+  "quality": {
+    "model_pairs": 6,
+    "model_texts": 12,
+    "assistant_preferences": {
+      "tie": 2,
+      "checkpoint160": 1,
+      "checkpoint32": 3
+    },
+    "assistant_model_modes": {
+      "scene": 11,
+      "mixed": 1
+    },
+    "judge_valid": 12,
+    "judge_total": 24,
+    "coarse_control_correct": 3,
+    "coarse_control_total": 10,
+    "coarse_gate_passed": false,
+    "parsed_choice_only_pairs": 8,
+    "parsed_choice_only_side_changes": 4,
+    "parsed_choice_only_caution": "Post-hoc diagnostic uses parsed choices even if ancillary mode fields fail schema; does not repair or increase valid full evaluations. Excludes no_se and invalid choices.",
+    "controls": [
+      {
+        "review_id": "Q03",
+        "swapped": false,
+        "status": "complete",
+        "choice": "no_se",
+        "expected": "B",
+        "correct": false
+      },
+      {
+        "review_id": "Q03",
+        "swapped": true,
+        "status": "evaluation_error",
+        "choice": null,
+        "expected": "B",
+        "correct": false
+      },
+      {
+        "review_id": "Q05",
+        "swapped": false,
+        "status": "complete",
+        "choice": "tie",
+        "expected": "tie",
+        "correct": true
+      },
+      {
+        "review_id": "Q05",
+        "swapped": true,
+        "status": "complete",
+        "choice": "tie",
+        "expected": "tie",
+        "correct": true
+      },
+      {
+        "review_id": "Q06",
+        "swapped": false,
+        "status": "complete",
+        "choice": "tie",
+        "expected": "B",
+        "correct": false
+      },
+      {
+        "review_id": "Q06",
+        "swapped": true,
+        "status": "evaluation_error",
+        "choice": null,
+        "expected": "B",
+        "correct": false
+      },
+      {
+        "review_id": "Q11",
+        "swapped": false,
+        "status": "complete",
+        "choice": "no_se",
+        "expected": "A",
+        "correct": false
+      },
+      {
+        "review_id": "Q11",
+        "swapped": true,
+        "status": "evaluation_error",
+        "choice": null,
+        "expected": "A",
+        "correct": false
+      },
+      {
+        "review_id": "Q12",
+        "swapped": false,
+        "status": "complete",
+        "choice": "A",
+        "expected": "A",
+        "correct": true
+      },
+      {
+        "review_id": "Q12",
+        "swapped": true,
+        "status": "evaluation_error",
+        "choice": null,
+        "expected": "A",
+        "correct": false
+      }
+    ],
+    "cases": [
+      {
+        "review_id": "Q01",
+        "kind": "models",
+        "A_source": "checkpoint32",
+        "B_source": "checkpoint160",
+        "assistant_choice": "tie",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 3,
+          "motif_grounding": 4
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 3,
+          "motif_grounding": 4
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "evaluation_error",
+            "choice": null
+          },
+          {
+            "swapped": true,
+            "status": "complete",
+            "choice": "tie"
+          }
+        ]
+      },
+      {
+        "review_id": "Q02",
+        "kind": "models",
+        "A_source": "checkpoint160",
+        "B_source": "checkpoint32",
+        "assistant_choice": "A",
+        "confidence": "medium",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 3,
+          "report_likeness": 3,
+          "motif_grounding": 3
+        },
+        "assistant_B": {
+          "mode": "mixed",
+          "scene_presence": 2,
+          "report_likeness": 2,
+          "motif_grounding": 2
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "evaluation_error",
+            "choice": null
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q03",
+        "kind": "analysis",
+        "A_source": "analysis",
+        "B_source": "human",
+        "assistant_choice": "B",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "analysis",
+          "scene_presence": 0,
+          "report_likeness": 0,
+          "motif_grounding": null
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "no_se"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q04",
+        "kind": "models",
+        "A_source": "checkpoint160",
+        "B_source": "checkpoint32",
+        "assistant_choice": "B",
+        "confidence": "medium",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 3,
+          "motif_grounding": 2
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 3,
+          "report_likeness": 3,
+          "motif_grounding": 4
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "tie"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q05",
+        "kind": "identity",
+        "A_source": "human",
+        "B_source": "identity",
+        "assistant_choice": "tie",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "tie"
+          },
+          {
+            "swapped": true,
+            "status": "complete",
+            "choice": "tie"
+          }
+        ]
+      },
+      {
+        "review_id": "Q06",
+        "kind": "list",
+        "A_source": "list",
+        "B_source": "human",
+        "assistant_choice": "B",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "list",
+          "scene_presence": 0,
+          "report_likeness": 0,
+          "motif_grounding": null
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "tie"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q07",
+        "kind": "valid_surreal",
+        "A_source": "human",
+        "B_source": "valid_surreal",
+        "assistant_choice": "tie",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "tie"
+          },
+          {
+            "swapped": true,
+            "status": "complete",
+            "choice": "tie"
+          }
+        ]
+      },
+      {
+        "review_id": "Q08",
+        "kind": "models",
+        "A_source": "checkpoint32",
+        "B_source": "checkpoint160",
+        "assistant_choice": "A",
+        "confidence": "medium",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 3,
+          "report_likeness": 3,
+          "motif_grounding": 3
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 3,
+          "report_likeness": 3,
+          "motif_grounding": 2
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "evaluation_error",
+            "choice": null
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q09",
+        "kind": "models",
+        "A_source": "checkpoint32",
+        "B_source": "checkpoint160",
+        "assistant_choice": "tie",
+        "confidence": "medium",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 3,
+          "report_likeness": 3,
+          "motif_grounding": 4
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 3,
+          "motif_grounding": 3
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "tie"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q10",
+        "kind": "models",
+        "A_source": "checkpoint160",
+        "B_source": "checkpoint32",
+        "assistant_choice": "B",
+        "confidence": "medium",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 3,
+          "report_likeness": 2,
+          "motif_grounding": 2
+        },
+        "assistant_B": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 3,
+          "motif_grounding": 3
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "tie"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q11",
+        "kind": "plan",
+        "A_source": "human",
+        "B_source": "plan",
+        "assistant_choice": "A",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "assistant_B": {
+          "mode": "plan",
+          "scene_presence": 0,
+          "report_likeness": 0,
+          "motif_grounding": null
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "no_se"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      },
+      {
+        "review_id": "Q12",
+        "kind": "repetition",
+        "A_source": "human",
+        "B_source": "repetition",
+        "assistant_choice": "A",
+        "confidence": "high",
+        "assistant_A": {
+          "mode": "scene",
+          "scene_presence": 4,
+          "report_likeness": 4,
+          "motif_grounding": null
+        },
+        "assistant_B": {
+          "mode": "list",
+          "scene_presence": 0,
+          "report_likeness": 0,
+          "motif_grounding": null
+        },
+        "judge": [
+          {
+            "swapped": false,
+            "status": "complete",
+            "choice": "A"
+          },
+          {
+            "swapped": true,
+            "status": "evaluation_error",
+            "choice": null
+          }
+        ]
+      }
+    ],
+    "rubric_hash": "3eb1a638d49dd23fe500a65dee1e562ea97e75e0b743adef26d0678b52ef33fe",
+    "annotations_hash": "b0e1da994842b17a8fede7b61db092801eeef3da46cf19b86e33b4309ae2b568",
+    "independent_human_review": false,
+    "controls_authored_by_reviewer": true,
+    "reward_validated": false
+  },
+  "interventions": {
+    "checkpoint": 32,
+    "cases": 3,
+    "answers": 36,
+    "conditions": {
+      "original": {
+        "n": 6,
+        "exact_probe_match": 6,
+        "probe_mentioned": 0,
+        "format_valid": 6,
+        "truncations": 0,
+        "answer_words_mean": 105,
+        "prompt_tokens_mean": 292,
+        "new_tokens_mean": 128.83333333333334
+      },
+      "anchor": {
+        "n": 6,
+        "exact_probe_match": 5,
+        "probe_mentioned": 6,
+        "format_valid": 6,
+        "truncations": 0,
+        "answer_words_mean": 114.33333333333333,
+        "prompt_tokens_mean": 306.3333333333333,
+        "new_tokens_mean": 139.5
+      },
+      "edited": {
+        "n": 6,
+        "exact_probe_match": 5,
+        "probe_mentioned": 5,
+        "format_valid": 6,
+        "truncations": 0,
+        "answer_words_mean": 130.83333333333334,
+        "prompt_tokens_mean": 306,
+        "new_tokens_mean": 157.83333333333334
+      },
+      "paraphrase": {
+        "n": 6,
+        "exact_probe_match": 6,
+        "probe_mentioned": 6,
+        "format_valid": 6,
+        "truncations": 0,
+        "answer_words_mean": 126.83333333333333,
+        "prompt_tokens_mean": 304.6666666666667,
+        "new_tokens_mean": 152
+      },
+      "swapped": {
+        "n": 6,
+        "exact_probe_match": 4,
+        "probe_mentioned": 4,
+        "format_valid": 6,
+        "truncations": 0,
+        "answer_words_mean": 99.16666666666667,
+        "prompt_tokens_mean": 306.3333333333333,
+        "new_tokens_mean": 119.83333333333333
+      },
+      "direct": {
+        "n": 6,
+        "exact_probe_match": 6,
+        "probe_mentioned": 0,
+        "format_valid": 5,
+        "truncations": 1,
+        "answer_words_mean": 90,
+        "prompt_tokens_mean": 82.66666666666667,
+        "new_tokens_mean": 241.83333333333334
+      }
+    },
+    "paired_exact_edit_following": 4,
+    "paired_edit_total": 6,
+    "format_valid": 35,
+    "new_tokens": 5639,
+    "new_generation_seconds": 80.72489245796169,
+    "rows": [
+      {
+        "task_id": "2b725f9a9eb96119",
+        "case_id": "I1",
+        "condition": "edited",
+        "seed": 29,
+        "kind": "location",
+        "state": "absent",
+        "expected": "inside_cupboard",
+        "match": false,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 63,
+        "prompt_tokens": 242,
+        "new_tokens": 75,
+        "seconds": 1.1005854169925442
+      },
+      {
+        "task_id": "6a0a328e2bcdabae",
+        "case_id": "I3",
+        "condition": "anchor",
+        "seed": 29,
+        "kind": "outcome",
+        "state": "sank_before_shore",
+        "expected": "sank_before_shore",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 99,
+        "prompt_tokens": 261,
+        "new_tokens": 125,
+        "seconds": 1.7644798749970505
+      },
+      {
+        "task_id": "59af7f105a659790",
+        "case_id": "I1",
+        "condition": "edited",
+        "seed": 17,
+        "kind": "location",
+        "state": "inside_cupboard",
+        "expected": "inside_cupboard",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 87,
+        "prompt_tokens": 242,
+        "new_tokens": 108,
+        "seconds": 1.5487379999976838
+      },
+      {
+        "task_id": "70ac58fc82d302c2",
+        "case_id": "I3",
+        "condition": "edited",
+        "seed": 17,
+        "kind": "outcome",
+        "state": "reached_without_sinking",
+        "expected": "reached_without_sinking",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 84,
+        "prompt_tokens": 260,
+        "new_tokens": 100,
+        "seconds": 1.5253963330033002
+      },
+      {
+        "task_id": "adf3592ea9d57897",
+        "case_id": "I1",
+        "condition": "paraphrase",
+        "seed": 17,
+        "kind": "location",
+        "state": "under_chair",
+        "expected": "under_chair",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 88,
+        "prompt_tokens": 243,
+        "new_tokens": 109,
+        "seconds": 1.5393275420065038
+      },
+      {
+        "task_id": "f3ef146c3f61c2ca",
+        "case_id": "I3",
+        "condition": "direct",
+        "seed": 17,
+        "kind": "outcome",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 58,
+        "prompt_tokens": 84,
+        "new_tokens": 70,
+        "seconds": 1.0135113339929376
+      },
+      {
+        "task_id": "1912edf6691143a9",
+        "case_id": "I1",
+        "condition": "original",
+        "seed": 17,
+        "kind": "location",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 75,
+        "prompt_tokens": 228,
+        "new_tokens": 94,
+        "seconds": 1.3382139579916839
+      },
+      {
+        "task_id": "2198443c5ccc1cbc",
+        "case_id": "I3",
+        "condition": "anchor",
+        "seed": 17,
+        "kind": "outcome",
+        "state": "nonarrival_unspecified",
+        "expected": "sank_before_shore",
+        "match": false,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 68,
+        "prompt_tokens": 261,
+        "new_tokens": 84,
+        "seconds": 1.286969416993088
+      },
+      {
+        "task_id": "3e595058ae4a3593",
+        "case_id": "I2",
+        "condition": "edited",
+        "seed": 29,
+        "kind": "actor",
+        "state": "narrator",
+        "expected": "narrator",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 219,
+        "prompt_tokens": 416,
+        "new_tokens": 258,
+        "seconds": 3.5946350839949446
+      },
+      {
+        "task_id": "3d854e0649e5ae09",
+        "case_id": "I2",
+        "condition": "swapped",
+        "seed": 17,
+        "kind": "outcome",
+        "state": "absent",
+        "expected": "sank_before_shore",
+        "match": false,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 113,
+        "prompt_tokens": 259,
+        "new_tokens": 133,
+        "seconds": 1.903739957997459
+      },
+      {
+        "task_id": "2c3983a2686a53de",
+        "case_id": "I2",
+        "condition": "direct",
+        "seed": 29,
+        "kind": "actor",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 82,
+        "prompt_tokens": 82,
+        "new_tokens": 104,
+        "seconds": 1.4119187080068514
+      },
+      {
+        "task_id": "ecdd05ab0fd8e95c",
+        "case_id": "I1",
+        "condition": "original",
+        "seed": 29,
+        "kind": "location",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 75,
+        "prompt_tokens": 228,
+        "new_tokens": 94,
+        "seconds": 1.3363269580004271
+      },
+      {
+        "task_id": "e4dfacabd37b3f63",
+        "case_id": "I2",
+        "condition": "paraphrase",
+        "seed": 29,
+        "kind": "actor",
+        "state": "sister",
+        "expected": "sister",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 100,
+        "prompt_tokens": 415,
+        "new_tokens": 118,
+        "seconds": 1.737554249993991
+      },
+      {
+        "task_id": "8bb664042da8e9b1",
+        "case_id": "I1",
+        "condition": "anchor",
+        "seed": 17,
+        "kind": "location",
+        "state": "under_chair",
+        "expected": "under_chair",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 87,
+        "prompt_tokens": 242,
+        "new_tokens": 108,
+        "seconds": 1.5221233330084942
+      },
+      {
+        "task_id": "d67cef63a4a12c19",
+        "case_id": "I3",
+        "condition": "original",
+        "seed": 17,
+        "kind": "outcome",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 62,
+        "prompt_tokens": 246,
+        "new_tokens": 78,
+        "seconds": 1.3209691669908352
+      },
+      {
+        "task_id": "e7ff1e16cc0b5689",
+        "case_id": "I2",
+        "condition": "paraphrase",
+        "seed": 17,
+        "kind": "actor",
+        "state": "sister",
+        "expected": "sister",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 224,
+        "prompt_tokens": 415,
+        "new_tokens": 269,
+        "seconds": 3.736494832992321
+      },
+      {
+        "task_id": "3d668b642eeebd14",
+        "case_id": "I1",
+        "condition": "paraphrase",
+        "seed": 29,
+        "kind": "location",
+        "state": "under_chair",
+        "expected": "under_chair",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 162,
+        "prompt_tokens": 243,
+        "new_tokens": 191,
+        "seconds": 2.7423880409915
+      },
+      {
+        "task_id": "bebc6a96a1808f31",
+        "case_id": "I2",
+        "condition": "original",
+        "seed": 29,
+        "kind": "actor",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 162,
+        "prompt_tokens": 402,
+        "new_tokens": 192,
+        "seconds": 2.8435835409909487
+      },
+      {
+        "task_id": "4ebbc5f1bca00236",
+        "case_id": "I2",
+        "condition": "direct",
+        "seed": 17,
+        "kind": "actor",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 146,
+        "prompt_tokens": 82,
+        "new_tokens": 174,
+        "seconds": 2.3383509589912137
+      },
+      {
+        "task_id": "c42cbfa49720f493",
+        "case_id": "I2",
+        "condition": "anchor",
+        "seed": 29,
+        "kind": "actor",
+        "state": "sister",
+        "expected": "sister",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 108,
+        "prompt_tokens": 416,
+        "new_tokens": 128,
+        "seconds": 1.8714287500042701
+      },
+      {
+        "task_id": "645d08e1fd2942f5",
+        "case_id": "I3",
+        "condition": "swapped",
+        "seed": 29,
+        "kind": "location",
+        "state": "under_chair",
+        "expected": "under_chair",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 63,
+        "prompt_tokens": 244,
+        "new_tokens": 77,
+        "seconds": 1.1717007090046536
+      },
+      {
+        "task_id": "57636b86b7643715",
+        "case_id": "I3",
+        "condition": "direct",
+        "seed": 29,
+        "kind": "outcome",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": false,
+        "truncated": true,
+        "answer_words": 199,
+        "prompt_tokens": 84,
+        "new_tokens": 1024,
+        "seconds": 14.444687167007942
+      },
+      {
+        "task_id": "cc5393df2c54e9e3",
+        "case_id": "I3",
+        "condition": "paraphrase",
+        "seed": 29,
+        "kind": "outcome",
+        "state": "sank_before_shore",
+        "expected": "sank_before_shore",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 134,
+        "prompt_tokens": 256,
+        "new_tokens": 159,
+        "seconds": 2.201696083007846
+      },
+      {
+        "task_id": "30b87c9f91753a74",
+        "case_id": "I1",
+        "condition": "swapped",
+        "seed": 29,
+        "kind": "actor",
+        "state": "sister",
+        "expected": "sister",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 106,
+        "prompt_tokens": 416,
+        "new_tokens": 130,
+        "seconds": 2.0888648749969434
+      },
+      {
+        "task_id": "2b5972375e9dba4a",
+        "case_id": "I2",
+        "condition": "anchor",
+        "seed": 17,
+        "kind": "actor",
+        "state": "sister",
+        "expected": "sister",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 237,
+        "prompt_tokens": 416,
+        "new_tokens": 284,
+        "seconds": 4.0840008329978446
+      },
+      {
+        "task_id": "79beb6e0b0613d3b",
+        "case_id": "I1",
+        "condition": "direct",
+        "seed": 17,
+        "kind": "location",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 32,
+        "prompt_tokens": 82,
+        "new_tokens": 44,
+        "seconds": 0.6385499580064788
+      },
+      {
+        "task_id": "f9d7a4aedaef9663",
+        "case_id": "I2",
+        "condition": "original",
+        "seed": 17,
+        "kind": "actor",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 170,
+        "prompt_tokens": 402,
+        "new_tokens": 205,
+        "seconds": 2.885439916004543
+      },
+      {
+        "task_id": "146aec9a2558d260",
+        "case_id": "I1",
+        "condition": "swapped",
+        "seed": 17,
+        "kind": "actor",
+        "state": "absent",
+        "expected": "sister",
+        "match": false,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 197,
+        "prompt_tokens": 416,
+        "new_tokens": 235,
+        "seconds": 3.311949334005476
+      },
+      {
+        "task_id": "972a6859a0b8bffa",
+        "case_id": "I3",
+        "condition": "swapped",
+        "seed": 17,
+        "kind": "location",
+        "state": "under_chair",
+        "expected": "under_chair",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 57,
+        "prompt_tokens": 244,
+        "new_tokens": 71,
+        "seconds": 1.042503457996645
+      },
+      {
+        "task_id": "f1a81eaa9265a86d",
+        "case_id": "I2",
+        "condition": "edited",
+        "seed": 17,
+        "kind": "actor",
+        "state": "narrator",
+        "expected": "narrator",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 234,
+        "prompt_tokens": 416,
+        "new_tokens": 282,
+        "seconds": 3.902034500002628
+      },
+      {
+        "task_id": "b7fdf7232ee2f899",
+        "case_id": "I1",
+        "condition": "anchor",
+        "seed": 29,
+        "kind": "location",
+        "state": "under_chair",
+        "expected": "under_chair",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 87,
+        "prompt_tokens": 242,
+        "new_tokens": 108,
+        "seconds": 1.5258523340016836
+      },
+      {
+        "task_id": "eab0c839ff75e421",
+        "case_id": "I3",
+        "condition": "edited",
+        "seed": 29,
+        "kind": "outcome",
+        "state": "reached_without_sinking",
+        "expected": "reached_without_sinking",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 98,
+        "prompt_tokens": 260,
+        "new_tokens": 124,
+        "seconds": 1.7999375829967903
+      },
+      {
+        "task_id": "60a25274109a76b9",
+        "case_id": "I1",
+        "condition": "direct",
+        "seed": 29,
+        "kind": "location",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 23,
+        "prompt_tokens": 82,
+        "new_tokens": 35,
+        "seconds": 0.5318892079958459
+      },
+      {
+        "task_id": "3bdf5938fb6f0415",
+        "case_id": "I2",
+        "condition": "swapped",
+        "seed": 29,
+        "kind": "outcome",
+        "state": "sank_before_shore",
+        "expected": "sank_before_shore",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 59,
+        "prompt_tokens": 259,
+        "new_tokens": 73,
+        "seconds": 1.0911699580028653
+      },
+      {
+        "task_id": "57f2190a20993a4b",
+        "case_id": "I3",
+        "condition": "paraphrase",
+        "seed": 17,
+        "kind": "outcome",
+        "state": "sank_before_shore",
+        "expected": "sank_before_shore",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 53,
+        "prompt_tokens": 256,
+        "new_tokens": 66,
+        "seconds": 0.9794103750027716
+      },
+      {
+        "task_id": "cad9402ab153152e",
+        "case_id": "I3",
+        "condition": "original",
+        "seed": 29,
+        "kind": "outcome",
+        "state": "absent",
+        "expected": "absent",
+        "match": true,
+        "format_valid": true,
+        "truncated": false,
+        "answer_words": 86,
+        "prompt_tokens": 246,
+        "new_tokens": 110,
+        "seconds": 1.5484707089926815
+      }
+    ],
+    "parameters_unchanged": true,
+    "optimizer_created": false,
+    "training_updates": 0,
+    "fresh_cache_per_generation": true,
+    "original_dream_text_preserved": true,
+    "prefixes_reencoded": true,
+    "annotations_hash": "4abb0a1e444dfff022cceda6629e66f8fca9dd678e57ecc0bef03ca6ee3b8c55",
+    "tasks_hash": "41487189f20214a1c4c80a99e24211dc03ddbcd82fd05651b165bfc6df309d95",
+    "caution": "Artificial appended probes and small sample: conditional sensitivity is not a demonstration of natural full retelling fidelity, quality benefit, diversity benefit or subjective experience. Two paraphrases retell the boat alone. Direct generation changes instruction and input length, and is not cost-matched."
+  },
+  "training_updates": 0,
+  "test_reports_used": 0,
+  "reference_in_generator_prompt": false,
+  "new_reward_selected": false,
+  "human_independent_validation": false
+}

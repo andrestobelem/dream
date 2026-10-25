@@ -5,13 +5,31 @@ cuente lo soñado dentro de `<answer>`**, aprendiendo de relatos humanos de Drea
 Sólo se trabaja con Dream, sin comparación con think ni problemas de aritmética.
 
 El generador recibe semillas naturales breves y la longitud aproximada del relato esperado.
-La referencia humana completa queda fuera del prompt. El contenido de dream es libre: no
-se evalúa su significado ni se exige fidelidad detallada entre bloques.
+La referencia humana completa queda fuera del prompt. El contenido de dream es libre:
+no se le exige reproducir esa referencia ni se impone fidelidad detallada entre bloques
+como recompensa. La calidad de sus escenas y su uso por answer se examinan como diagnóstico.
 
-En el ensayo actual, la recompensa depende de la similitud de answer con **su referencia
+En el último entrenamiento completado, la recompensa dependió de la similitud de answer con **su referencia
 humana asociada**: `(1 + coseno) / 2`, usando MiniLM congelado. GRPO asigna esa recompensa a
 todos los tokens muestreados, incluidos los del bloque de sueño. No hay penalización por
 coincidencias textuales ni por diferencias de longitud. Un formato inválido recibe cero.
+
+## Diagnóstico actual: escenas y uso de dream
+
+El [diagnóstico v19](docs/diagnostico-dream-v19.md) revisó seis pares de bloques dream:
+ya contienen escenas; preferí el 32 en tres, el 160 en uno y empaté dos. Es revisión del
+asistente en desarrollo, no validación humana independiente ni una estimación general.
+
+Se generaron **36 answers sin entrenar**, interviniendo ubicación, actor y desenlace dentro
+de dream. El detalle agregado se conservó completo en 5/6, el cambiado en 5/6 y su paráfrasis
+en 6/6. Ambos lados de una edición se siguieron completamente en 4/6 pares. Hay dependencia
+textual, sin demostrar ventaja de calidad o costo frente a generación directa.
+
+El juez de calidad no pasó la calibración: 12/24 salidas con esquema válido y 3/10
+presentaciones de controles acertadas. No se eligió una recompensa nueva ni se cambiaron
+pérdidas por segmento, penalizaciones o pesos. La cercanía a la referencia queda como
+diagnóstico histórico; el siguiente trabajo propuesto son preferencias de calidad revisadas
+sobre material de entrenamiento. Los 200 relatos de prueba siguen sin usarse.
 
 ## Último experimento completado
 
@@ -116,6 +134,7 @@ el [experimento ampliado](docs/experimento-ampliado-v17.md).
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Escenas, calidad e intervenciones sobre dream](docs/diagnostico-dream-v19.md).
 - [Revisión asistida de doce pares y límites del juez](docs/revision-v18.md).
 - [Experimento ampliado: una pasada por 128 relatos](docs/experimento-ampliado-v17.md).
 - [Preparación del lote de 128 y diagnóstico de longitud](docs/preparacion-v16.md).

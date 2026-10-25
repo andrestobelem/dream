@@ -4,6 +4,28 @@ Estado al 25 de octubre de 2026: experimento ampliado completado, desde el check
 hasta el 160. Los pasos 33–160 recorrieron una sola vez los 128 relatos aprobados.
 La comparación no mostró una mejora convincente; el 32 sigue como referencia práctica.
 
+Diagnóstico posterior v19 completado: revisión de calidad de dream, calibración de juez
+y 36 continuaciones con intervenciones textuales. Sin entrenamiento; el evaluador no pasó
+la calibración y no se eligió una recompensa nueva.
+
+## Escenas y dependencia textual: diagnóstico completado
+
+- [x] Revisar seis pares de bloques dream, uno por grupo y fuera de las referencias de v18.
+- [x] Conservar notas congeladas antes de revelar las procedencias; revisión del asistente.
+- [x] Evaluar seis contrastes de calidad y los seis pares de modelo en ambos órdenes.
+- [x] Fijar tres pedidos, seis condiciones y dos semillas; generar 36 answers con el checkpoint 32 congelado.
+- [x] Comprobar cambios de ubicación, actor y desenlace, paráfrasis, intercambio de dream y generación directa.
+- [x] Congelar las etiquetas de los hechos antes de revelar las condiciones; conservar la salida fallida.
+- [x] Auditar pesos intactos, adaptadores exactos, contextos nuevos y ausencia de referencias completas en el prompt.
+- [ ] Preparar preferencias revisadas sobre material de entrenamiento y definir su piloto antes de actualizar pesos.
+
+Los doce bloques de modelo ya presentan contenido escénico. Preferencias: 32 en tres pares,
+160 en uno, dos empates. En las intervenciones, detalle agregado 5/6, cambiado 5/6,
+paráfrasis 6/6; ambos lados del cambio correctos en 4/6. Esto prueba sensibilidad textual
+limitada, no mejora de calidad frente a generación directa. El juez sólo completó 12/24
+evaluaciones y acertó 3/10 presentaciones de controles. [Resultados y límites](diagnostico-dream-v19.md).
+La fidelidad entre bloques se mantuvo como diagnóstico, sin transformarla en requisito de recompensa.
+
 ## Experimento ampliado aprobado
 
 - [x] Lote revisado de 128 relatos aprobado por el usuario, sin personas reservadas.
@@ -43,16 +65,21 @@ No se entrenó ni se usaron los 200 relatos de prueba. [Revisión y decisión](r
 
 Pedirle a Qwen3-1.7B-Base que sueñe dentro de `<dream>` y cuente lo soñado dentro de
 `<answer>`. Sólo D, sin comparación con think ni aritmética. El contenido del sueño queda
-libre. No se evalúa su significado ni la fidelidad detallada del relato respecto de él.
+libre. No se exige que reproduzca una referencia humana ni se impone fidelidad detallada
+entre bloques como recompensa. V19 examina escenas y dependencia textual como diagnóstico.
 
 La consigna usa la plantilla de conversación propuesta por el usuario, semillas naturales
 cortas y el tamaño aproximado del relato esperado. La referencia humana completa se
 mantiene fuera del prompt. La apertura de dream pertenece a la entrada; el modelo genera
 el contenido, los cierres y el relato final, sin un ejemplo resuelto.
 
-El objetivo de la corrida aprobada es acercar answer a **su relato humano asociado** mediante
+El objetivo de la última corrida entrenada (v17) fue acercar answer a **su relato humano asociado** mediante
 embeddings. Esa recompensa alcanza todos los tokens muestreados. No hay castigo automático
 por similitud alta o copia, ni una recompensa adicional por longitud. Formato inválido: cero.
+
+La etapa actual (v19) examina calidad de las escenas y dependencia textual sin entrenar.
+No usa la cercanía a una referencia particular como medida de calidad onírica, y no impone
+fidelidad entre bloques como una nueva recompensa. No se modificó el backend ni el reparto de crédito.
 
 ## Implementación comprobada
 

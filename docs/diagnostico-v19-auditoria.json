@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "quality_review_frozen_before_model_key": true,
+  "probe_labels_frozen_before_condition_key": true,
+  "independent_human_review": false,
+  "quality_judge_parameters_unchanged": true,
+  "generator_parameters_unchanged": true,
+  "adapter_loaded_exactly": true,
+  "answers": 36,
+  "fresh_contexts": 36,
+  "original_dream_text_checked": true,
+  "no_reference_in_generator_prompt": true,
+  "optimizer_created": false,
+  "training_updates": 0,
+  "test_reports_used": 0,
+  "intervention_script_sha256": "e1fcccabf012f128b5ea2b97239a3488ab4d7e846211db253ef9e12cec1106f3",
+  "core_matches_saved_snapshot": true
+}
