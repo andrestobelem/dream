@@ -10,6 +10,31 @@ from .report import collect, write_csv
 from .storage import digest, read_json, read_jsonl
 
 
+def percent(value):
+    return "—" if value is None else f"{100 * value:.1f}"
+
+
+def paired_statistics(before, after, common):
+    result = {}
+    for key in [
+        "dream_likeness",
+        "reference_alignment",
+        "content_compliance",
+        "retelling_fidelity",
+        "quality",
+        "format",
+        "total",
+    ]:
+        differences = [
+            after[p]["reward"][key] - before[p]["reward"][key]
+            for p in common
+            if after[p]["reward"].get(key) is not None and before[p]["reward"].get(key) is not None
+        ]
+        result[f"n_pairs_{key}"] = len(differences)
+        result[f"delta_{key}"] = statistics.mean(differences) if differences else None
+    return result
+
+
 def report(root):
     dream = root / "dream"
     output = dream / "report"
@@ -19,8 +44,9 @@ def report(root):
         "",
         (
             "El modelo produce una escena dentro de `<dream>` y cuenta ese sueño dentro de `<answer>`. "
-            "Un juez local congelado mide semejanza con relatos humanos, alineación con la referencia "
-            "y fidelidad de la narración a la escena previa."
+            "Se reportan carácter onírico, cumplimiento y fidelidad por separado, según la rúbrica "
+            "guardada en cada corrida. Las medias excluyen dimensiones no puntuadas; su cobertura "
+            "se conserva en el CSV. Una abstención no cuenta como cero."
         ),
         "",
     ]
@@ -81,6 +107,17 @@ def report(root):
             "",
         ]
     tables, steps_table, examples, paired = [], [], [], []
+    protocols = set()
+    closed_check = dream / "closed-check.json"
+    if closed_check.exists():
+        c = read_json(closed_check)
+        text += [
+            (
+                f"Juez cerrado: **{c['expected_cases_passed']}/{c['n_cases']}** situaciones coincidentes. "
+                "La repetibilidad técnica no demuestra corrección semántica. Entrenamiento no habilitado por este diagnóstico."
+            ),
+            "",
+        ]
     anchor_check = dream / "anchor-calibration.json"
     if anchor_check.exists():
         controls = read_json(anchor_check)
@@ -94,6 +131,7 @@ def report(root):
         if "diagnostics" in path.relative_to(dream).parts:
             continue
         manifest = read_json(path)
+        protocols.add(manifest.get("config", {}).get("judge", {}).get("rubric_version"))
         folder = path.parent
         records, steps = collect(folder)
         label = str(folder.relative_to(dream))
@@ -102,8 +140,8 @@ def report(root):
             "",
             f"Estado: **{manifest['status']}**. Pasos guardados: **{len(steps)}**.",
             "",
-            "| Fase | Condición | Relatos / n | Onírico total /100 | Sólo relatos /100 | Referencia /100 | Cumplimiento válido /100 | Fidelidad /100 | Formato |",
-            "|---|---|---:|---:|---:|---:|---:|---:|---:|",
+            "| Fase | Condición | Relatos / n | Reward / n | Onírico /100 | Sólo relatos /100 | Referencia /100 | Cumplimiento válido /100 | Fidelidad /100 | Formato |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
         groups = defaultdict(list)
         for r in records:
@@ -124,17 +162,15 @@ def report(root):
         for (phase, condition), values in sorted(groups.items()):
             s = summarize(values)
             tables.append({"run": label, "phase": phase, "condition": condition, **s})
-            fidelity_display = (
-                "—" if condition == "neutral" else f"{100 * s['retelling_fidelity']:.1f}"
-            )
+            fidelity_display = "—" if condition == "neutral" else percent(s["retelling_fidelity"])
             valid_display = (
                 "—"
                 if s["valid_dream_likeness"] is None
                 else f"{100 * s['valid_dream_likeness']:.1f}"
             )
             text.append(
-                f"| {phase} | {condition} | {s['n_valid_answers']}/{s['n']} | {100 * s['dream_likeness']:.1f} | {valid_display} | "
-                f"{100 * s['reference_alignment']:.1f} | "
+                f"| {phase} | {condition} | {s['n_valid_answers']}/{s['n']} | {s['n_reward_scored']}/{s['n']} | {percent(s['dream_likeness'])} | {valid_display} | "
+                f"{percent(s['reference_alignment'])} | "
                 + (
                     f"{100 * s['valid_content_compliance']:.1f}"
                     if s.get("valid_content_compliance") is not None
@@ -153,17 +189,7 @@ def report(root):
                         "seed": manifest["seed"],
                         "condition": condition,
                         "n_pairs": len(common),
-                        **{
-                            f"delta_{k}": statistics.mean(
-                                after[p]["reward"][k] - before[p]["reward"][k] for p in common
-                            )
-                            for k in [
-                                "dream_likeness",
-                                "reference_alignment",
-                                "retelling_fidelity",
-                                "quality",
-                            ]
-                        },
+                        **paired_statistics(before, after, common),
                     }
                 )
         if (
@@ -226,7 +252,15 @@ def report(root):
             ),
             "",
         ]
-    if steps_table and tables and calls:
+    if steps_table and tables and "dream-v4" in protocols:
+        write_json(
+            output / "estimate.json",
+            {
+                "status": "pending_closed_benchmark",
+                "limitations": "La clasificación por fragmentos y requisitos no se extrapola como tres generaciones de juez por relato.",
+            },
+        )
+    elif steps_table and tables and calls:
         generation_per_item = statistics.mean(
             t["generation_seconds"] / t["n"] for t in tables if t["n"]
         )
@@ -273,8 +307,8 @@ def report(root):
         ),
         "",
         (
-            "El juez comparte familia con el generador y puede tener sesgos de estilo. La revisión humana ciega "
-            "y un segundo juez independiente quedan pendientes antes de afirmar una mejora del experimento largo."
+            "La revisión humana ciega y el contraste con otro juez quedan pendientes antes de afirmar una mejora. "
+            "La independencia entre generador y juez depende de los modelos fijados en cada protocolo."
         ),
         "",
     ]
@@ -299,10 +333,14 @@ def plot_scores(output, rows):
                 ("reward_dream_likeness", "onírico"),
                 ("reward_reference_alignment", "referencia"),
                 ("reward_retelling_fidelity", "fidelidad"),
+                ("reward_content_compliance", "cumplimiento"),
             ]:
+                scored = [v for v in values if v.get(dimension) is not None]
+                if not scored:
+                    continue
                 axis.plot(
-                    [v[field] for v in values],
-                    [v[dimension] for v in values],
+                    [v[field] for v in scored],
+                    [v[dimension] for v in scored],
                     label=f"{name}: {label}",
                 )
             axis.set(ylim=(-0.05, 1.05), ylabel="Score normalizado")
@@ -332,7 +370,7 @@ def blind_review(dream, examples):
             "phase": e["phase"],
             "condition": e["condition"],
             "problem_id": e["problem_id"],
-            "judge_score": e["dream_likeness"] * 4,
+            "judge_score": None if e["dream_likeness"] is None else e["dream_likeness"] * 4,
         }
     for key, row in human.items():
         if key in generated:

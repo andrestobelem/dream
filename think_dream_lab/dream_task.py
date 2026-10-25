@@ -72,6 +72,7 @@ def extract_blocks(text, condition):
         valid = (
             bool(answer)
             and re.fullmatch(r"\s*<answer>.*?</answer>\s*", text, re.DOTALL) is not None
+            and re.search(r"</?(?:think|dream|answer)>", answer) is None
         )
         return {"draft": "", "answer": answer, "format": int(valid)}
     _, tag = CONDITIONS[condition]
@@ -94,26 +95,49 @@ def extract_blocks(text, condition):
 
 def combine_scores(ratings, format_score, config, *, neutral=False):
     r = config["reward"]
+    protocol = config["judge"].get("rubric_version")
+    v4 = protocol == "dream-v4"
     dimensions = {
-        k: ratings[k] / 4 for k in ["dream_likeness", "reference_alignment", "retelling_fidelity"]
+        k: None if ratings[k] is None else ratings[k] / 4
+        for k in ["dream_likeness", "reference_alignment", "retelling_fidelity"]
     }
-    v3 = config["judge"].get("rubric_version") == "dream-v3"
-    alignment_key = "content_compliance" if v3 else "reference_alignment"
-    if v3:
-        dimensions["content_compliance"] = ratings["content_compliance"] / 4
-    quality = sum(
-        r[k] * dimensions[k] for k in ["dream_likeness", alignment_key, "retelling_fidelity"]
+    alignment_key = (
+        "content_compliance" if protocol in {"dream-v3", "dream-v4"} else "reference_alignment"
     )
-    if neutral:
-        # Sin escena previa, se reporta calidad en dos dimensiones; no se finge fidelidad.
-        quality = (
-            r["dream_likeness"] * dimensions["dream_likeness"]
-            + r[alignment_key] * dimensions[alignment_key]
-        ) / (r["dream_likeness"] + r[alignment_key])
-    return {
+    if alignment_key == "content_compliance":
+        value = ratings["content_compliance"]
+        dimensions[alignment_key] = None if value is None else value / 4
+    required = ["dream_likeness", alignment_key] + ([] if neutral else ["retelling_fidelity"])
+    quality = (
+        None
+        if any(dimensions[k] is None for k in required)
+        else sum(r[k] * dimensions[k] for k in required)
+    )
+    if neutral and quality is not None:
+        quality /= sum(r[k] for k in required)
+    total = (
+        None
+        if quality is None
+        else r["quality_weight"] * quality + r["format_weight"] * int(format_score)
+    )
+    if v4 and not format_score:
+        # Falta de estructura comprobada, independiente de cualquier incertidumbre semántica.
+        total = 0.0
+    result = {
         **dimensions,
         "quality": quality,
         "format": int(format_score),
-        "total": r["quality_weight"] * quality + r["format_weight"] * int(format_score),
+        "total": total,
         "neutral_formula": neutral,
     }
+    if v4:
+        result.update(
+            scoring_protocol=protocol,
+            score_status="invalid_format"
+            if not format_score
+            else "abstained"
+            if total is None
+            else "scored",
+            unscored_dimensions=[k for k, v in result.items() if v is None],
+        )
+    return result

@@ -38,11 +38,22 @@ def _supervise(config, root: Path, worker_args: list[str]):
         "DO_NOT_TRACK": "1",
         "TOKENIZERS_PARALLELISM": "false",
         "MPLBACKEND": "Agg",
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "MLX_ENABLE_TF32": "0",
     }
+    from .provenance import freeze_source
+
+    frozen = freeze_source(root, config)
+    actual_args = list(worker_args)
+    if "--config" in actual_args:
+        actual_args[actual_args.index("--config") + 1] = frozen["config_path"]
+    else:
+        actual_args += ["--config", frozen["config_path"]]
+    launcher = "import runpy,sys; sys.path.insert(0,sys.argv.pop(1)); runpy.run_module('think_dream_lab',run_name='__main__',alter_sys=True)"
     baseline_swap = telemetry()["swap_used_bytes"]
     start = time.monotonic()
     process = subprocess.Popen(
-        [sys.executable, "-m", "think_dream_lab", "_worker", *worker_args],
+        [sys.executable, "-c", launcher, frozen["directory"], "_worker", *actual_args],
         env=environment,
         start_new_session=True,
     )
@@ -51,6 +62,7 @@ def _supervise(config, root: Path, worker_args: list[str]):
         "args": worker_args,
         "reserved_seconds": remaining,
         "started_at": time.time(),
+        "source_snapshot": frozen,
     }
     # Reservar todo evita reiniciar presupuesto si se mata al supervisor.
     write_json(

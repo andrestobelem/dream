@@ -68,7 +68,9 @@ def contract_brief(judge, row):
     items = validate_anchors(value["anchors"], row["reference"])
     # Las citas de procedencia quedan en el registro del juez, fuera de la consigna.
     visible = [{k: item[k] for k in ["id", "kind", "requirement"]} for item in items]
-    return PREFIX + protected_json({"version": VERSION, "anchors": visible})
+    return PREFIX + protected_json(
+        {"version": getattr(judge, "spec", {}).get("rubric_version", VERSION), "anchors": visible}
+    )
 
 
 def visible_anchors(brief):
@@ -77,7 +79,7 @@ def visible_anchors(brief):
     if not isinstance(brief, str) or not brief.startswith(PREFIX):
         raise ValueError("Falta la consigna con contrato visible dream-v3.")
     contract = parse_json(brief[len(PREFIX) :])
-    if set(contract) != {"version", "anchors"} or contract["version"] != VERSION:
+    if set(contract) != {"version", "anchors"} or contract["version"] not in {VERSION, "dream-v4"}:
         raise ValueError("Versión de contrato inválida.")
     items = contract["anchors"]
     if not isinstance(items, list) or any(

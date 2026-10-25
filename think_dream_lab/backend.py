@@ -341,6 +341,9 @@ class Runner:
             (completions, texts, indices), records = self.generate(
                 row, condition, count=t["group_size"]
             )
+            from .uncertainty import dimension_metrics, require_scored_group
+
+            require_scored_group(records, folder, step)
             prompt_text = self.render_prompt(row, condition)
             prompt_ids = self.encode(prompt_text)
             batch = (
@@ -425,17 +428,7 @@ class Runner:
                     else {}
                 ),
                 "reward_total": float(np.mean(totals)),
-                **{
-                    f"reward_{key}": float(np.mean([r["reward"][key] for r in records]))
-                    for key in [
-                        "quality",
-                        "dream_likeness",
-                        "reference_alignment",
-                        "content_compliance",
-                        "retelling_fidelity",
-                    ]
-                    if key in records[0]["reward"]
-                },
+                **dimension_metrics(records),
                 "format": np.mean([r["reward"]["format"] for r in records]).item(),
                 "variable_reward": len(set(totals)) > 1,
                 "advantages": advantages.tolist(),

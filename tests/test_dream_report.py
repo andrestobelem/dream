@@ -70,3 +70,68 @@ def test_quality_is_separate_from_output_coverage():
     assert result["n_valid_answers"] == 1 and result["n"] == 2
     assert result["dream_likeness"] == 0.375
     assert result["valid_dream_likeness"] == 0.75
+
+
+def test_report_preserves_unscored_values_and_counts(tmp_path):
+    import csv
+
+    from think_dream_lab.dream_report import report
+    from think_dream_lab.storage import read_json, write_json
+
+    dream = tmp_path / "dream"
+    folder = dream / "evaluations/probe"
+    write_json(
+        folder / "run.json",
+        {
+            "status": "complete",
+            "kind": "dream_evaluation",
+            "seed": 4242,
+            "config": {"judge": {"rubric_version": "dream-v4"}},
+        },
+    )
+    append_jsonl(
+        dream / "data/validation.jsonl", {"problem_id": "p", "reference": "A human scene."}
+    )
+    append_jsonl(
+        folder / "responses.jsonl",
+        {
+            "phase": "before",
+            "step": 0,
+            "condition": "D",
+            "problem_id": "p",
+            "candidate": 0,
+            "text": "<dream>A.</dream><answer>A retelling.</answer>",
+            "tokens": 10,
+            "latency_seconds": 1,
+            "truncated": False,
+            "reward": {
+                "dream_likeness": 0.75,
+                "reference_alignment": None,
+                "content_compliance": 0.5,
+                "retelling_fidelity": None,
+                "quality": None,
+                "format": 1,
+                "total": None,
+                "answer_words": 2,
+                "score_status": "abstained",
+            },
+        },
+    )
+    report(tmp_path)
+    with (dream / "report/evaluations.csv").open(newline="") as stream:
+        row = next(csv.DictReader(stream))
+    assert row["total"] == "" and row["retelling_fidelity"] == ""
+    assert row["n_reward_scored"] == "0" and row["n_abstained"] == "1"
+    assert read_json(dream / "report/examples.json")[0]["total"] is None
+
+
+def test_paired_deltas_use_only_available_pairs_with_their_counts():
+    from think_dream_lab.dream_report import paired_statistics
+
+    before = {"p1": {"reward": {"quality": 0.4}}, "p2": {"reward": {"quality": 0.8}}}
+    after = {"p1": {"reward": {"quality": 0.6}}, "p2": {"reward": {"quality": None}}}
+    result = paired_statistics(before, after, before.keys())
+    assert result["n_pairs_quality"] == 1 and abs(result["delta_quality"] - 0.2) < 1e-9
+    assert (
+        result["n_pairs_reference_alignment"] == 0 and result["delta_reference_alignment"] is None
+    )

@@ -219,7 +219,7 @@ class Judge:
         }
 
     def brief(self, row):
-        if getattr(self, "spec", {}).get("rubric_version") == "dream-v3":
+        if getattr(self, "spec", {}).get("rubric_version") in {"dream-v3", "dream-v4"}:
             from .anchors import contract_brief
 
             return contract_brief(self, row)
@@ -253,7 +253,11 @@ class Judge:
             f"Content anchors: {text}. Dream type labels: {', '.join(categories) or 'unspecified'}."
         )
 
-    def rate(self, reference, draft, answer, *, brief=None):
+    def rate(self, reference, draft, answer, *, brief=None, neutral=False):
+        if getattr(self, "spec", {}).get("rubric_version") == "dream-v4":
+            from .closed_task import rate_closed
+
+            return rate_closed(self, draft, answer, brief, neutral=neutral)
         if getattr(self, "spec", {}).get("rubric_version") == "dream-v3":
             from .anchors import assess
 

@@ -12,11 +12,13 @@ BACKEND_COMMIT = "4fa3c5148b17a5833b3074e4e58c6299baec1018"
 
 
 def load_config(path: str | Path) -> dict:
-    config = yaml.safe_load(Path(path).read_text())
+    path = Path(path)
+    config = read_json(path) if path.suffix == ".json" else yaml.safe_load(path.read_text())
     if config["model"]["id"] not in {"Qwen/Qwen3-1.7B-Base", "HuggingFaceTB/SmolLM2-1.7B"}:
         raise ValueError("El modelo debe pertenecer a los checkpoints base registrados.")
-    if config["conditions"] != ["A", "B", "C", "D"]:
-        raise ValueError("Se requieren las cuatro condiciones en orden A/B/C/D.")
+    dream_only = config.get("task") == "dream" and config["conditions"] == ["D"]
+    if not dream_only and config["conditions"] != ["A", "B", "C", "D"]:
+        raise ValueError("Usá [D] para Dream o [A, B, C, D] para el protocolo histórico.")
     if len(config["seeds"]) != 3 or len(set(config["seeds"])) != 3:
         raise ValueError("Se requieren tres semillas distintas.")
     if config["training"]["loss_type"] != "grpo":
@@ -128,6 +130,9 @@ def implementation_manifest():
         "dream_verification.py",
         "closed_judge.py",
         "base_check.py",
+        "closed_task.py",
+        "uncertainty.py",
+        "provenance.py",
     ]
     files = {name: hashlib.sha256((package / name).read_bytes()).hexdigest() for name in names}
     lockfile = package.parent / "uv.lock"

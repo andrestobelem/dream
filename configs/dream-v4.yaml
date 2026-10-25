@@ -31,7 +31,7 @@ corpus:
   train: 1000
   validation: 100
   test: 200
-conditions: [A, B, C, D]
+conditions: [D]  # Soñar dentro de <dream> y relatarlo dentro de <answer>.
 seeds: [11, 22, 33]
 generation:
   max_tokens: 768

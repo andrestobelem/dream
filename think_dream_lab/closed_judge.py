@@ -1,6 +1,7 @@
 """Clasificación cerrada sin generar texto; umbrales y agregación explícitos."""
 
 import math
+import os
 import platform
 import statistics
 import time
@@ -102,6 +103,7 @@ class ClosedJudge:
             "mlx": version("mlx"),
             "mlx_lm": version("mlx-lm"),
             "logits_dtype": "float32",
+            "mlx_enable_tf32": os.environ.get("MLX_ENABLE_TF32", "default"),
         }
         self.implementation = implementation_manifest()["hash"]
 

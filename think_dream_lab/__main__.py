@@ -25,6 +25,7 @@ def parser():
         "anchor-holdout",
         "closed-check",
         "base-check",
+        "evaluate",
         "smoke",
         "experiment",
         "_worker",
@@ -42,8 +43,16 @@ def parser():
             )
         if command in ["experiment", "_worker"]:
             cmd.add_argument("--steps", type=int, required=command == "experiment")
-            cmd.add_argument("--condition", choices=["A", "B", "C", "D"])
+            cmd.add_argument(
+                "--condition",
+                choices=["A", "B", "C", "D"] + (["neutral"] if command == "_worker" else []),
+            )
             cmd.add_argument("--seed", type=int)
+        if command in {"evaluate", "_worker"}:
+            cmd.add_argument("--limit", type=int, default=1)
+            cmd.add_argument("--start-index", type=int, default=0)
+        if command == "evaluate":
+            cmd.add_argument("--condition", choices=["A", "B", "C", "D", "neutral"], default="D")
         if command == "_worker":
             cmd.add_argument(
                 "action",
@@ -56,6 +65,7 @@ def parser():
                     "anchor-holdout",
                     "closed-check",
                     "base-check",
+                    "evaluate",
                     "smoke",
                     "experiment",
                     "verify",
@@ -122,6 +132,8 @@ def main(argv=None):
             condition=args.condition,
             seed=args.seed,
             steps=args.steps,
+            limit=args.limit,
+            start_index=args.start_index,
         )
         return 0
     if args.command == "experiment":
@@ -150,6 +162,15 @@ def main(argv=None):
                 break
     else:
         extra = ["--resume"] if getattr(args, "resume", False) else []
+        if args.command == "evaluate":
+            extra = [
+                "--condition",
+                args.condition,
+                "--limit",
+                str(args.limit),
+                "--start-index",
+                str(args.start_index),
+            ]
         code = supervise(config, root, [args.command, *common, *extra])
         if not code and args.command == "smoke" and args.verify_continuity:
             from .storage import read_json
