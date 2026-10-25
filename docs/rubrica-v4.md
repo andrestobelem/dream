@@ -1,6 +1,6 @@
 # Juez de etiquetas cerradas
 
-`dream-v4` incorpora el generador base SmolLM2 y un evaluador cerrado para cumplimiento y fidelidad. Su implementación e integración todavía están en curso; el entrenamiento permanece deshabilitado.
+`dream-v4` incorpora el generador base SmolLM2 y un evaluador cerrado para cumplimiento y fidelidad. La integración está implementada; falta validar el evaluador y el entrenamiento permanece deshabilitado. El único recorrido activo es Soñar + `<dream>`, seguido de `<answer>`.
 
 ## Clasificación sin generación
 
@@ -16,7 +16,7 @@ El texto se divide en fragmentos contiguos identificados, con offsets verificabl
 
 Las reglas de agregación son fijas en Python. Una etiqueta demasiado próxima a la segunda o con masa insuficiente produce una abstención. También se abstiene ante fragmentos con juicios incompatibles o inciertos. Sin contenido, se registra la ausencia conocida; una abstención del juez es otro caso.
 
-Si algún requisito queda sin decidir, el score global es `None`, con cobertura y score condicional reportados por separado. Ese `None` no equivale a cero ni puede pasar directamente a GRPO. Falta integrar el manejo de abstenciones en generación, evaluación, entrenamiento e Inspect antes de habilitar el nuevo circuito.
+Si algún requisito queda sin decidir, el score global es `None`, con cobertura y score condicional reportados por separado. Ese `None` no equivale a cero ni puede pasar directamente a GRPO. El circuito conserva la abstención en los informes y en Inspect, y detiene el grupo completo antes de calcular ventajas o actualizar adaptadores. No elimina candidatos inciertos ni les imputa una recompensa.
 
 Los umbrales actuales de margen 0,15 y masa 0,05 son provisionales. Requieren calibración con pares revisados por humanos, validación independiente y un criterio de cobertura fijado antes de entrenar. La revisión de oniricidad de seis relatos no reemplaza las anotaciones necesarias para calibrar estas tres clases.
 
@@ -28,9 +28,19 @@ La repetibilidad técnica no demuestra corrección semántica: hubo errores ante
 
 El carácter onírico permanece separado, con revisión humana pendiente. No se presentan las evaluaciones automáticas como estados mentales, autenticidad humana o una escala clínica.
 
+## Contraste con un clasificador especializado
+
+El 25 de octubre se probó `cross-encoder/nli-deberta-v3-small`, revisión `fa2804872c3b4bd748f38c0185cc85775361e735`. Su [ficha oficial](https://huggingface.co/cross-encoder/nli-deberta-v3-small) describe una clasificación de pares en contradicción, implicación y neutralidad, entrenada con SNLI y MultiNLI. El relato se usó como premisa y el requisito como hipótesis; las clases se mapearon a contradicho, preservado y omitido.
+
+El resultado fue **26 de 32 pares y cinco de ocho situaciones completas**. Corrigió la emoción ausente, pero falló en dos paráfrasis, tres juicios de la lista de palabras y un juicio de la instrucción al evaluador. También obtuvo cinco de ocho situaciones al aplicar el margen provisional de 0,15. No se adoptó para la recompensa.
+
+Se ejecutó en CPU, float32, dos hilos y sin gradientes, con PyTorch 2.10.0 y Transformers 5.20.2 en un entorno local separado. La repetición del primer forward dio diferencia máxima de logits cero y los pesos permanecieron intactos. No generó texto. El supervisor del diagnóstico registró 38,18 segundos en el presupuesto acumulado de v4; no se reinició el presupuesto.
+
+El código está en [experiments/nli_probe.py](../experiments/nli_probe.py). Los datos de entrada, probabilidades por par, hashes y versiones están en `results/dream-v4/dream/nli-probe/`. Este contraste usa controles sintéticos ya inspeccionados durante desarrollo; no es una validación independiente ni una calibración humana. La correspondencia entre NLI y narración de experiencias tiene límites: una lista de palabras puede activar implicación sin constituir un sueño relatado.
+
 ## Próximos pasos
 
-1. Mejorar la corrección del clasificador y contrastar un modelo especializado en inferencia textual, sin ajustar los resultados para aprobar los controles iniciales.
+1. Mejorar la corrección del clasificador y verificar los cambios con ejemplos independientes. El primer contraste especializado no resolvió los errores.
 2. Preparar pares para anotación humana y calibrar umbrales, sesgos de etiquetas y cobertura; congelar el protocolo antes de la comparación.
-3. Integrar cumplimiento y fidelidad con reglas de abstención que nunca castiguen al generador por incertidumbre del juez.
+3. Revisar la integración de cumplimiento y fidelidad con los pares anotados; las reglas de abstención ya están implementadas.
 4. Repetir el piloto con SmolLM2 y verificar reanudación antes de ampliar el entrenamiento.
