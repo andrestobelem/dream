@@ -1,96 +1,42 @@
 # Plan de implementación de Dream
 
-Actualizado el 25 de octubre de 2026.
+Actualizado el 25 de octubre de 2026, después de la aclaración de alcance.
 
-El objetivo es generar una experiencia dentro de `<dream>` y contar esa misma experiencia en `<answer>`. Los relatos humanos del corpus sirven para construir las consignas y evaluar los resultados. El experimento de aritmética queda como antecedente técnico.
+## Objetivo actual
 
-El circuito histórico ejecutó un piloto de cinco actualizaciones GRPO con Qwen3 y `dream-v2`. El generador actual es SmolLM2-1.7B base, sin posentrenamiento de razonamiento. Se auditaron tokenizer, carga y generación, con pesos intactos y sin juez ni entrenamiento. El nuevo protocolo `dream-v4` usa clasificación cerrada por probabilidades y abstención para cumplimiento y fidelidad. La CLI lo selecciona por defecto y mantiene su entrenamiento bloqueado mientras se completa integración y calibración.
+Usar un modelo base sin posentrenamiento de razonamiento para **soñar dentro de `<dream>` y después contar ese sueño dentro de `<answer>`**. Aprender a partir de relatos humanos y evaluar qué tan oníricos son los relatos, si cumplen la consigna y si cuentan la experiencia escrita en el primer bloque.
 
-Estado verificado: 88 pruebas del proyecto y cinco de Inspect aprobadas. La primera prueba real del clasificador cerrado coincidió con cuatro de ocho situaciones y la última con cinco de ocho. Repitió exactamente los logits de etiquetas en un forward independiente y dejó los pesos intactos. La corrección semántica y los umbrales siguen sin validar. Los ensayos anteriores por JSON, selección de evidencia y razonamiento del juez quedaron registrados; ninguno habilitó entrenamiento. El contraste exploratorio con Phi falló en formato de respuesta y no se adoptó como evaluador.
+La única condición activa es **D: Soñar + `<dream>`**. Las variantes A/B/C y neutral se conservan como antecedentes; no forman parte de las corridas actuales. Tampoco se requiere la comparación de doce corridas del diseño anterior. La aritmética es un antecedente técnico.
 
-El [site ya presenta el proyecto](https://del-think-al-drean.andrestobelem.chatgpt.site/proyecto-dream), con el origen, corpus, método y límites de los resultados. La actualización del nuevo generador y evaluador se mantiene junto con esta revisión.
+## Hecho
 
-## Implementado
+- [x] Repositorio público con licencia MIT y configuración de Python.
+- [x] Corpus DreamViews: 1.000 relatos de entrenamiento, 100 de validación y 200 de prueba, separados por autor; categorías originales conservadas.
+- [x] Consignas derivadas de los relatos, con requisitos visibles para el generador y el evaluador.
+- [x] SmolLM2-1.7B base con revisión fijada; carga, tokenización y generación comprobadas. `<dream>` no es un token especial ni un modo de razonamiento del modelo.
+- [x] Generación en dos bloques y extracción de escena y relato.
+- [x] Configuración actual limitada a D; el piloto y el entrenamiento con esta configuración tampoco agregan la evaluación neutral.
+- [x] Implementación local de GRPO con LoRA, checkpoints y límites de recursos. El piloto ejecutado corresponde al modelo Qwen3 anterior, no demuestra aprendizaje en SmolLM2.
+- [x] Integración del clasificador cerrado en cumplimiento y fidelidad; una abstención se conserva como ausencia de score. Un grupo con recompensa desconocida se detiene antes de actualizar adaptadores.
+- [x] Informes y revisión humana ciega preparados; los resultados históricos se pueden revisar con Inspect.
+- [x] [Presentación del proyecto publicada](https://del-think-al-drean.andrestobelem.chatgpt.site/proyecto-dream). La versión 8 publicada muestra sólo D en el método activo y retira la comparación de doce entrenamientos de los próximos pasos.
 
-- [x] Repositorio público, licencia MIT y configuración de Python.
-- [x] Importación del corpus DreamViews, filtros y separación por autor entre entrenamiento, validación y prueba. Selección actual: 1.000, 100 y 200 relatos, respectivamente.
-- [x] Consignas construidas con descripciones breves extraídas de los relatos y categorías del corpus.
-- [x] Cuatro condiciones que cruzan instrucción de pensar o soñar con etiquetas de proceso, más una condición neutral de evaluación.
-- [x] Juez local congelado con evaluaciones separadas de carácter onírico, cercanía al relato humano y fidelidad entre experiencia y relato final.
-- [x] GRPO con LoRA, límites de recursos, checkpoints e informes reproducibles.
-- [x] Piloto de cinco actualizaciones en una condición y una semilla. Verificación de cambios en adaptadores, base y juez sin cambios, y recarga del checkpoint.
-- [x] Integración de Inspect AI e Inspect Flow para reproducir y revisar resultados guardados, sin nueva inferencia.
-- [x] Informes que distinguen scores globales y scores de respuestas extraíbles; paquete de revisión humana ciega preparado.
+## Lo que falta para entrenar y evaluar Dream
 
-El piloto valida el funcionamiento técnico, pero no demuestra una mejora en los sueños generados. La evaluación comparativa usó dos muestras por celda. En la condición entrenada, el formato completo pasó de una de dos respuestas a ninguna de dos.
+1. **Validar la evaluación.** El clasificador cerrado acertó cinco de ocho controles en la última prueba. Faltan corregir los errores relevantes y calibrar sus umbrales con ejemplos revisados por humanos. El paquete de seis relatos para evaluar carácter onírico está preparado y todavía no fue puntuado. No equivale a calibrar cumplimiento o fidelidad.
+2. **Comprobar generación D en una muestra mayor.** Hay generaciones con formato válido, pero las pruebas pequeñas no prueban estabilidad. Revisar escenas, relatos, copia y diversidad.
+3. **Ejecutar un piloto pequeño de entrenamiento D con SmolLM2**, una vez que la evaluación sea utilizable. Comparar relatos antes y después, conservar componentes del score y comprobar que sólo cambien los adaptadores.
+4. **Verificar recuperación** del piloto de sueños y documentar resultados y límites. La prueba completa de interrupción y reanudación anterior corresponde a aritmética.
+5. **Publicar los resultados del piloto** en el repo y el site, distinguiendo pruebas de código y evidencia de aprendizaje.
 
-## 1. Mejorar la evaluación de cercanía
+El entrenamiento de `dream-v4` permanece bloqueado porque el evaluador aún no está validado. La infraestructura opcional de evaluación no debe demorar ni ampliar estas tareas. No se lanzarán comparaciones entre instrucciones o delimitadores como parte de este alcance.
 
-- [x] Versionar un protocolo nuevo y conservar los resultados de `dream-v2` como antecedentes separados.
-- [x] Extraer una lista explícita de requisitos y dar al generador los mismos elementos que se usarán para puntuar su cumplimiento. Las citas de procedencia se verifican en el relato fuente.
-- [x] Evaluar cada elemento como preservado, omitido o contradicho, registrando evidencia textual. Se implementó una llamada independiente por elemento.
-- [x] Mantener la cercanía global al relato humano como diagnóstico y definir fórmula y pesos: cumplimiento = máximo(0, (preservados − 0.5 × contradichos) / total); aporta 30% de calidad.
-- [x] Mantener separadas la fidelidad entre `<dream>` y `<answer>` y la semejanza con relatos de sueños humanos.
-- [x] Presentar por separado cumplimiento, carácter onírico, fidelidad y tasa de formato válido. Una respuesta no extraíble se registra como fallo de respuesta.
+## Antecedentes y límites
 
-Criterio para avanzar: protocolo documentado, fórmula explícita y puntuaciones auditables por elemento. No se debe penalizar un detalle del relato reservado que no apareció en la consigna.
+El piloto histórico de Qwen3 tuvo cinco actualizaciones, con dos muestras de evaluación por celda. En D, el formato completo pasó de una de dos respuestas a ninguna de dos: no hay evidencia de mejora. Los intentos anteriores de juez por JSON y el contraste exploratorio con Phi tampoco habilitaron el nuevo entrenamiento.
 
-### Actualización acordada para dream-v4
+DreamViews tiene suficientes relatos para esta etapa. Los textos surrealistas quedan como alternativa posterior si hicieran falta, con procedencia y evaluación separadas. La semejanza textual no demuestra experiencia subjetiva del modelo.
 
-- [x] Seleccionar un generador base sin posentrenamiento de razonamiento y verificar que think/dream no sean tokens especiales. Modelo, revisión y auditoría están en [modelo-base.md](modelo-base.md).
-- [x] Implementar clasificación cerrada por logits con modelo congelado, sin muestreo ni generación de explicaciones.
-- [x] Verificar etiquetas de un token bajo el contexto exacto, rotar el mapeo A/B/C y registrar probabilidades, masa total y margen.
-- [x] Implementar fragmentos identificados y reglas deterministas de agregación, conflicto y abstención. Una abstención devuelve `None`, no cero.
-- [x] Comprobar repetibilidad de un forward independiente en este equipo, distinguiéndola de corrección semántica.
-- [ ] Integrar el clasificador en cumplimiento y fidelidad del circuito completo; definir requisitos de fidelidad y manejo de grupos GRPO con abstenciones sin castigar al generador.
-- [ ] Calibrar umbrales con pares revisados por humanos y validar exactitud y cobertura en un conjunto separado.
+Detalles: [modelo base](modelo-base.md), [rúbrica actual](rubrica-v4.md) y [validación técnica histórica](validacion-tecnica.md).
 
-Los detalles y los fallos observados se documentan en [rubrica-v4.md](rubrica-v4.md). Los umbrales provisionales no autorizan entrenamiento.
-
-## 2. Validar el juez
-
-- [x] Preparar controles con paráfrasis, omisiones, contradicciones, cambios de participantes y relatos ajenos que compartan vocabulario. Incluye validación estricta de citas y bloqueo de RL ante fallos.
-- [ ] Comprobar que agregar detalles compatibles no perjudique el cumplimiento y que las contradicciones relevantes sí lo reduzcan.
-- [ ] Resolver los falsos positivos ante vocabulario sin experiencia relatada. Repetir los controles después del cambio y ampliar con ejemplos independientes de los usados para ajustar el evaluador.
-- [x] Sustituir las citas generadas libremente por selección de fragmentos identificados del texto, verificables en código. Los controles semánticos de esas selecciones siguen pendientes de aprobación.
-- [ ] Completar una revisión humana ciega y medir el acuerdo con el juez por dimensión.
-- [ ] Contrastar una muestra con un juez de otra familia y revisar desacuerdos.
-- [ ] Revisar las categorías del corpus y los indicadores de contenido: las etiquetas nativas y las etiquetas automáticas débiles deben permanecer diferenciadas.
-
-Criterio para avanzar: controles con resultados esperados definidos de antemano y discrepancias relevantes resueltas o documentadas. La semejanza textual no prueba que una experiencia sea un sueño real.
-
-## 3. Estabilizar el formato y la recompensa
-
-- [ ] Resolver la omisión o mala delimitación de los bloques.
-- [ ] Revisar la recompensa para que omitir `<dream>` no resulte conveniente y para evitar premiar copia o extensión sin contenido.
-- [ ] Ejecutar un piloto acotado con el protocolo nuevo y verificar formato, puntuaciones y ejemplos.
-
-La comprobación inicial de SmolLM2 produjo formato válido en cero de cinco condiciones con la plantilla conversacional y cinco de cinco con un ejemplo común, una sola consigna por condición. Fueron pruebas de generación sin entrenamiento ni juez. Falta ampliar la muestra antes de dar por estable el formato.
-
-Criterio para avanzar: fijar previamente el umbral de formato aceptable y comprobarlo con una muestra mayor que las dos respuestas del piloto inicial.
-
-## 4. Completar la validación operativa
-
-- [ ] Demostrar continuidad de una corrida de sueños interrumpida y reanudada, comparada con una corrida equivalente sin interrupción. La prueba completa anterior corresponde al circuito de aritmética.
-- [ ] Conectar Inspect con evaluación nueva de modelos y jueces; actualmente reproduce resultados existentes.
-- [ ] Completar el análisis de condiciones y semillas, con diferencias pareadas e incertidumbre.
-
-La ruta de verificación de continuidad para sueños ya está implementada: compara adaptadores, optimizador, PRNG de Python/NumPy/MLX, tokens y rollouts lógicos, excluyendo latencias y memoria. Falta ejecutarla contra un nuevo smoke completo con SmolLM2 y el protocolo congelado.
-
-## 5. Ejecutar la comparación completa
-
-- [ ] Fijar presupuesto, pasos, conjunto de evaluación, protocolo y criterios de éxito antes de lanzar las corridas.
-- [ ] Ejecutar las cuatro condiciones con las tres semillas configuradas y evaluar también la condición neutral.
-- [ ] Informar resultados por categoría, variación entre semillas, fallos de formato y revisión humana, además de las medias.
-- [ ] Analizar diversidad y posible copia de los relatos del corpus.
-
-Las doce corridas comparativas todavía no se lanzaron. DreamViews aporta suficientes relatos para la primera etapa; los textos surrealistas quedan como alternativa posterior, con procedencia y evaluación separadas.
-
-La estimación histórica de `dream-v2` fue de unas 15 horas de evaluación para las doce corridas, además del entrenamiento. `dream-v3` usa más llamadas por relato: requiere un benchmark nuevo antes de fijar un plazo o presupuesto. La validación humana tampoco tiene un tiempo de finalización fijado.
-
-## Entrega del trabajo
-
-- [x] Crear commits con los cambios implementados y revisados.
-- [x] Subirlos a GitHub y comprobar que la documentación describa el estado publicado.
-
-La implementación y documentación se publicaron en `main` de `andrestobelem/dream` el 25 de octubre de 2026 (código y documentación hasta `97c7d73`, con actualizaciones de este estado posteriores). La entrega del código no completa el experimento: siguen pendientes integración, calibración humana, nuevo piloto, continuidad y comparación completa.
+Verificación de esta revisión: 99 pruebas del proyecto y ocho de la integración opcional de Inspect aprobadas; Ruff y comprobación de diferencias sin errores. La nueva inferencia a través de Inspect todavía no se probó con modelos reales y no es requisito del próximo piloto D.

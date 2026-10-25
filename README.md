@@ -9,11 +9,13 @@ deshabilitado hasta completar integración y validación. Los pilotos con Qwen3 
 
 ## Diseño definido
 
+El recorrido activo es únicamente **D: Soñar + `<dream>`**, seguido del relato en `<answer>`. Las variantes A/B/C y neutral quedan como antecedentes.
+
 - **Corpus principal:** [DreamViews, versión 1](https://zenodo.org/records/19161757), descrito en [Mallett, 2026](https://arxiv.org/abs/2603.26992). Conservamos las etiquetas originales de sus autores: lúcido, no lúcido, pesadilla, fragmento, memorable y falso despertar.
-- **Entrada:** requisitos visibles derivados de los relatos, guardados y compartidos entre condiciones. El evaluador de cumplimiento recibe los mismos requisitos, sin detalles ocultos del relato reservado.
+- **Entrada:** requisitos visibles derivados de los relatos, guardados para generar y evaluar sueños. El evaluador de cumplimiento recibe los mismos requisitos, sin detalles ocultos del relato reservado.
 - **Generador actual:** [SmolLM2-1.7B base](docs/modelo-base.md), revisión fijada, sin plantilla de chat ni tokens especiales para think/dream. Carga y generación comprobadas, sin entrenamiento; falta el piloto de GRPO.
 - **Juez:** `mlx-community/Qwen3-8B-4bit`, revisión fijada, congelado y temperatura cero. Toda la ejecución es local, sin APIs pagas ni envío de relatos.
-- **Piloto histórico:** baseline A/B/C/D y neutral; cinco actualizaciones de D con Qwen3, evaluación y recarga. Las doce corridas comparativas no se iniciaron.
+- **Piloto histórico:** baseline A/B/C/D y neutral; cinco actualizaciones de D con Qwen3, evaluación y recarga. La comparación de doce corridas quedó fuera del alcance actual.
 
 Un sueño humano puede ser cotidiano y coherente: **absurdo no equivale a onírico**. El score mide semejanza textual; no demuestra experiencias subjetivas del modelo ni autenticidad humana.
 
@@ -65,6 +67,7 @@ Estos controles básicos no validan científicamente al juez. La revisión human
 uv sync --locked
 uv run python -m think_dream_lab doctor
 uv run python -m think_dream_lab corpus
+uv run python -m think_dream_lab evaluate --condition D --limit 1
 uv run python -m think_dream_lab closed-check
 uv run python -m think_dream_lab report --results results/dream-v4
 ```
@@ -102,7 +105,7 @@ integración y calibración. Después se deberá fijar explícitamente el presup
 uv run python -m think_dream_lab experiment --config configs/dream-v4.yaml --steps PASOS
 ```
 
-A=think/think, B=think/dream, C=dream/think, D=dream/dream; semillas 11/22/33. Cada entrenamiento parte del checkpoint base con adaptadores nuevos y orden de datos emparejado. No se ejecutan las doce corridas al terminar el smoke.
+La configuración actual ejecuta sólo D=dream/dream. Cada entrenamiento parte del checkpoint base con adaptadores nuevos. Las variantes A/B/C y neutral pertenecen al diseño histórico; el flujo actual no las agrega automáticamente.
 
 Sin escena previa, la fidelidad se fuerza a cero en código aunque el juez diga otra cosa;
 el juicio original se conserva para auditarlo. El informe separa cobertura de formato y
