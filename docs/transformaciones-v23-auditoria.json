@@ -1,0 +1,12 @@
+{
+  "protocol_hash": "92f2f5220336beea31f9d52104cbc9f138a392f22ccfa0480f39eeb59f50b9b8",
+  "packet_hash": "8fc35d02317b3ca4c8ec1f46089acb156dc953a8264908dde475de9d3597fdad",
+  "annotations_hash": "1ec567b4667dbbfa9a7395c1db5a43a59394f959670a03d2a750fc73a241b1b1",
+  "source_key_opened_before_freeze": false,
+  "independent_human_validation": false,
+  "reviewed_presentations": 30,
+  "result_hash": "d274f9e68f3eedc6282a7861e3c0c5f08142991c650be55bb43392c8c413b374",
+  "training_updates": 0,
+  "legacy_scores_unchanged": true,
+  "both_checkpoint_adapters_unchanged": true
+}

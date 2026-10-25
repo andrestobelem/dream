@@ -1,0 +1,127 @@
+{
+  "real_cases": 18,
+  "old_literal_major_cases": 12,
+  "real_material": {
+    "reconocible": 13,
+    "parcial": 5
+  },
+  "real_treatment": {
+    "transformado": 1,
+    "mixto": 10,
+    "literal": 4,
+    "no_se": 3
+  },
+  "old_major_material": {
+    "reconocible": 7,
+    "parcial": 5
+  },
+  "old_major_treatment": {
+    "transformado": 1,
+    "mixto": 8,
+    "no_se": 3
+  },
+  "real_account": {
+    "organiza_preserva": 12,
+    "resume_con_omisiones": 3,
+    "no_se": 3
+  },
+  "duplicate_checks": [
+    {
+      "review_id": "S08",
+      "same_labels": true,
+      "different_fields": []
+    },
+    {
+      "review_id": "S14",
+      "same_labels": true,
+      "different_fields": []
+    },
+    {
+      "review_id": "S16",
+      "same_labels": true,
+      "different_fields": []
+    },
+    {
+      "review_id": "S21",
+      "same_labels": true,
+      "different_fields": []
+    }
+  ],
+  "controls": [
+    {
+      "control": "interpretive_comment",
+      "experience": "comentario",
+      "material": "reconocible",
+      "treatment": "literal",
+      "literal_deviation": false,
+      "account": "no_se"
+    },
+    {
+      "control": "normalizing_account",
+      "experience": "escena",
+      "material": "reconocible",
+      "treatment": "transformado",
+      "literal_deviation": true,
+      "account": "normaliza_borra"
+    },
+    {
+      "control": "literal_scene",
+      "experience": "escena",
+      "material": "reconocible",
+      "treatment": "literal",
+      "literal_deviation": false,
+      "account": "organiza_preserva"
+    },
+    {
+      "control": "unrelated_valid_dream",
+      "experience": "escena",
+      "material": "ausente",
+      "treatment": "no_se",
+      "literal_deviation": true,
+      "account": "organiza_preserva"
+    },
+    {
+      "control": "replaced_account",
+      "experience": "escena",
+      "material": "reconocible",
+      "treatment": "literal",
+      "literal_deviation": false,
+      "account": "sustituye"
+    },
+    {
+      "control": "request_echo",
+      "experience": "enunciado",
+      "material": "reconocible",
+      "treatment": "literal",
+      "literal_deviation": false,
+      "account": "no_se"
+    },
+    {
+      "control": "transformation_preserved",
+      "experience": "escena",
+      "material": "reconocible",
+      "treatment": "transformado",
+      "literal_deviation": true,
+      "account": "organiza_preserva"
+    },
+    {
+      "control": "quiet_fragment",
+      "experience": "fragmento",
+      "material": "reconocible",
+      "treatment": "literal",
+      "literal_deviation": false,
+      "account": "organiza_preserva"
+    }
+  ],
+  "training_updates": 0,
+  "new_model_generations": 0,
+  "test_reports_used": 0,
+  "checkpoint_decision_changed": false,
+  "independent_human_validation": false,
+  "status": "descriptive pilot completed; rubric provisional, no independent reliability estimate",
+  "limitations": [
+    "Sources, prior marks and control labels hidden in packet; same assistant saw v22 and authored controls, so recognition is possible. Not independent validation or measured interrater reliability.",
+    "Biased selection of prior literal flags, not prevalence or a fresh model comparison.",
+    "Duplicate recognition may inflate self-consistency; authored controls are illustrations, not independent gold labels."
+  ]
+}

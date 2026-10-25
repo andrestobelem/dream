@@ -70,3 +70,8 @@ distinciones y su fiabilidad antes de usarlas en preferencias o como condición 
 No convertir estos procedimientos en una lista obligatoria ni recompensa por rareza. No
 usar los 200 relatos reservados para calibrarlos. Esta revisión nueva y otro entrenamiento
 **no se iniciaron** por recibir la orientación.
+
+Después, con la indicación «ahora sigamos con los sueños», se completó la relectura
+descriptiva v23: [casos, controles y límites](revision-transformaciones-v23.md). No cambió
+la elección del checkpoint ni inició entrenamiento; permitió proponer un criterio más
+rico para los próximos pares, incluido cómo answer puede añadir o borrar relaciones.

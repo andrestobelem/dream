@@ -4,6 +4,20 @@ Estado al 25 de octubre de 2026: v22 completado sin entrenar; la envoltura alcan
 y 18/18 formatos completos por sistema. La ventaja de calidad del candidato v21 no se
 confirma en los pedidos nuevos (20 frente a 14, 62 empates); se conserva el 32.
 
+## Materiales oníricos v23: revisión descriptiva completada
+
+- [x] Fijar categorías separadas de experiencia, material, tratamiento y relación answer–dream.
+- [x] Seleccionar 18 casos reales distintos, ocho controles construidos y cuatro repeticiones.
+- [x] Revisar y congelar treinta fichas con evidencia textual verificable.
+- [x] Registrar límites: controles propios, reconocimiento de repeticiones, sin validación independiente.
+- [x] Distinguir transformaciones reconocibles de material parcial sin cambiar resultados anteriores.
+- [x] Preparar criterio prospectivo que también registra añadidos y correcciones hacia la semilla.
+
+[Revisión y ejemplos](revision-transformaciones-v23.md), [criterio para próximos pares](criterio-proximos-pares-oniricos.md).
+No se muestrearon nuevos relatos de los checkpoints ni se entrenó; ocho controles se
+escribieron expresamente. No se compararon modelos de nuevo. La rúbrica es provisional
+y el 32 sigue como referencia; los 200 reservados permanecen fuera.
+
 ## Envoltura v22: comparación nueva completada
 
 - [x] Implementar dos etapas de contenido libre con etiquetas aportadas por el programa.
