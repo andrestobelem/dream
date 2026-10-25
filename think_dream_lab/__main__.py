@@ -32,7 +32,7 @@ def parser():
     ]:
         cmd = commands.add_parser(command, **({"help": command} if command != "_worker" else {}))
         cmd.add_argument("--config", default="configs/dream-v4.yaml")
-        cmd.add_argument("--results", type=Path, default=Path("results/dream-v4"))
+        cmd.add_argument("--results", type=Path, default=Path("results/dream-v4-qwen"))
         if command in ["smoke", "experiment", "_worker"]:
             cmd.add_argument("--resume", action="store_true")
         if command == "smoke":
@@ -87,10 +87,6 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
-    if args.command in {"smoke", "experiment"} and config["model"]["id"] == "Qwen/Qwen3-1.7B-Base":
-        raise ValueError(
-            "Configuración histórica: el nuevo generador debe ser SmolLM2 base sin posentrenamiento de razonamiento."
-        )
     if (
         args.command in {"smoke", "experiment"}
         and config["judge"].get("rubric_version") == "dream-v4"

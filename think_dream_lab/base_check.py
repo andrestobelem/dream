@@ -1,4 +1,4 @@
-"""Carga y generación del nuevo modelo base, sin juez ni actualización de pesos."""
+"""Carga y generación del modelo base, sin juez ni actualización de pesos."""
 
 from .backend import Runner, fingerprint, seed_all
 from .config import freeze_model, implementation_manifest
@@ -41,8 +41,8 @@ class BaseProbe(Runner):
 
 
 def check_base(config, root):
-    if config["model"]["id"] != "HuggingFaceTB/SmolLM2-1.7B":
-        raise ValueError("La comprobación nueva requiere SmolLM2 base.")
+    if config["model"]["id"] not in {"Qwen/Qwen3-1.7B-Base", "HuggingFaceTB/SmolLM2-1.7B"}:
+        raise ValueError("La comprobación requiere uno de los checkpoints base registrados.")
     implementation = implementation_manifest()
     folder = root / "dream" / "diagnostics" / "base-check" / implementation["hash"][:12]
     if (folder / "base-validation.json").exists():

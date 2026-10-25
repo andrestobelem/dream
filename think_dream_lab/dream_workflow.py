@@ -16,10 +16,8 @@ from .workflow import doctor, latest_checkpoint, reconcile_logs, reload_check
 
 class DreamRunner(Runner):
     def __init__(self, config, lock, folder, judge, briefs):
-        if config["model"]["id"] != "HuggingFaceTB/SmolLM2-1.7B":
-            raise ValueError(
-                "El generador actual requiere SmolLM2 base; Qwen3 queda como antecedente histórico."
-            )
+        if config["model"]["id"] not in {"Qwen/Qwen3-1.7B-Base", "HuggingFaceTB/SmolLM2-1.7B"}:
+            raise ValueError("El generador debe ser uno de los checkpoints base registrados.")
         self.judge, self.briefs = judge, briefs
         super().__init__(config, lock, folder)
 

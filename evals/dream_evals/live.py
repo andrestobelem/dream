@@ -216,7 +216,7 @@ def local_mlx_batch(project, config_path, results_dir, condition, start_index, l
 
 @task
 def dream_live(
-    results_dir="results/dream-v4",
+    results_dir="results/dream-v4-qwen",
     config_path="configs/dream-v4.yaml",
     condition="D",
     start_index=0,

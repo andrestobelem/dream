@@ -1,7 +1,7 @@
 task: dream
 model:
-  id: HuggingFaceTB/SmolLM2-1.7B
-  revision: effd688a12921b4cc83e3312b6feb579f70f9c71
+  id: Qwen/Qwen3-1.7B-Base
+  revision: ea980cb0a6c2ae4b936e82123acc929f1cec04c1
 judge:
   id: mlx-community/Qwen3-8B-4bit
   revision: 545dc4251c05440727734bcd94334791f6ab0192
@@ -73,7 +73,7 @@ evaluation:
   seed: 4242
   samples_per_problem: 1
 runtime:
-  budget_seconds: 600  # Diez minutos acumulados para validar v3 antes de ampliarlo.
+  budget_seconds: 450  # Nuevo piloto: mantiene el total de esta sesión dentro de los 45 minutos.
   poll_seconds: 1
   swap_growth_limit_gib: 2
   min_free_disk_gib: 20

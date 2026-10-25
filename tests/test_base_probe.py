@@ -1,8 +1,27 @@
 from types import SimpleNamespace
 
+import pytest
+
 from think_dream_lab import base_check
-from think_dream_lab.config import load_config
-from think_dream_lab.storage import read_json
+from think_dream_lab.__main__ import parser
+from think_dream_lab.config import freeze_model, load_config
+from think_dream_lab.dream_workflow import DreamRunner
+from think_dream_lab.storage import read_json, write_json
+
+
+def test_pilot_base_is_the_default_and_does_not_reuse_smollm2_locks(tmp_path, monkeypatch):
+    config = load_config("configs/dream-v4.yaml")
+    assert config["model"]["id"] == "Qwen/Qwen3-1.7B-Base" and config["conditions"] == ["D"]
+    assert str(parser().parse_args(["base-check"]).results) == "results/dream-v4-qwen"
+    old = load_config("configs/dream-v4-smollm2.yaml")["model"]
+    write_json(tmp_path / "model-lock.json", old)
+    with pytest.raises(ValueError, match="no coincide"):
+        freeze_model(config, tmp_path)
+    assert read_json(tmp_path / "model-lock.json") == old
+    calls = []
+    monkeypatch.setattr(base_check.Runner, "__init__", lambda *a: calls.append(a[1]["model"]["id"]))
+    DreamRunner(config, {}, tmp_path, object(), {})
+    assert calls == ["Qwen/Qwen3-1.7B-Base"]
 
 
 def test_dream_probe_never_adds_neutral_and_retains_a_format_failure(tmp_path, monkeypatch):
