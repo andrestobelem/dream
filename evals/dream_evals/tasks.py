@@ -19,6 +19,7 @@ FIELDS = (
     "format",
     "total",
 )
+CLOSED_FIELDS = (*FIELDS, "content_compliance")
 CONDITIONS = ("A", "B", "C", "D", "neutral")
 PHASES = ("before", "after", "rollout")
 REPLAY_MODEL = "mockllm/dream-replay"
@@ -46,10 +47,13 @@ def jsonl(path):
     )
 
 
-def score_values(reward):
+def score_values(reward, *, allow_unscored=False):
     values = {}
-    for key in FIELDS:
+    for key in CLOSED_FIELDS if allow_unscored else FIELDS:
         value = reward[key]
+        if value is None and allow_unscored:
+            values[key] = None
+            continue
         if (
             isinstance(value, bool)
             or not isinstance(value, (int, float))
@@ -58,6 +62,19 @@ def score_values(reward):
         ):
             raise ValueError(f"Score inválido: {key}={value!r}")
         values[key] = float(value)
+    if allow_unscored:
+        missing = {key for key, value in values.items() if value is None}
+        status = reward.get("score_status")
+        if reward.get("scoring_protocol") != "dream-v4" or missing != set(
+            reward.get("unscored_dimensions", [])
+        ):
+            raise ValueError("Falta la declaración exacta de dimensiones no puntuadas.")
+        if status not in {"scored", "abstained", "invalid_format"} or values["format"] is None:
+            raise ValueError("Estado de puntuación inválido.")
+        if (status == "abstained") != (values["total"] is None):
+            raise ValueError("La abstención no coincide con la recompensa disponible.")
+        if status == "invalid_format" and (values["format"] != 0 or values["total"] != 0):
+            raise ValueError("La penalización de formato es inconsistente.")
     return values
 
 
@@ -67,7 +84,7 @@ def load_run(results_dir="results", run="smoke"):
     if not folder.is_relative_to(dream) or "diagnostics" in folder.relative_to(dream).parts:
         raise ValueError("La corrida debe estar dentro de results/dream y fuera de diagnostics.")
     manifest = read_json(folder / "run.json")
-    if manifest.get("kind") not in {"dream_smoke", "dream_experiment"}:
+    if manifest.get("kind") not in {"dream_smoke", "dream_experiment", "dream_evaluation"}:
         raise ValueError("Se requieren resultados de sueños, no del diagnóstico aritmético.")
     if manifest["status"] != "complete":
         raise ValueError("La corrida debe estar completa antes de compararla.")
@@ -81,7 +98,10 @@ def load_run(results_dir="results", run="smoke"):
         key = (row["phase"], row["condition"], row["step"], row["problem_id"], row["candidate"])
         if key in unique and canonical(row) != canonical(unique[key]):
             raise ValueError(f"Dos respuestas distintas tienen el mismo identificador: {key}")
-        score_values(row["reward"])
+        score_values(
+            row["reward"],
+            allow_unscored=manifest["config"]["judge"].get("rubric_version") == "dream-v4",
+        )
         unique[key] = row
     references = {
         r["problem_id"]: r["reference"]
@@ -194,9 +214,13 @@ def dream_results(
     return Task(
         dataset=samples,
         solver=replay_recorded(),
-        scorer=recorded_scores(),
+        scorer=recorded_closed_scores()
+        if judge.get("rubric_version") == "dream-v4"
+        else recorded_scores(),
         model=REPLAY_MODEL,
-        version="dream-recorded-v1",
+        version="dream-recorded-v2-unscored"
+        if judge.get("rubric_version") == "dream-v4"
+        else "dream-recorded-v1",
         fail_on_error=True,
         metadata={
             "mode": "offline_replay",
@@ -204,9 +228,35 @@ def dream_results(
             "condition": condition,
             "phase": phase,
             "source_snapshot": actual_snapshot,
-            "training_replicate": manifest["seed"],
+            "training_replicate": manifest["seed"]
+            if manifest["kind"] != "dream_evaluation"
+            else None,
             "generation_rerun": False,
             "judge_rerun": False,
         },
         description="Revisión de salidas y scores de Dream ya guardados. Sin inferencias nuevas.",
     )
+
+
+@scorer(metrics={name: [mean()] for name in CLOSED_FIELDS})
+def recorded_closed_scores():
+    async def score(state: TaskState, target: Target) -> Score:
+        reward = state.metadata["recorded_reward"]
+        values = score_values(reward, allow_unscored=True)
+        # Inspect excluye NaN por dimensión de métricas y reductores. La fuente conserva
+        # None; nunca se acepta NaN desde el archivo original ni se lo convierte en cero.
+        return Score(
+            value={key: float("nan") if value is None else value for key, value in values.items()},
+            answer=state.output.completion,
+            explanation="Scores locales; dimensiones ausentes excluidas de las medias, con cobertura por dimensión.",
+            reason="grader_uncertainty" if reward["score_status"] == "abstained" else None,
+            metadata={
+                "source": "recorded_local_judge",
+                "replayed": not state.metadata.get("local_generation_new", False),
+                "source_reward": reward,
+                "score_status": reward["score_status"],
+                "rubric": state.metadata["judge"],
+            },
+        )
+
+    return score

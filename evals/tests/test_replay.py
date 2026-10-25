@@ -117,3 +117,61 @@ def test_flow_uses_only_available_complete_cells(results):
     assert len(spec.tasks) == 1
     assert spec.tasks[0].model == REPLAY_MODEL
     assert spec.flow_metadata["new_training"] is False
+
+
+def test_closed_replay_excludes_unknown_dimensions_from_means(results, tmp_path, monkeypatch):
+    import math
+
+    root, row = results
+    path = root / "dream/smoke/run.json"
+    manifest = json.loads(path.read_text())
+    manifest["kind"] = "dream_evaluation"
+    manifest["config"]["judge"]["rubric_version"] = "dream-v4"
+    path.write_text(json.dumps(manifest))
+    row["reward"].update(
+        reference_alignment=None,
+        content_compliance=0.5,
+        scoring_protocol="dream-v4",
+        score_status="scored",
+        unscored_dimensions=["reference_alignment"],
+    )
+    other = json.loads(json.dumps(row))
+    other["candidate"] = 1
+    other["text"] += " A second sample."
+    for field in ["total", "quality", "retelling_fidelity", "content_compliance"]:
+        other["reward"][field] = None
+    other["reward"].update(
+        score_status="abstained",
+        unscored_dimensions=[
+            "reference_alignment",
+            "total",
+            "quality",
+            "retelling_fidelity",
+            "content_compliance",
+        ],
+    )
+    (root / "dream/smoke/responses.jsonl").write_text(
+        json.dumps(row) + "\n" + json.dumps(other) + "\n"
+    )
+
+    async def forbidden(*args, **kwargs):
+        pytest.fail("El replay no debe llamar a modelos")
+
+    monkeypatch.setattr(Model, "generate", forbidden)
+    log = inspect_eval(
+        dream_results(str(root)),
+        model=REPLAY_MODEL,
+        display="none",
+        log_dir=str(tmp_path / "closed-logs"),
+        notification=False,
+        ctl_server=False,
+    )[0]
+    assert log.status == "success" and log.stats.model_usage == {}
+    total = next(s for s in log.results.scores if s.name == "total")
+    assert total.scored_samples == 1 and total.unscored_samples == 1
+    assert next(iter(total.metrics.values())).value == pytest.approx(row["reward"]["total"])
+    reference = next(s for s in log.results.scores if s.name == "reference_alignment")
+    assert reference.scored_samples == 0 and reference.unscored_samples == 2
+    assert math.isnan(next(iter(reference.metrics.values())).value)
+    metadata = log.samples[1].scores["recorded_closed_scores"].metadata
+    assert metadata["source_reward"]["total"] is None

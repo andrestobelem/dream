@@ -379,6 +379,7 @@ source = { editable = "." }
 dependencies = [
     { name = "inspect-ai" },
     { name = "inspect-flow" },
+    { name = "pyyaml" },
 ]
 
 [package.dev-dependencies]
@@ -390,6 +391,7 @@ dev = [
 requires-dist = [
     { name = "inspect-ai", specifier = "==0.3.284" },
     { name = "inspect-flow", specifier = "==0.14.0" },
+    { name = "pyyaml", specifier = ">=6,<7" },
 ]
 
 [package.metadata.requires-dev]

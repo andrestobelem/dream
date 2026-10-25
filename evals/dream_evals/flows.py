@@ -10,7 +10,11 @@ from .tasks import REPLAY_MODEL, dream_results, load_run, read_json, select_reco
 def dream_flow(results_dir="results") -> FlowSpec:
     root = Path(results_dir).resolve()
     dream = root / "dream"
-    candidates = [dream / "smoke", *sorted((dream / "runs").glob("*"))]
+    candidates = [
+        dream / "smoke",
+        *sorted((dream / "runs").glob("*")),
+        *sorted((dream / "evaluations").glob("*")),
+    ]
     tasks = []
     for folder in candidates:
         if not (folder / "run.json").exists():
@@ -62,5 +66,53 @@ def dream_flow(results_dir="results") -> FlowSpec:
             "mode": "offline_replay",
             "new_inferences": False,
             "new_training": False,
+        },
+    )
+
+
+def live_dream_flow(
+    results_dir="results/dream-v4",
+    config_path="configs/dream-v4.yaml",
+    condition="D",
+    start_index=1,
+    limit=1,
+):
+    from .live import CONTROLLER_MODEL, PROJECT, dream_live, source_snapshot
+
+    root, config = Path(results_dir).resolve(), Path(config_path).resolve()
+    snapshot = source_snapshot(PROJECT, config, root, start_index, limit)[2]
+    return FlowSpec(
+        tasks=[
+            FlowTask(
+                factory=FlowFactory(
+                    dream_live,
+                    results_dir=str(root),
+                    config_path=str(config),
+                    condition=condition,
+                    start_index=start_index,
+                    limit=limit,
+                    snapshot=snapshot,
+                ),
+                model=CONTROLLER_MODEL,
+                metadata={"condition": condition, "mode": "supervised_local_mlx"},
+            )
+        ],
+        execution_type="inproc",
+        log_dir=str(root / "dream/inspect-live"),
+        store=FlowStoreConfig(path=str(root / "dream/inspect-live-store"), read=True, write=True),
+        options=FlowOptions(
+            max_samples=1,
+            max_tasks=1,
+            retry_attempts=0,
+            display="plain",
+            notification=False,
+            ctl_server=False,
+        ),
+        flow_metadata={
+            "project": "Dream",
+            "mode": "supervised_local_mlx",
+            "local_generation_may_run": True,
+            "new_training": False,
+            "calibrated": False,
         },
     )
