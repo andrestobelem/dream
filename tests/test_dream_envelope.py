@@ -30,3 +30,73 @@ def test_program_closure_does_not_hide_budget_exhaustion():
 )
 def test_eos_and_empty_stages_are_distinguished(text, ids, complete):
     assert finish_stage(text, ids, {9}, 20)["complete"] is complete
+
+
+def test_repeated_instruction_is_not_silently_rewritten():
+    r = finish_stage(
+        "I hid the coin.\n\nWrite the dream account in <answer> tags.\nUser: next", [1, 2], {9}, 20
+    )
+    assert r["stop_reason"] == "<answer>"
+    assert r["content"].endswith("Write the dream account in")
+    assert "User:" in r["discarded_suffix"]
+
+
+def test_stream_stops_on_merged_turn_and_restores_model(monkeypatch):
+    import importlib
+    from types import SimpleNamespace
+
+    from think_dream_lab.dream_envelope import generate_stage
+
+    module = importlib.import_module("mlx_lm.generate")
+    trainer = importlib.import_module("mlx_lm_lora.trainer.grpo_trainer")
+    monkeypatch.setattr(trainer, "fork_prompt_cache", lambda *args: None)
+    seen = []
+
+    class Batch:
+        def __init__(self, *args, **kwargs):
+            self.step, self.live, self.closed = 0, True, False
+            seen.append(self)
+
+        def insert(self, prompts, limits, **kwargs):
+            assert prompts == [[7, 8]] and limits == [20]
+
+        def next_generated(self):
+            if not self.live:
+                return []
+            self.step += 1
+            assert self.step <= 3
+            return [SimpleNamespace(uid=1, token=self.step, finish_reason=None)]
+
+        def remove(self, uids):
+            assert uids == [1]
+            self.live = False
+
+        def close(self):
+            self.closed = True
+
+    class Model:
+        training = True
+
+        def eval(self):
+            self.training = False
+
+        def train(self, mode):
+            self.training = mode
+
+    class Tokenizer:
+        def __init__(self):
+            self.eos_token_ids = {9}
+
+        def decode(self, ids):
+            return "".join({1: "I hid the coin.", 2: "\nUs", 3: "er: unwanted"}[i] for i in ids)
+
+    monkeypatch.setattr(module, "BatchGenerator", Batch)
+    model = Model()
+    r = generate_stage(
+        model,
+        Tokenizer(),
+        [7, 8],
+        {"max_tokens": 20, "temperature": 0.8, "top_p": 0.95, "min_p": 0, "top_k": 0},
+    )
+    assert r["content"] == "I hid the coin." and r["output_ids"] == [1, 2, 3]
+    assert r["stop_reason"] == "new_turn" and model.training and seen[0].closed

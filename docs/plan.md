@@ -6,6 +6,12 @@ asistente (30 preferencias frente a 11 y 55 empates), pero fallo de formato en d
 
 ## Ensayo v21: completado, sin promover por formato
 
+Prueba posterior v22 en ejecución: misma envoltura de salida por etapas en el 32 y el
+candidato v21, sin actualizar pesos; 24 pedidos nuevos y cuatro muestras por sistema,
+además de regenerar las 18 regresiones de dependencia en ambos.
+[Diseño y límites](envoltura-v22.md). Las etiquetas aportadas por el programa no se
+presentan como cierre aprendido. Un límite agotado sigue contando como fallo.
+
 - [x] Auditar el filtro de longitud del pool v20 sin relabelar las notas históricas.
 - [x] Seleccionar 24 pedidos nuevos de 24 personas de entrenamiento, separados de reservados.
 - [x] Generar 96 candidatos desde el 32 y revisar cuatro alternativas por pedido.
