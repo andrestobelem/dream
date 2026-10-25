@@ -1,0 +1,31 @@
+{
+  "selection": {
+    "reviewer": "assistant in same conversation, not independent human",
+    "known_context": "Aggregate v17 results and selection rule known; per-response provenance and scores concealed until annotations frozen.",
+    "pairs": 12,
+    "unique_reports": 11,
+    "author_groups": 6,
+    "pairs_per_group": 2,
+    "discordant_pairs": 8,
+    "contrast_pairs": 4,
+    "selection_seed": 20261026,
+    "packet_hash": "a01ed6065c4dd49e8b37b302819945b3425b59e199096561ee15cd773a3787a9",
+    "rubric_hash": "a05b45695cfbe7922e176ef45d747fe306fc399de556fe1ec3b0b1a18e628124",
+    "training_updates": 0,
+    "test_reports_used": 0,
+    "selection_rule": "All eight common-valid pairs with MiniLM increase and Phi-4 overall decrease; four hash-selected contrasts fill two pairs per author group, avoiding further repeated references.",
+    "source_comparison_hash": "4cfa2d04187cabfe3773efdaa955dae49e11f9c5730ac00ae9fb719989332969"
+  },
+  "frozen_review": {
+    "packet_hash": "a01ed6065c4dd49e8b37b302819945b3425b59e199096561ee15cd773a3787a9",
+    "annotations_hash": "dc5ad5c2dc154c94a2d1e394efec32d664c8a9107371747e229c4fab4379e748",
+    "reviewer": "assistant",
+    "independent_human_review": false,
+    "provenance_consulted_before_freeze": false,
+    "pairs": 12,
+    "accounts": 24,
+    "rubric_hash": "a05b45695cfbe7922e176ef45d747fe306fc399de556fe1ec3b0b1a18e628124"
+  },
+  "rubric": "Misma rúbrica v17: personajes/objetos/escenario, sucesos, relaciones y cercanía global, enteros 0–4. Preferencia A/B/empate separada, con confianza y dudas. Sólo answer frente a referencia.",
+  "scope": "Revisión diagnóstica por el asistente. Sin entrenamiento ni evaluación nueva de generadores. Los 200 relatos de prueba no se usan."
+}
