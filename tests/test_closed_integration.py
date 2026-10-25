@@ -27,8 +27,8 @@ def contract():
 def test_closed_fidelity_sees_scene_propositions_and_never_reserved_reference():
     calls = []
 
-    def assess(requirements, candidate):
-        calls.append((requirements, candidate))
+    def assess(requirements, candidate, **kwargs):
+        calls.append((requirements, candidate, kwargs.get("mode", "compliance")))
         return {"score": 0.75 if len(calls) == 1 else None, "coverage": 1}
 
     judge = Judge.__new__(Judge)
@@ -43,6 +43,7 @@ def test_closed_fidelity_sees_scene_propositions_and_never_reserved_reference():
         brief=contract(),
     )
     assert [a["requirement"] for a in calls[1][0]] == ["I floated.", "My brother followed."]
+    assert calls[0][2] == "compliance" and calls[1][2] == "fidelity"
     assert "HIDDEN REFERENCE" not in str(calls)
     assert ratings["reference_alignment"] is None and ratings["retelling_fidelity"] is None
     result = combine_scores(ratings, 1, load_config("configs/dream-v4.yaml"))
@@ -79,7 +80,10 @@ def test_skipping_dream_cannot_earn_quality_and_does_not_call_judge():
     assert result["score_status"] == "invalid_format"
 
 
-def test_abstention_retains_group_and_stops_before_advantages_or_gradients(tmp_path, monkeypatch):
+@pytest.mark.parametrize("retries", [0, 2])
+def test_abstention_retains_group_and_stops_before_advantages_or_gradients(
+    tmp_path, monkeypatch, retries
+):
     from mlx import nn
     from mlx_lm_lora.trainer import grpo_trainer
 
@@ -94,7 +98,10 @@ def test_abstention_retains_group_and_stops_before_advantages_or_gradients(tmp_p
         {"text": "uncertain", "reward": {"total": None}},
     ]
     runner = Runner.__new__(Runner)
-    runner.config = {"training": {"group_size": 2}, "generation": {}}
+    runner.config = {
+        "training": {"group_size": 2, "max_unscored_groups": retries},
+        "generation": {},
+    }
     runner.optimizer, runner.model = object(), object()
     runner.checkpoint_path = "previous-checkpoint"
     runner.generate = lambda *a, **kw: ((None, ["scored", "uncertain"], [0, 0]), rows)
@@ -103,6 +110,7 @@ def test_abstention_retains_group_and_stops_before_advantages_or_gradients(tmp_p
     stored = read_json(tmp_path / "unscored-groups/step-000001.json")
     assert stored["records"] == rows and stored["unscored_candidates"] == [1]
     assert stored["optimizer_updated"] is False and runner.checkpoint_path == "previous-checkpoint"
+    assert len(list((tmp_path / "unscored-groups").glob("*.json"))) == retries + 1
     assert not (tmp_path / "steps.jsonl").exists()
 
 

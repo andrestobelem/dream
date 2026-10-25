@@ -46,7 +46,14 @@ def verify_continuity(config, root):
     data, corpus = prepare(config, root)
     lock = freeze_model(config, root / "dream")
     run_id = identity(
-        config, lock, digest([corpus["hash"], manifest["briefs"]]), "D", manifest["seed"]
+        config,
+        lock,
+        digest(
+            [corpus["hash"], manifest["briefs"]]
+            + ([manifest["training_order"]] if "training_order" in manifest else [])
+        ),
+        "D",
+        manifest["seed"],
     )
     if run_id != manifest["identity"]:
         raise ValueError("El código, corpus, modelo o protocolo difieren del smoke de sueños.")
@@ -81,6 +88,7 @@ def verify_continuity(config, root):
             folder,
             run_id,
             resume=source / "checkpoints" / f"step-{split_step:06d}",
+            sample_order=manifest.get("training_order"),
         )
         proof = compare_checkpoints(
             source / "checkpoints" / f"step-{final_step:06d}", runner.checkpoint_path

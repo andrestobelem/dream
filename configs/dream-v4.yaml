@@ -13,9 +13,11 @@ judge:
   classification:
     labels: [A, B, C]
     rotations: 3
-    margin: 0.15  # Provisional: requiere calibración con referencias anotadas antes de entrenar.
+    scope: whole_account
+    prefix_cache: true
+    margin: 0.15  # Calibración asistida operativa v3; no es validación humana independiente.
     min_choice_mass: 0.05
-    calibration_file: null
+    calibration_file: results/dream-v4-qwen/dream/calibration/calibration.json
   calibration_margin: 1.0
 corpus:
   source: dreamviews
@@ -58,6 +60,7 @@ training:
   advantage_epsilon: 0.0001
   weight_decay: 0.0
   checkpoint_every: 1
+  max_unscored_groups: 2
   dropout: 0.0
 reward:
   dream_likeness: 0.5
@@ -66,14 +69,14 @@ reward:
   quality_weight: 0.9
   format_weight: 0.1
 smoke:
-  steps: 5
-  eval_problems: 2
+  steps: 3
+  eval_problems: 1
   train_condition: D
 evaluation:
   seed: 4242
   samples_per_problem: 1
 runtime:
-  budget_seconds: 450  # Nuevo piloto: mantiene el total de esta sesión dentro de los 45 minutos.
+  budget_seconds: 500  # Con los otros presupuestos, el máximo acumulado de la sesión es 2682 s (<45 min).
   poll_seconds: 1
   swap_growth_limit_gib: 2
   min_free_disk_gib: 20

@@ -31,6 +31,9 @@ def load_config(path: str | Path) -> dict:
         raise ValueError("El backend fijado normaliza ventajas con epsilon=1e-4.")
     if config["training"]["checkpoint_every"] != 1:
         raise ValueError("La recuperación validada guarda cada actualización.")
+    retries = config["training"].get("max_unscored_groups", 0)
+    if type(retries) is not int or not 0 <= retries <= 2:
+        raise ValueError("Se permiten de cero a dos grupos adicionales ante abstenciones.")
     if config["training"]["dropout"] != 0 or config["lora"]["dropout"] != 0:
         raise ValueError("Los modos de rollout y scoring requieren dropout cero.")
     for section, key in [
@@ -130,6 +133,8 @@ def implementation_manifest():
         "anchor_holdout.py",
         "dream_verification.py",
         "closed_judge.py",
+        "calibration.py",
+        "calibration_transfer.py",
         "closed_transfer.py",
         "base_check.py",
         "closed_task.py",

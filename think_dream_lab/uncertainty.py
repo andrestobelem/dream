@@ -27,13 +27,20 @@ def dimension_metrics(records):
     return result
 
 
-def require_scored_group(records, folder, step):
+def require_scored_group(records, folder, step, *, attempt=0):
     unknown = [i for i, row in enumerate(records) if row["reward"]["total"] is None]
     if unknown:
         write_json(
-            folder / "unscored-groups" / f"step-{step:06d}.json",
+            folder
+            / "unscored-groups"
+            / (
+                f"step-{step:06d}.json"
+                if not attempt
+                else f"step-{step:06d}-attempt-{attempt + 1:02d}.json"
+            ),
             {
                 "step": step,
+                "attempt": attempt + 1,
                 "unscored_candidates": unknown,
                 "records": records,
                 "optimizer_updated": False,

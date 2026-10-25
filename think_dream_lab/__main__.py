@@ -24,6 +24,7 @@ def parser():
         "anchor-check",
         "anchor-holdout",
         "closed-check",
+        "calibrate",
         "base-check",
         "evaluate",
         "smoke",
@@ -51,6 +52,9 @@ def parser():
         if command in {"evaluate", "_worker"}:
             cmd.add_argument("--limit", type=int, default=1)
             cmd.add_argument("--start-index", type=int, default=0)
+        if command in {"calibrate", "_worker"}:
+            cmd.add_argument("--review-file", type=Path)
+            cmd.add_argument("--likeness-review-file", type=Path)
         if command == "evaluate":
             cmd.add_argument("--condition", choices=["A", "B", "C", "D", "neutral"], default="D")
         if command == "_worker":
@@ -64,6 +68,7 @@ def parser():
                     "anchor-check",
                     "anchor-holdout",
                     "closed-check",
+                    "calibrate",
                     "base-check",
                     "evaluate",
                     "smoke",
@@ -91,9 +96,9 @@ def main(argv=None):
         args.command in {"smoke", "experiment"}
         and config["judge"].get("rubric_version") == "dream-v4"
     ):
-        raise ValueError(
-            "dream-v4 está en implementación y calibración; todavía no habilita entrenamiento."
-        )
+        from .calibration import require_calibration
+
+        require_calibration(config["judge"])
     root = args.results.resolve()
     if args.command == "_worker":
         if config.get("task") == "dream":
@@ -130,6 +135,8 @@ def main(argv=None):
             steps=args.steps,
             limit=args.limit,
             start_index=args.start_index,
+            review_file=args.review_file,
+            likeness_review_file=args.likeness_review_file,
         )
         return 0
     if args.command == "experiment":
@@ -167,6 +174,11 @@ def main(argv=None):
                 "--start-index",
                 str(args.start_index),
             ]
+        if args.command == "calibrate":
+            for flag in ["review_file", "likeness_review_file"]:
+                value = getattr(args, flag)
+                if value is not None:
+                    extra += ["--" + flag.replace("_", "-"), str(value.resolve())]
         code = supervise(config, root, [args.command, *common, *extra])
         if not code and args.command == "smoke" and args.verify_continuity:
             from .storage import read_json

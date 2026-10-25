@@ -62,9 +62,11 @@ class DreamRunner(Runner):
 
     def train(self, *args, **kwargs):
         if self.config["judge"].get("rubric_version") == "dream-v4":
-            raise RuntimeError(
-                "El entrenamiento requiere calibración validada del juez cerrado con referencias anotadas."
-            )
+            from .calibration import require_calibration
+            from .closed_judge import ClosedJudge
+
+            scorer = ClosedJudge(self.judge)
+            require_calibration(self.config["judge"], scorer.environment)
         return super().train(*args, **kwargs)
 
 
@@ -154,6 +156,38 @@ def load_judge(config, root, data):
     return judge
 
 
+def admitted_training_order(judge, rows, seed, steps, folder):
+    from .anchors import EXTRACT, SourceIneligibleError
+
+    path = folder / "task-rejections.json"
+    signature = digest([judge.spec, EXTRACT])
+    stored = read_json(path) if path.exists() else {"signature": signature, "rejected": {}}
+    if stored["signature"] != signature:
+        raise ValueError("Cambió el criterio de admisión de fuentes.")
+    accepted = []
+    order = np.random.default_rng(seed).permutation(len(rows)).tolist()
+    for index in order[: min(len(order), steps * 4)]:
+        row = rows[index]
+        if row["problem_id"] in stored["rejected"]:
+            continue
+        try:
+            prepare_briefs(judge, [row], folder)
+        except SourceIneligibleError as error:
+            stored["rejected"][row["problem_id"]] = {
+                "source_id": row["source_id"],
+                "reason": str(error),
+            }
+            write_json(path, stored)
+            print("Fuente sin suficientes hechos verificables:", row["source_id"], flush=True)
+        else:
+            accepted.append(index)
+            if len(accepted) == min(steps, len(rows)):
+                return accepted
+    raise ValueError(
+        "No se encontraron suficientes fuentes admisibles dentro del límite del piloto."
+    )
+
+
 def smoke(config, root, resume=False):
     folder = root / "dream" / "smoke"
     manifest_path = folder / "run.json"
@@ -164,15 +198,19 @@ def smoke(config, root, resume=False):
     judge = load_judge(config, root, data)
     seed = config["seeds"][0]
     n, steps = config["smoke"]["eval_problems"], config["smoke"]["steps"]
-    order = np.random.default_rng(seed).permutation(len(data["train"])).tolist()
-    touched = [data["train"][order[i % len(order)]] for i in range(steps)] + data["validation"][:n]
+    order = admitted_training_order(judge, data["train"], seed, steps, root / "dream/data")
+    touched = [data["train"][i] for i in order] + data["validation"][:n]
     briefs = prepare_briefs(judge, touched, root / "dream" / "data")
     lock = freeze_model(config, root / "dream")
     run_id = identity(
         config,
         lock,
         digest(
-            [corpus_manifest["hash"], {r["problem_id"]: briefs[r["problem_id"]] for r in touched}]
+            [
+                corpus_manifest["hash"],
+                {r["problem_id"]: briefs[r["problem_id"]] for r in touched},
+                order,
+            ]
         ),
         "D",
         seed,
@@ -190,6 +228,7 @@ def smoke(config, root, resume=False):
         "judge": config["judge"],
         "corpus_hash": corpus_manifest["hash"],
         "steps_requested": steps,
+        "training_order": order,
         "briefs": {r["problem_id"]: briefs[r["problem_id"]] for r in touched},
     }
     write_json(manifest_path, manifest)
@@ -209,6 +248,7 @@ def smoke(config, root, resume=False):
         folder,
         run_id,
         resume=latest_checkpoint(folder) if resume else None,
+        sample_order=order,
     )
     reload_check(runner, folder, runner.checkpoint_path)
     import mlx.core as mx
@@ -221,7 +261,7 @@ def smoke(config, root, resume=False):
     write_json(folder / "training-validation.json", validation)
     if not validation["post_reload_logits_finite"] or not validation["judge_unchanged"]:
         raise FloatingPointError("Logits no finitos después de recargar.")
-    for condition in (["D"] if config["conditions"] == ["D"] else ["D", "neutral"]):
+    for condition in ["D"] if config["conditions"] == ["D"] else ["D", "neutral"]:
         runner.evaluate(data["validation"][:n], condition, folder, "after", eval_seed, step=steps)
     manifest.update(status="complete", completed_at=time.time())
     write_json(manifest_path, manifest)
@@ -273,7 +313,7 @@ def experiment(config, root, condition, seed, steps, resume=False):
     }
     write_json(path, manifest)
     runner = DreamRunner(config, lock, folder, judge, briefs)
-    for prompt in ([condition] if config["conditions"] == ["D"] else [condition, "neutral"]):
+    for prompt in [condition] if config["conditions"] == ["D"] else [condition, "neutral"]:
         runner.evaluate(data["test"], prompt, folder, "before", config["evaluation"]["seed"])
     reconcile_logs(folder)
     runner.train(
@@ -286,7 +326,7 @@ def experiment(config, root, condition, seed, steps, resume=False):
         resume=latest_checkpoint(folder) if resume else None,
     )
     reload_check(runner, folder, runner.checkpoint_path)
-    for prompt in ([condition] if config["conditions"] == ["D"] else [condition, "neutral"]):
+    for prompt in [condition] if config["conditions"] == ["D"] else [condition, "neutral"]:
         runner.evaluate(
             data["test"], prompt, folder, "after", config["evaluation"]["seed"], step=steps
         )
@@ -382,6 +422,15 @@ def worker(action, config, root, **kwargs):
             from .closed_judge import check_closed
 
             check_closed(config, root)
+        elif action == "calibrate":
+            from .calibration import calibrate
+
+            calibrate(
+                config,
+                root,
+                review_file=kwargs.get("review_file"),
+                likeness_review_file=kwargs.get("likeness_review_file"),
+            )
         elif action == "base-check":
             from .base_check import check_base
 

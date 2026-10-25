@@ -7,9 +7,17 @@ from .judge import GUARD, protected_json
 VERSION = "dream-v3"
 PREFIX = "Required content: "
 KINDS = {"participant", "setting", "event", "relationship", "emotion"}
+
+
+class SourceIneligibleError(ValueError):
+    """No hay suficientes elementos verificables para una tarea del piloto."""
+
+
 EXTRACT = GUARD + (
     "Extract 3 to 6 short, atomic requirements for generating a similar dream. "
     "Use only explicitly stated facts. Prefer central events and relationships, not incidental details. "
+    "Describe a particular experienced episode, not advice, habits or general discussion. "
+    'If the source is not a specific experience, return {"anchors":[]}; never invent facts to meet the count. '
     "Each requirement must be independently checkable; do not bundle multiple events. "
     "Include an exact contiguous source quote supporting each requirement. "
     "Do not infer emotions or relationships. Use English. "
@@ -63,9 +71,42 @@ def validate_anchors(items, reference=None):
 
 def contract_brief(judge, row):
     value = judge.call("anchor_extraction", EXTRACT, {"reference": row["reference"]})
-    if set(value) != {"anchors"}:
-        raise ValueError("Extracción de elementos inválida.")
-    items = validate_anchors(value["anchors"], row["reference"])
+    if isinstance(value, dict) and value.get("anchors") == []:
+        raise SourceIneligibleError("La fuente no aporta una experiencia específica para la tarea.")
+    try:
+        if set(value) != {"anchors"}:
+            raise ValueError("Extracción de elementos inválida.")
+        items = validate_anchors(value["anchors"], row["reference"])
+    except (ValueError, TypeError, KeyError):
+        from .evidence import passages
+
+        chunks = passages(row["reference"])
+        by_id = {p["id"]: p["text"] for p in chunks}
+        selected = judge.call(
+            "anchor_extraction_select_original",
+            GUARD
+            + 'If this is advice or discussion rather than an experienced episode, return {"anchors":[]}. '
+            + 'Extract 3 to 6 short atomic requirements for a similar dream, using only explicit central facts in the supplied passages. Do not infer feelings or relationships. For each requirement select exactly one supporting source_passage_id from the supplied list. Never write or correct a source quote. Use English. Return ONLY {"anchors":[{"id":"a1","kind":"event","requirement":"short proposition","source_passage_id":"s1"}]}. Kinds: participant, setting, event, relationship, emotion. IDs a1, a2, etc.',
+            {"passages": [{"id": p["id"], "text": p["text"]} for p in chunks]},
+        )
+        if set(selected) != {"anchors"} or not isinstance(selected["anchors"], list):
+            raise ValueError("Selección de fuentes inválida.")
+        if len(selected["anchors"]) < 3:
+            raise SourceIneligibleError(
+                "Menos de tres hechos respaldados por fragmentos originales."
+            )
+        items = []
+        for item in selected["anchors"]:
+            if (
+                set(item) != {"id", "kind", "requirement", "source_passage_id"}
+                or item["source_passage_id"] not in by_id
+            ):
+                raise ValueError("El extractor seleccionó un fragmento inexistente o inválido.")
+            items.append(
+                {k: item[k] for k in ["id", "kind", "requirement"]}
+                | {"source_quote": by_id[item["source_passage_id"]]}
+            )
+        validate_anchors(items, row["reference"])
     # Las citas de procedencia quedan en el registro del juez, fuera de la consigna.
     visible = [{k: item[k] for k in ["id", "kind", "requirement"]} for item in items]
     return PREFIX + protected_json(

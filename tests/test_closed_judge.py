@@ -1,5 +1,6 @@
 import json
 import math
+from copy import deepcopy
 from types import SimpleNamespace
 
 import pytest
@@ -124,3 +125,76 @@ def test_direct_logits_are_normalized_without_generation_and_cached(tmp_path):
         == r["label_logits"]
     )
     assert len(calls) == 2
+
+
+def test_cached_prefix_preserves_full_context_and_is_not_modified(tmp_path, monkeypatch):
+    import mlx.core as mx
+    from mlx_lm_lora.trainer import grpo_trainer
+
+    built = []
+
+    def build(model, ids):
+        built.append(ids)
+        return {"sum": sum(ids[:-1])}
+
+    monkeypatch.setattr(grpo_trainer, "build_shared_prompt_cache", build)
+    monkeypatch.setattr(grpo_trainer, "fork_prompt_cache", lambda model, cache: dict(cache))
+
+    class Tokenizer:
+        def apply_chat_template(self, messages, *, add_generation_prompt, **kwargs):
+            return "FULL" + messages[-1]["content"] if add_generation_prompt else "PREFIX"
+
+        def encode(self, text, **kwargs):
+            prefix = list(range(1, 17))
+            if text == "PREFIX":
+                return prefix
+            letter = text[-1] if text[-1] in "ABC" else None
+            return (
+                prefix
+                + [17, 19 if "other" in text else 18]
+                + (["ABC".index(letter) + 1] if letter else [])
+            )
+
+    def model(ids, cache=None):
+        value = sum(ids.tolist()[0]) + (cache["sum"] if cache else 0)
+        if cache is not None:
+            cache["sum"] = value
+        return mx.array([[[0.0, value, value + 1, value + 2]]])
+
+    spec = {
+        "classification": {
+            "labels": ["A", "B", "C"],
+            "rotations": 3,
+            "margin": 0.15,
+            "min_choice_mass": 0.05,
+            "prefix_cache": True,
+        }
+    }
+    cached = ClosedJudge(
+        SimpleNamespace(spec=spec, model=model, tokenizer=Tokenizer(), root=tmp_path)
+    )
+    first = cached.distribution("claim", "passage", 0)
+    uncached_spec = deepcopy(spec)
+    uncached_spec["classification"]["prefix_cache"] = False
+    full = ClosedJudge(
+        SimpleNamespace(spec=uncached_spec, model=model, tokenizer=Tokenizer(), root=tmp_path)
+    )
+    assert first["label_logits"] == full.distribution("claim", "passage", 0)["label_logits"]
+    assert first["cached_prefix_tokens"] == 15
+    assert cached.distribution("claim", "other", 0)["label_logits"] != first["label_logits"]
+    assert len(built) == 1 and list(cached.prefix_templates.values()) == [
+        {"sum": sum(range(1, 16))}
+    ]
+
+
+def test_whole_account_retains_context_and_exact_source_offsets():
+    scorer = ClosedJudge.__new__(ClosedJudge)
+    scorer.options = {"scope": "whole_account"}
+    calls = []
+    scorer.classify = lambda requirement, text: calls.append(text) or {"status": "preserved"}
+    text = "I met my sister. " + "We walked together. " * 40 + "She woke me up."
+    result = scorer.assess([{"id": "a", "requirement": "My sister woke me up."}], text)
+    assert calls == [text]
+    assert result["source_passages"] == [
+        {"id": "account", "start": 0, "end": len(text), "text": text}
+    ]

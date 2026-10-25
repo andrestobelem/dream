@@ -21,7 +21,11 @@ def rate_closed(judge, draft, answer, brief, *, neutral=False):
     scorer = judge.closed_scorer
     compliance = scorer.assess(visible_anchors(brief), answer)
     requirements = draft_requirements(draft)
-    fidelity = scorer.assess(requirements, answer) if requirements and not neutral else None
+    fidelity = (
+        scorer.assess(requirements, answer, mode="fidelity")
+        if requirements and not neutral
+        else None
+    )
     likeness = judge.likeness(answer) if answer else {"dream_likeness": 0}
     return {
         "dream_likeness": likeness["dream_likeness"],
@@ -33,7 +37,7 @@ def rate_closed(judge, draft, answer, brief, *, neutral=False):
         "anchor_assessment": compliance,
         "fidelity_assessment": fidelity,
         "fidelity_requirements": requirements,
-        "fidelity_method": "scene_sentences_v1",
+        "fidelity_method": "scene_sentences_core_v2",
         "likeness_reason": likeness.get("reason"),
         "scoring_protocol": "dream-v4",
     }

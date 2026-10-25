@@ -318,7 +318,9 @@ class Runner:
             },
         )
 
-    def train(self, rows, condition, seed, steps, folder, run_identity, resume=None):
+    def train(
+        self, rows, condition, seed, steps, folder, run_identity, resume=None, sample_order=None
+    ):
         import mlx.core as mx
         from mlx import nn
         from mlx.utils import tree_flatten, tree_map
@@ -340,19 +342,36 @@ class Runner:
             self.checkpoint_path = resume
         if start_step > steps:
             raise ValueError("El checkpoint supera los pasos solicitados.")
-        order = np.random.default_rng(seed).permutation(len(rows)).tolist()
+        order = (
+            sample_order
+            if sample_order is not None
+            else np.random.default_rng(seed).permutation(len(rows)).tolist()
+        )
+        if not order or any(type(i) is not int or not 0 <= i < len(rows) for i in order):
+            raise ValueError("Orden de fuentes inválido.")
         t = self.config["training"]
         g = self.config["generation"]
         loss_grad = nn.value_and_grad(self.model, grpo_loss)
         for step in range(start_step + 1, steps + 1):
             start = time.perf_counter()
             row = rows[order[(step - 1) % len(order)]]
-            (completions, texts, indices), records = self.generate(
-                row, condition, count=t["group_size"]
-            )
-            from .uncertainty import dimension_metrics, require_scored_group
+            from .uncertainty import UnscoredGroupError, dimension_metrics, require_scored_group
 
-            require_scored_group(records, folder, step)
+            for attempt in range(t.get("max_unscored_groups", 0) + 1):
+                (completions, texts, indices), records = self.generate(
+                    row, condition, count=t["group_size"]
+                )
+                try:
+                    require_scored_group(records, folder, step, attempt=attempt)
+                except UnscoredGroupError:
+                    if attempt == t.get("max_unscored_groups", 0):
+                        raise
+                    print(
+                        "Juez incierto: se conserva el grupo y se muestrea otro grupo completo para la misma consigna.",
+                        flush=True,
+                    )
+                else:
+                    break
             prompt_text = self.render_prompt(row, condition)
             prompt_ids = self.encode(prompt_text)
             batch = (
@@ -440,6 +459,7 @@ class Runner:
                 **dimension_metrics(records),
                 "format": np.mean([r["reward"]["format"] for r in records]).item(),
                 "variable_reward": len(set(totals)) > 1,
+                "unscored_groups_before_update": attempt,
                 "advantages": advantages.tolist(),
                 "mlx_peak_bytes": mx.get_peak_memory(),
                 **{key: value.item() for key, value in metrics.items()},
