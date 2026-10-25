@@ -62,16 +62,33 @@ def paired_summary(rows, keyed, first, second):
     }
 
 
-def compare(root, previous):
+def compare(root, previous, baseline=Path("results/dream-v7-eval")):
+    train = read_json(root / "dream/paired/run.json")
+    source = read_json(Path(train["lineage"]["source_run"]))
+    start = train["lineage"]["source_step"]
+    end = train["training_validation"]["steps_completed"]
+    if (
+        train["status"] != "complete"
+        or source["status"] != "complete"
+        or source["training_validation"]["steps_completed"] != start
+        or train["lineage"]["target_step"] != end
+        or not start < end <= start + 16
+        or train["validation_used_for_updates"]
+        or not train["training_validation"]["base_unchanged"]
+    ):
+        raise ValueError(
+            "La continuación no coincide con su tramo completo y separado de validación."
+        )
+    first, second = f"step{start}", f"step{end}"
     folder = root / "dream/holdout"
     pack = read_json(folder / "evaluation-pack.json")
     old = read_json(previous / "dream/holdout/evaluation-pack.json")
     if pack["rows_hash"] != old["rows_hash"] or pack["rows"] != old["rows"]:
         raise ValueError("La cohorte debe conservar todos sus prompts y referencias.")
     paths = {
-        "base": previous / "dream/holdout/base",
-        "step16": previous / "dream/holdout/checkpoint",
-        "step32": folder / "checkpoint",
+        "base": baseline / "dream/holdout/base",
+        first: previous / "dream/holdout/checkpoint",
+        second: folder / "checkpoint",
     }
     keyed, runs = {}, {}
     expected = {(r["problem_id"], c) for r in pack["rows"] for c in range(3)}
@@ -88,8 +105,11 @@ def compare(root, previous):
         for key in ["model", "generation", "evaluation", "embeddings", "lora"]:
             if run["config"][key] != runs["base"]["config"][key]:
                 raise ValueError("Cambió un parámetro de la comparación.")
+        own_pack = read_json(path.parent / "evaluation-pack.json")
+        if own_pack["rows"] != pack["rows"] or run["cohort_hash"] != pack["rows_hash"]:
+            raise ValueError("Un modelo se evaluó con otras referencias o prompts.")
         validate_pack(
-            pack if name == "step32" else old,
+            own_pack,
             read_json(path.parent / "selection.json"),
             run["config"],
         )
@@ -99,15 +119,13 @@ def compare(root, previous):
             raise ValueError("Muestras incompletas o duplicadas.")
         if name != "base" and not run["adapter_loaded_exactly"]:
             raise ValueError("Los adaptadores evaluados no coinciden con el checkpoint.")
-    train = read_json(root / "dream/paired/run.json")
-    source = read_json(Path(train["lineage"]["source_run"]))
-    for run, training in [(runs["step16"], source), (runs["step32"], train)]:
+    for run, training in [(runs[first], source), (runs[second], train)]:
         if (
             sha256(Path(training["training_validation"]["checkpoint"]) / "adapters.safetensors")
             != run["checkpoint_sha256"]
         ):
             raise ValueError("Se modificó un checkpoint evaluado.")
-    if train["lineage"]["source_checkpoint_sha256"] != runs["step16"]["checkpoint_sha256"]:
+    if train["lineage"]["source_checkpoint_sha256"] != runs[first]["checkpoint_sha256"]:
         raise ValueError("La continuación no partió del checkpoint evaluado anteriormente.")
     train_groups = {
         r["author_group"]
@@ -130,8 +148,7 @@ def compare(root, previous):
                     if record[field] != reference[field]:
                         raise ValueError("Cambió la entrada o la semilla de un par.")
     comparisons = {
-        f"{a}_to_step32": paired_summary(pack["rows"], keyed, a, "step32")
-        for a in ["base", "step16"]
+        f"{a}_to_{second}": paired_summary(pack["rows"], keyed, a, second) for a in ["base", first]
     }
     result = {
         "reports": 24,
@@ -139,22 +156,22 @@ def compare(root, previous):
         "cohort_hash": pack["rows_hash"],
         "metrics": {k: metrics(list(v.values())) for k, v in keyed.items()},
         "comparisons": comparisons,
-        "training_steps_before": 16,
-        "training_steps_after": 32,
-        "additional_training_steps": 16,
+        "training_steps_before": start,
+        "training_steps_after": end,
+        "additional_training_steps": end - start,
         "validation_used_for_updates": False,
-        "checkpoint16_sha256": runs["step16"]["checkpoint_sha256"],
-        "checkpoint32_sha256": runs["step32"]["checkpoint_sha256"],
+        f"checkpoint{start}_sha256": runs[first]["checkpoint_sha256"],
+        f"checkpoint{end}_sha256": runs[second]["checkpoint_sha256"],
         "historical_generations_reused_without_regeneration": True,
         "caution": "Los 24 relatos son validación de desarrollo ya observada, no una nueva prueba ciega. Encoder compartido con recompensa; seis grupos; no evalúa oniricidad.",
     }
     target = root / "dream/report"
     write_json(target / "comparison.json", result)
     graph = {
-        **comparisons["step16_to_step32"],
+        **comparisons[f"{first}_to_{second}"],
         "reports": 24,
-        "base_label": "Checkpoint 16",
-        "checkpoint_label": "Checkpoint 32",
+        "base_label": f"Checkpoint {start}",
+        "checkpoint_label": f"Checkpoint {end}",
         "cohort_label": "Mismos relatos reservados",
     }
     save_scatter(target, graph)
@@ -166,11 +183,11 @@ def compare(root, previous):
         "relative_word_error_valid_mean": "Error relativo de longitud, sólo válidas",
     }
     lines = [
-        "# Continuación del paso 16 al 32",
+        f"# Continuación del paso {start} al {end}",
         "",
-        "Mismos 24 relatos reservados y tres muestras por modelo y relato. Base y paso 16 reutilizan sus salidas originales. Sólo los ocho relatos de entrenamiento actualizaron pesos.",
+        f"Mismos 24 relatos reservados y tres muestras por modelo y relato. Base y paso {start} reutilizan sus salidas originales. Sólo los ocho relatos de entrenamiento actualizaron pesos.",
         "",
-        "| Medida | Base | Paso 16 | Paso 32 |",
+        f"| Medida | Base | Paso {start} | Paso {end} |",
         "| --- | ---: | ---: | ---: |",
     ]
     for key, label in labels.items():
@@ -182,11 +199,11 @@ def compare(root, previous):
             + " | ".join(f"{v:.4f}" if isinstance(v, float) else str(v) for v in values)
             + " |"
         )
-    lines += ["", "![Paso 16 frente al 32](cercania-pareada.png)", ""]
+    lines += ["", f"![Paso {start} frente al {end}](cercania-pareada.png)", ""]
     for name, p in comparisons.items():
         ci = p["cosine_cluster_interval"]
         lines += [
-            f"## {p['first']} → paso 32",
+            f"## {p['first']} → paso {end}",
             "",
             f"{p['n_common_valid_pairs']} pares válidos: coseno {p['cosine_first']:.4f} → {p['cosine_second']:.4f}; cambio medio {p['common_valid_cosine_delta_mean']:+.4f}.",
             "",
@@ -210,7 +227,7 @@ def compare(root, previous):
         "",
         result["caution"],
         "",
-        "Mismos prompts, longitudes y semillas. Formatos inválidos no tienen coseno. El checkpoint 16 y la base quedaron intactos. Los 200 relatos de prueba no se usaron. Referencias y generaciones completas permanecen fuera de Git. Fuente DreamBank, CC BY-NC-SA 4.0, dreambank.net. Código MIT.",
+        f"Mismos prompts, longitudes y semillas. Formatos inválidos no tienen coseno. El checkpoint {start} y la base quedaron intactos. Los 200 relatos de prueba no se usaron. Referencias y generaciones completas permanecen fuera de Git. Fuente DreamBank, CC BY-NC-SA 4.0, dreambank.net. Código MIT.",
         "",
     ]
     (target / "comparacion.md").write_text("\n".join(lines))
@@ -222,5 +239,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--previous", type=Path, default=Path("results/dream-v7-eval"))
+    parser.add_argument("--baseline", type=Path, default=Path("results/dream-v7-eval"))
     args = parser.parse_args()
-    compare(args.results.resolve(), args.previous.resolve())
+    compare(args.results.resolve(), args.previous.resolve(), args.baseline.resolve())

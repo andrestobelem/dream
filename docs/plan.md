@@ -1,6 +1,6 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 32 y evaluación completadas.
+Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 48 y evaluación completadas.
 
 ## Alcance vigente
 
@@ -92,6 +92,21 @@ con intervalo exploratorio [-0,0100; +0,0284]. La señal de cercanía es pequeñ
 Los 24 relatos son validación de desarrollo ya observada, fuera del entrenamiento;
 los 200 de prueba permanecen sin usar. Se terminó en el paso 32.
 [Resultados y método](continuacion-v8.md), [datos numéricos](resultados-v8.json).
+
+## Continuación completada: paso 32 → 48
+
+- [x] Restauración del checkpoint 32 completo; 16 pasos y 64 rollouts adicionales con el lote original.
+- [x] Personas y relatos reservados fuera de las actualizaciones; base y origen intactos.
+- [x] Recarga exacta del checkpoint 48 y 72 respuestas nuevas de evaluación congelada.
+- [x] Comparación con las salidas originales de base y paso 32, mismos prompts y semillas.
+- [x] Auditoría de 216 scores de evaluación y 64 de entrenamiento desde caché; 142 pruebas aprobadas.
+- [x] Informe generalizado a la procedencia de cada segmento; regresión exacta contra v8.
+
+En 67 pares válidos, coseno 0,6446 → 0,6523 (+0,0078); doce medias por relato suben y doce
+bajan. La media por relato/persona tiene intervalo [-0,0132; +0,0317]. Formato 70/72 → 69/72,
+truncamientos 0 → 1. Resultado mixto, sin mejora concluyente respecto del paso 32.
+Se terminó en el paso 48. Los 24 relatos siguen fuera de las actualizaciones y los 200 de
+prueba permanecen sin usar. [Método y resultados](continuacion-v9.md), [datos numéricos](resultados-v9.json).
 
 ## Recursos y recuperación
 
