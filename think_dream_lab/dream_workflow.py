@@ -65,7 +65,7 @@ class DreamRunner(Runner):
     def train(self, *args, **kwargs):
         if self.config["judge"].get("rubric_version") == "dream-v4":
             raise RuntimeError(
-                "El entrenamiento requiere calibración humana validada del juez cerrado."
+                "El entrenamiento requiere calibración validada del juez cerrado con referencias anotadas."
             )
         return super().train(*args, **kwargs)
 
@@ -228,7 +228,7 @@ def smoke(config, root, resume=False):
     manifest.update(status="complete", completed_at=time.time())
     write_json(manifest_path, manifest)
     print(
-        "Smoke de sueños completo. La validez del score requiere revisión humana independiente.",
+        "Smoke de sueños completo. Terminar el entrenamiento no valida por sí solo el score.",
         flush=True,
     )
 

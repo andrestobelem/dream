@@ -13,7 +13,7 @@ judge:
   classification:
     labels: [A, B, C]
     rotations: 3
-    margin: 0.15  # Provisional: requiere calibración humana antes de entrenar.
+    margin: 0.15  # Provisional: requiere calibración con referencias anotadas antes de entrenar.
     min_choice_mass: 0.05
     calibration_file: null
   calibration_margin: 1.0

@@ -20,7 +20,7 @@ Las reglas de agregación son fijas en Python. Una etiqueta demasiado próxima a
 
 Si algún requisito queda sin decidir, el score global es `None`, con cobertura y score condicional reportados por separado. Ese `None` no equivale a cero ni puede pasar directamente a GRPO. El circuito conserva la abstención en los informes y en Inspect, y detiene el grupo completo antes de calcular ventajas o actualizar adaptadores. No elimina candidatos inciertos ni les imputa una recompensa.
 
-Los umbrales actuales de margen 0,15 y masa 0,05 son provisionales. Requieren calibración con pares revisados por humanos, validación independiente y un criterio de cobertura fijado antes de entrenar. La revisión de oniricidad de seis relatos no reemplaza las anotaciones necesarias para calibrar estas tres clases.
+Los umbrales actuales de margen 0,15 y masa 0,05 son provisionales. Para el próximo piloto exploratorio se usarán, por autorización del usuario, referencias anotadas por el asistente para la calibración de desarrollo, con procedencia explícita y criterios de cobertura fijados antes de entrenar. La validación humana independiente sigue siendo una etapa diferente. La revisión de oniricidad de seis relatos no reemplaza las anotaciones necesarias para calibrar estas tres clases.
 
 ## Qué se verificó
 
@@ -36,11 +36,21 @@ El carácter onírico permanece separado, con revisión humana pendiente. No se 
 
 ## Pares preparados para revisión humana
 
-El paquete `results/dream-v4/dream/review-pairs/7c803087be40/revision.csv` contiene 29 pares de requisito y relato, agrupados en 14 fuentes. Incluye los ocho pares de los controles nuevos, primera y última oración de nueve escenas válidas producidas por SmolLM2 y tres requisitos de la evaluación real de cumplimiento. Las respuestas humanas están vacías; no se presentan etiquetas sintéticas como anotaciones de personas.
+El paquete `results/dream-v4/dream/review-pairs/7c803087be40/revision.csv` contiene 29 pares de requisito y relato, agrupados en 14 fuentes. Incluye los ocho pares de los controles nuevos, primera y última oración de nueve escenas válidas producidas por SmolLM2 y tres requisitos de la evaluación real de cumplimiento. Se preparó con las respuestas vacías; la revisión posterior del asistente se conserva separada, sin presentar etiquetas sintéticas como anotaciones de personas.
 
 Se completa `etiqueta_humana` con `preservado`, `omitido`, `contradicho` o `no_se`, y se pueden agregar notas. No muestra predicciones del juez. La clave de procedencia se mantiene aparte; no debe abrirse antes de revisar. El script [prepare_pair_review.py](../experiments/prepare_pair_review.py) verifica el texto inmutable y conserva las anotaciones al repetir la exportación.
 
 Este paquete permite revisar discrepancias y preparar una calibración posterior. Todavía no es un conjunto de calibración validado. Debe separarse por fuente antes de ajustar y evaluar umbrales; una revisión pequeña tampoco prueba precisión general. La revisión de oniricidad de seis relatos sigue siendo un archivo distinto.
+
+### Revisión del asistente completada
+
+El usuario autorizó que el asistente hiciera la revisión con su criterio. Se conservaron las dos etiquetas ya cargadas y se completaron 27 adicionales. La copia `revision-asistente.csv` tiene una columna `origen_revision` y el resultado conjunto es: 11 preservados, 15 omitidos, dos contradichos y uno ambiguo (`no_se`). Los originales no se alteraron ni se llenaron columnas humanas con notas automáticas.
+
+Cada nota juzga la proposición completa: si una oración reúne varios hechos y sólo conserva algunos, se marca omitida con una explicación de la conservación parcial. Se detectó una formulación ambigua que atribuye devolver un bolso a una estación y a un desconocido; quedó `no_se`. Esto muestra un límite de usar oraciones completas como requisitos de fidelidad y debe revisarse antes de interpretar ese score.
+
+Se restauró únicamente en la copia una comilla adicional al final de un relato, contrastándolo con el control original congelado. El manifiesto `revision-asistente.json` registra esa corrección, las procedencias y hashes de entrada y salida. No se cambió la etiqueta preexistente de esa fila.
+
+Los seis relatos de oniricidad se puntuaron aparte, antes de abrir su clave de origen, en `results/dream/report/revision-asistente.csv`. Las notas fueron 4, 2, 3, 2, 3 y 4 en el orden del paquete. Sólo cuatro tenían score histórico del juez: tres coincidieron exactamente y uno difirió en un punto, con error absoluto medio 0,25 sobre una escala de 0–4. Es un diagnóstico de cuatro salidas anteriores, no una validación de `dream-v4`.
 
 ## Contraste con un clasificador especializado
 
@@ -63,6 +73,6 @@ Los resultados se guardaron separados en `results/dream-v4-phi/dream/closed-chec
 ## Próximos pasos
 
 1. Mejorar la corrección del clasificador y verificar los cambios con ejemplos independientes. El primer contraste especializado no resolvió los errores.
-2. Anotar los pares preparados y calibrar umbrales, sesgos de etiquetas y cobertura; congelar el protocolo antes de entrenar.
+2. Usar las etiquetas asistidas para calibrar umbrales y medir cobertura, separando por fuente y conservando `no_se` como incertidumbre; congelar el protocolo antes de entrenar.
 3. Revisar la integración de cumplimiento y fidelidad con los pares anotados; las reglas de abstención ya están implementadas.
 4. Repetir el piloto con SmolLM2 y verificar reanudación antes de ampliar el entrenamiento.

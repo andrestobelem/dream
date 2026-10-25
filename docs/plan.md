@@ -23,13 +23,15 @@ La única condición activa es **D: Soñar + `<dream>`**. Las variantes A/B/C y 
 
 ## Lo que falta para entrenar y evaluar Dream
 
-1. **Validar la evaluación.** La variante con ejemplos del clasificador cerrado pasó siete de ocho controles conocidos y tres de cuatro nuevos. Siguen pendientes errores relevantes y calibración humana. Se prepararon 29 pares de requisitos y relatos para revisar cumplimiento y fidelidad; no tienen anotaciones humanas. El paquete anterior de seis relatos para evaluar carácter onírico tampoco fue puntuado y es una revisión distinta.
+1. **Calibrar y comprobar la evaluación.** La variante con ejemplos del clasificador cerrado pasó siete de ocho controles conocidos y tres de cuatro nuevos. A pedido del usuario, el asistente revisó los 29 pares: conservó dos etiquetas preexistentes y anotó los otros 27; uno quedó ambiguo. También puntuó los seis relatos de carácter onírico. Las copias `revision-asistente.csv` y su manifiesto distinguen la procedencia de cada nota. Estas referencias permiten avanzar con una calibración de desarrollo asistida; no se presentan como validación humana independiente. Siguen pendientes errores relevantes del juez.
 2. **Estabilizar generación D.** La nueva prueba de diez consignas sintéticas obtuvo nueve respuestas completas y una sin cierre de `<dream>`; no aprobó el criterio fijado de 10/10. Falta revisar calidad, copia y diversidad con relatos del corpus.
 3. **Ejecutar un piloto pequeño de entrenamiento D con SmolLM2**, una vez que la evaluación sea utilizable. Comparar relatos antes y después, conservar componentes del score y comprobar que sólo cambien los adaptadores.
 4. **Verificar recuperación** del piloto de sueños y documentar resultados y límites. La prueba completa de interrupción y reanudación anterior corresponde a aritmética.
 5. **Publicar los resultados del piloto** en el repo y el site, distinguiendo pruebas de código y evidencia de aprendizaje.
 
 El entrenamiento de `dream-v4` permanece bloqueado porque el evaluador aún no está validado. La infraestructura opcional de evaluación no debe demorar ni ampliar estas tareas. No se lanzarán comparaciones entre instrucciones o delimitadores como parte de este alcance.
+
+No se espera que el usuario termine las planillas: autorizó la revisión con criterio del asistente. Los originales se conservaron. La revisión humana independiente queda como validación posterior; el próximo piloto será exploratorio y deberá distinguir esa limitación de una calibración operativa con las referencias asistidas.
 
 ## Antecedentes y límites
 

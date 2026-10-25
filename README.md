@@ -122,6 +122,12 @@ la clave antes de puntuar. Esta revisión está preparada, no realizada.
 Regenerar informes conserva el paquete original y sus anotaciones. Los paquetes nuevos
 se escriben con otro nombre para no borrar ni cambiar la revisión en curso.
 
+Por autorización del usuario, el asistente completó una revisión separada de esos seis
+relatos y de 29 pares de requisitos. Las copias `revision-asistente.csv` distinguen la
+procedencia de las notas; no se rellenaron columnas humanas con puntuaciones del asistente.
+Se usarán como referencias de desarrollo para el piloto exploratorio. Los detalles y límites
+están en la [rúbrica actual](docs/rubrica-v4.md).
+
 La generación de sueños termina en `</answer>`, EOS o el límite de tokens, con el mismo
 criterio en todas las condiciones. Los tokens muestreados del cierre se conservan para GRPO.
 
