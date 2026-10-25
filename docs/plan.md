@@ -1,6 +1,26 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: último entrenamiento y evaluación hasta el paso 144; diagnóstico de longitud y lote ampliado preparados, sin nuevo entrenamiento.
+Estado al 25 de octubre de 2026: experimento ampliado completado, desde el checkpoint 32
+hasta el 160. Los pasos 33–160 recorrieron una sola vez los 128 relatos aprobados.
+La comparación no mostró una mejora convincente; el 32 sigue como referencia práctica.
+
+## Experimento ampliado aprobado
+
+- [x] Lote revisado de 128 relatos aprobado por el usuario, sin personas reservadas.
+- [x] Evaluación inicial del paso 32 a 2.048 tokens: 70/72 formatos válidos, coseno 0,6453.
+- [x] Juez independiente Phi-4 fijado antes de entrenar y seis controles superados.
+- [x] Restauración exacta de adaptadores, optimizador y aleatoriedad; origen intacto.
+- [x] Completar 128 actualizaciones nuevas, una visita por relato y 512 rollouts usados.
+- [x] Evaluar el paso 160 con los mismos 24 reservados, prompts, semillas y límite.
+- [x] Puntuar 139 respuestas válidas de ambas fases mezcladas con el juez ciego, sólo sobre answer.
+- [x] Auditar 512 scores de entrenamiento y 144 de evaluación; 166 pruebas aprobadas.
+- [x] Comparar ambas medidas y documentar resultados, límites y recuperación del lector del juez.
+
+En los mismos 67 pares válidos, MiniLM pasó de 0,6435 a 0,6485 (+0,0050) y el juez
+de 2,2537 a 2,0896 sobre 4 (−0,1642). Ambos intervalos por persona incluyen cero.
+Formato: 70/72 → 69/72; error de longitud: 0,3643 → 0,7443. No se siguió entrenando
+después de la pasada fijada. Los 200 relatos de prueba siguen sin usarse.
+[Diseño, resultados y comandos](experimento-ampliado-v17.md), [datos](resultados-v17.json).
 
 ## Alcance vigente
 
@@ -214,9 +234,9 @@ y los 200 de prueba no se usaron.
 - [x] Tres referencias con recortes explícitos y hashes originales conservados; los ocho
   ejemplos aprobados se mantienen exactamente. Vista revisable y archivo de prompts sin referencia.
 - [x] Auditorías de integridad y modelos congelados; 149 pruebas aprobadas; cero actualizaciones.
-- [ ] Fijar el límite y la evaluación inicial completa del checkpoint elegido antes de entrenar el lote.
-- [ ] Juez independiente y ciego de cercanía, separado de oniricidad.
-- [ ] Ejecutar el recorrido completo del lote nuevo. No se inició en esta etapa.
+- [x] Fijar el límite y la evaluación inicial completa del checkpoint elegido antes de entrenar el lote (v17).
+- [x] Fijar el juez independiente y sus controles, separado de oniricidad (v17).
+- [x] Completar el recorrido del lote nuevo en v17; ver resultados al inicio de este plan.
 
 [Diagnóstico, lote y límites](preparacion-v16.md), [datos de longitud](resultados-longitud-v16.json),
 [auditoría del lote](lote-v16-resumen.json). Los 24 relatos siguen siendo desarrollo y los
@@ -234,10 +254,11 @@ los tokens y los checkpoints se guardan en `results/dream-v6/`. No se publican r
 originales ni pesos automáticamente. DreamBank declara CC BY-NC-SA 4.0, atribución a
 [dreambank.net](https://dreambank.net/); MIT se aplica al código.
 
-## Propuesta recibida del panel lateral: siguiente experimento
+## Propuesta recibida del panel lateral y ejecución
 
-Propuesta recibida durante la corrida 96 → 112. Después se ejecutaron sólo el diagnóstico
-de longitud y la preparación del lote; el entrenamiento ampliado y el juez siguen pendientes:
+Propuesta recibida durante la corrida 96 → 112. Primero se completaron el diagnóstico
+de longitud y la preparación del lote (v16). Después de su aprobación se completó el
+experimento ampliado (v17), con el diseño y resultados al inicio de este plan:
 
 - Comparación breve sin entrenar de 1.024 frente a 2.048 tokens, con checkpoints y consignas
   idénticos, para distinguir truncamientos de problemas de generación.

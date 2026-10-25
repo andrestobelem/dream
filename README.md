@@ -13,7 +13,29 @@ humana asociada**: `(1 + coseno) / 2`, usando MiniLM congelado. GRPO asigna esa 
 todos los tokens muestreados, incluidos los del bloque de sueño. No hay penalización por
 coincidencias textuales ni por diferencias de longitud. Un formato inválido recibe cero.
 
-## Próximo experimento preparado, sin entrenar
+## Último experimento completado
+
+Se completó una pasada de **128 actualizaciones nuevas desde el checkpoint 32 hasta el 160**,
+una por cada relato aprobado y cuatro candidatos por actualización. Ambas evaluaciones
+usaron 2.048 tokens y los mismos 24 relatos reservados de seis personas.
+Un juez Phi-4 independiente evaluó ambas fases mezcladas, sin participar en la recompensa.
+
+| Medida | Antes · paso 32 | Después · paso 160 |
+| --- | ---: | ---: |
+| MiniLM, mismos 67 pares válidos | 0,6435 | 0,6485 |
+| Juez de cercanía, mismos pares, 0–4 | 2,2537 | 2,0896 |
+| Formato válido | 70/72 | 69/72 |
+| Score incluyendo fallos de formato | 0,7998 | 0,7916 |
+
+**No se observó una mejora convincente.** MiniLM subió apenas y el juez bajó; ambos
+intervalos exploratorios incluyen cero. El error de longitud también aumentó: 0,3643 → 0,7443.
+El paso 32 sigue como referencia práctica y el 160 se conserva como resultado experimental.
+Los reservados quedaron fuera del entrenamiento y los 200 de prueba no se evaluaron.
+Auditoría completa aprobada y 166 pruebas exitosas.
+[Método, resultados y límites](docs/experimento-ampliado-v17.md),
+[datos numéricos](docs/resultados-v17.json), [auditoría](docs/auditoria-v17.json).
+
+## Preparación y diagnóstico previos
 
 El [diagnóstico de longitud y el lote ampliado](docs/preparacion-v16.md) están completos.
 En una muestra de seis relatos elegida para incluir los truncamientos del paso 144,
@@ -25,14 +47,14 @@ El lote contiene los ocho relatos anteriores más 120 nuevos, balanceados entre 
 de entrenamiento. Todos los reservados quedan fuera. Las 128 semillas fueron revisadas
 contra sus fuentes; se registraron 92 correcciones y tres recortes trazables de referencia.
 El lote local, sus prompts separados y la vista `results/dream-v16/preparation/revision.html`
-están listos para revisar. **No se inició otro entrenamiento.**
+quedaron aprobados para esta pasada.
 
-## Último entrenamiento completado
+## Ensayo anterior completado
 
 Se continuó desde el checkpoint 128 hasta el **144**, con el mismo lote de ocho relatos,
 restaurando optimizador y aleatoriedad. Los **24 relatos reservados de seis personas**
 quedaron fuera del entrenamiento y se evaluaron con tres generaciones por modelo y relato.
-Este entrenamiento conservó los ocho relatos originales; el lote ampliado se preparó después, sin entrenarlo.
+Este ensayo conservó los ocho relatos originales; el lote ampliado se entrenó después en la bifurcación 32 → 160.
 
 | Medida | Base | Paso 128 | Paso 144 |
 | --- | ---: | ---: | ---: |
@@ -55,8 +77,9 @@ los 200 de prueba permanecen sin usar.
 ## Datos y ejecución
 
 La importación real de DreamBank conserva 1.000 relatos de entrenamiento, 100 de validación
-y 200 de prueba, deduplicados y separados en 43 grupos. El entrenamiento usó ocho relatos
-y el piloto evaluó cuatro. La evaluación ampliada usa otros 24 relatos de validación;
+y 200 de prueba, deduplicados y separados en 43 grupos. Los primeros entrenamientos usaron ocho relatos
+y el piloto evaluó cuatro; la última pasada usó 128 relatos de 30 personas.
+La evaluación ampliada usa otros 24 relatos de validación;
 los 200 de prueba no se utilizaron. El registro de
 alias y hogares está en [configs/dreambank-groups.json](configs/dreambank-groups.json).
 
@@ -76,13 +99,16 @@ interactividad de Metal, se usaron variables limitadas al proceso; ver el docume
 resultados. No se reinicia ningún contador ni se eliminan intentos fallidos.
 
 El lote local, las referencias y los pesos permanecen fuera de Git. La preparación
-revisable está en `results/dream-v6/preparation-short-seeds/`; incluye los prompts,
+del lote corto está en `results/dream-v6/preparation-short-seeds/`; incluye los prompts,
 referencias separadas, longitudes y hashes. Un clon del repositorio necesita esos datos
-locales antes de ejecutar este ensayo.
+locales antes de ejecutar esos ensayos. El lote ampliado aprobado está en
+`results/dream-v16/preparation/`; sus comandos de entrenamiento y evaluación están en
+el [experimento ampliado](docs/experimento-ampliado-v17.md).
 
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Experimento ampliado: una pasada por 128 relatos](docs/experimento-ampliado-v17.md).
 - [Preparación del lote de 128 y diagnóstico de longitud](docs/preparacion-v16.md).
 - [Continuación hasta el paso 144](docs/continuacion-v15.md).
 - [Continuación hasta el paso 128](docs/continuacion-v14.md).

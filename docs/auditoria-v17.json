@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "new_updates": 128,
+  "unique_training_reports": 128,
+  "training_rollouts_recomputed": 512,
+  "evaluation_scores_recomputed": 144,
+  "new_embedding_inference": false,
+  "reserved_in_updates": false,
+  "source_files_unchanged": true,
+  "bootstrap_exact": true,
+  "final_checkpoint_reload_exact": true,
+  "finite_losses_and_nonzero_gradients": true,
+  "judge_parameters_unchanged": true,
+  "judge_normalizations_preserve_complete_fields": true,
+  "same_prompts_tokens_seeds": true,
+  "test_reports_evaluated": 0,
+  "approved_dataset_hash": "d910fdda3577dfd3b0188face94a99ad6ac0cff09a92ecd85ed9f8a338e2453e"
+}
