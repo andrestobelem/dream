@@ -22,6 +22,7 @@ def parser():
         "corpus",
         "seeds",
         "embedding-check",
+        "prompt-check",
         "judge",
         "anchor-check",
         "anchor-holdout",
@@ -50,9 +51,26 @@ def parser():
                 choices=["A", "B", "C", "D"] + (["neutral"] if command == "_worker" else []),
             )
             cmd.add_argument("--seed", type=int)
-        if command in {"evaluate", "seeds", "embedding-check", "base-check", "_worker"}:
-            cmd.add_argument("--limit", type=int, default=12 if command == "embedding-check" else 1)
+        if command in {
+            "evaluate",
+            "seeds",
+            "embedding-check",
+            "base-check",
+            "prompt-check",
+            "_worker",
+        }:
+            cmd.add_argument(
+                "--limit",
+                type=int,
+                default=12
+                if command == "embedding-check"
+                else 3
+                if command == "prompt-check"
+                else 1,
+            )
             cmd.add_argument("--start-index", type=int, default=0)
+        if command in {"prompt-check", "_worker"}:
+            cmd.add_argument("--brief-file", type=Path, required=command == "prompt-check")
         if command == "evaluate":
             cmd.add_argument("--condition", choices=["A", "B", "C", "D", "neutral"], default="D")
         if command == "_worker":
@@ -63,6 +81,7 @@ def parser():
                     "corpus",
                     "seeds",
                     "embedding-check",
+                    "prompt-check",
                     "judge",
                     "judge-check",
                     "anchor-check",
@@ -109,12 +128,8 @@ def main(argv=None):
         if args.command == "smoke":
             from .supervisor import supervise
 
-            if args.verify_continuity:
-                raise ValueError(
-                    "La prueba automática de continuidad DreamBank aún está pendiente."
-                )
             extra = ["--resume"] if args.resume else []
-            return supervise(
+            code = supervise(
                 config,
                 args.results.resolve(),
                 [
@@ -126,9 +141,27 @@ def main(argv=None):
                     *extra,
                 ],
             )
-        if args.command in {"seeds", "embedding-check", "base-check"}:
+            if not code and args.verify_continuity:
+                code = supervise(
+                    config,
+                    args.results.resolve(),
+                    [
+                        "verify",
+                        "--config",
+                        str(Path(args.config).resolve()),
+                        "--results",
+                        str(args.results.resolve()),
+                    ],
+                )
+            return code
+        if args.command in {"seeds", "embedding-check", "base-check", "prompt-check"}:
             from .supervisor import supervise
 
+            extra = (
+                ["--brief-file", str(args.brief_file.resolve())]
+                if args.command == "prompt-check"
+                else []
+            )
             return supervise(
                 config,
                 args.results.resolve(),
@@ -140,13 +173,16 @@ def main(argv=None):
                     str(args.results.resolve()),
                     "--limit",
                     str(args.limit),
+                    *extra,
                 ],
             )
         if args.command == "_worker" and args.action in {
             "seeds",
             "embedding-check",
             "base-check",
+            "prompt-check",
             "smoke",
+            "verify",
         }:
             from .dreambank_workflow import check_base, embedding_check, extract_seeds, smoke
 
@@ -154,6 +190,16 @@ def main(argv=None):
                 raise KeyboardInterrupt("Extracción interrumpida; se conservan semillas completas.")
 
             signal.signal(signal.SIGTERM, stop_seed_extraction)
+            if args.action == "prompt-check":
+                from .natural_prompt_probe import probe
+
+                probe(config, args.results.resolve(), args.brief_file, args.limit)
+                return 0
+            if args.action == "verify":
+                from .dreambank_continuity import verify_continuity
+
+                verify_continuity(config, args.results.resolve())
+                return 0
             if args.action == "smoke":
                 smoke(config, args.results.resolve(), args.resume)
                 return 0

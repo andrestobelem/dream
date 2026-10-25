@@ -17,6 +17,7 @@ SEEDS = {
 
 def test_runner_uses_seeds_and_only_answer_reward():
     runner = EmbeddingRunner.__new__(EmbeddingRunner)
+    runner.config = load_config("configs/dream-v5.yaml")
     calls = []
 
     class Reward:
@@ -28,8 +29,9 @@ def test_runner_uses_seeds_and_only_answer_reward():
     row = {"seeds": SEEDS, "reference": "SECRET REFERENCE"}
     assert "SECRET REFERENCE" not in runner.render_prompt(row, "D")
     assert "Example" not in runner.render_prompt(row, "D")
-    assert runner.completion_reward("two blocks", row, "D") == {"total": 0.7}
-    assert calls == ["two blocks"]
+    result = runner.completion_reward("two blocks", row, "D")
+    assert result["total"] == 0.7
+    assert calls == [runner.config["generation"].get("response_prefix", "") + "two blocks"]
     with pytest.raises(ValueError):
         runner.render_prompt(row, "A")
 

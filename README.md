@@ -46,10 +46,13 @@ hasta ocho frases sin reescribirlas. Para repetir esta prueba, con su consumo su
 ```
 
 La recompensa y su conexión con GRPO están implementadas. El diagnóstico real conserva
-los aciertos y límites: listas temáticas también pueden puntuar alto. El prompt mínimo sin
-ejemplo produjo un formato válido de tres, con pesos base intactos. El piloto se interrumpió
-por tiempo antes de la primera actualización. Faltan las actualizaciones, recarga y evaluación
-posterior. La CLI impide ejecutar el juez histórico como si fuera el nuevo protocolo. El [plan actualizado](docs/plan.md) registra
+los aciertos y límites: listas temáticas también pueden puntuar alto. El piloto previo con apertura de `<dream>` completó tres pasos: los adaptadores
+cambiaron,
+la base quedó intacta y pasaron recarga y continuidad. Sus dos muestras reservadas fallaron
+el formato antes y después, por lo que no hay evidencia de mejora.
+La nueva plantilla propuesta por el usuario, con semillas naturales más ricas, se probó aparte
+sin entrenamiento: dos formatos válidos de tres, con diferencias importantes de contenido. La CLI impide ejecutar el juez histórico como si fuera el nuevo protocolo.
+El [plan actualizado](docs/plan.md) registra
 lo terminado, las tareas pendientes y el presupuesto acumulado.
 
 La infraestructura histórica de GRPO/LoRA y checkpoints se conserva para adaptar. Un piloto
@@ -74,7 +77,9 @@ relatos, pesos ni resultados locales.
 
 La riqueza de las semillas queda abierta; el límite inicial no es una conclusión. La recompensa
 actual busca el vecino más cercano del banco, no una reconstrucción obligatoria del relato de origen.
-Método y resultados: [recompensa por embeddings](docs/recompensa-embeddings.md).
+Método y resultados: [recompensa por embeddings](docs/recompensa-embeddings.md),
+[validación del piloto anterior](docs/validacion-dreambank.md) y
+[prueba de la plantilla natural](docs/plantilla-natural.md).
 
 ```sh
 uv sync --extra embeddings

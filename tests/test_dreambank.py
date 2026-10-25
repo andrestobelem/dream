@@ -135,7 +135,8 @@ def test_minimal_prompt_contains_only_seeds():
         "emotions": [],
     }
     prompt = render_prompt(seeds)
-    assert "<dream>...</dream>" in prompt and "<answer>...</answer>" in prompt
+    assert "<dream> dream here </dream>" in prompt
+    assert "<answer> dream account here </answer>" in prompt
     assert "think" not in prompt and "Example" not in prompt and "words per block" not in prompt
     with pytest.raises(ValueError):
         validate_seeds({**seeds, "actions": ["a full detailed plot with several clauses"]})

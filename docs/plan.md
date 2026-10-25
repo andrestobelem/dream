@@ -61,26 +61,37 @@ Conservamos **Qwen/Qwen3-1.7B-Base**, revisión
 - [x] Infraestructura histórica de GRPO, LoRA, checkpoints y cierre textual disponible para adaptar.
   Su funcionamiento anterior no demuestra eficacia del nuevo protocolo.
 
-## Trabajo pendiente, en orden
+## Resultados y siguiente trabajo
 
-1. Revisar y ampliar semillas: su riqueza queda abierta. Una comparación de niveles breve,
-   intermedio y rico para los mismos relatos es una propuesta para estudiar, no una decisión
-   cerrada ni un ensayo ejecutado. Deben aportar suficiente contexto sin entregar una trama.
-2. Completar el piloto de tres actualizaciones. Su primer intento completó la evaluación inicial,
-   pero se interrumpió por tiempo durante la preparación de LoRA, sin actualizaciones ni checkpoint.
-   Falta verificar cambios de adaptadores, pesos base congelados, recarga y evaluación posterior.
-3. Verificar continuidad real con el protocolo nuevo. Las pruebas con dobles comprueban el
-   recorrido de interrupción/reanudación; todavía no sustituyen la ejecución con pesos reales.
-4. Ampliar el diagnóstico de cercanía: distinguir vecino del banco y relato que originó la semilla.
-   La recompensa actual usa el banco; la métrica respecto del relato fuente puede registrarse
-   aparte. No incorporar validación/prueba al banco ni penalizaciones por coincidencias.
-5. Publicar los resultados efectivos del piloto una vez que existan; el site ya describe el
-   método actual y su estado incompleto.
+- [x] El piloto con apertura de `<dream>` completó tres pasos. Cuatro de doce candidatos
+  cumplieron el formato; los pasos 2 y 3 tuvieron recompensas variables y gradientes no nulos.
+  Los adaptadores cambiaron y la base quedó intacta. La recarga reprodujo los pesos guardados.
+- [x] Continuidad real desde el paso 2: diez comprobaciones aprobadas, incluidas salidas,
+  adaptadores, optimizador y estados aleatorios. No se atribuye esto a la nueva plantilla natural.
+- [x] Evaluación antes y después: dos muestras reservadas por fase, todas con formato inválido.
+  No hay evidencia de mejora. El cero de formato no es un juicio semántico del sueño.
+- [x] Revisión de desarrollo asistida de las cinco consignas usadas: contenido conservado,
+  con omisiones de emociones y relaciones. No son anotaciones humanas independientes.
+- [x] Diagnóstico separado respecto del relato de origen, calculado con vectores ya guardados.
+  En dos candidatos el vecino más cercano del banco difiere del relato de origen.
+- [x] Site versión 12 publicado con resultados, continuidad y limitaciones del piloto anterior.
+- [x] Nueva plantilla pedida por el usuario y semillas en lenguaje natural probadas con el modelo
+  base, sin entrenamiento: dos formatos válidos de tres, uno interpretativo y otro narrativo;
+  un tercero truncado. Referencia humana fuera del prompt. [Detalle](plantilla-natural.md).
 
-El diagnóstico encontró recompensa media 1,000 para referencias exactas, 0,777 para relatos
-reservados y 0,793 para listas temáticas. Los grupos tienen distintos referentes; los números
-no prueban una preferencia por listas frente a sueños. Sí advierten que la cercanía temática
-puede puntuar alto. Detalles en [recompensa por embeddings](recompensa-embeddings.md).
+La nueva redacción cambia la consigna: sus pruebas se conservan separadas del piloto entrenado.
+Antes de atribuirle resultados de aprendizaje habría que entrenarla y evaluarla con su propia
+identidad. Ese entrenamiento no se ejecutó en esta prueba de plantilla.
+
+Quedan abiertas la riqueza adecuada de las semillas y la estabilidad del formato. Comparar
+niveles breve, intermedio y rico es una propuesta, no un ensayo aprobado o ejecutado. La
+cercanía al relato de origen y al banco sigue registrada por separado; no se cambió la recompensa.
+
+El diagnóstico del encoder encontró recompensa media 1,000 para referencias exactas, 0,777
+para relatos reservados y 0,793 para listas temáticas. Los grupos tienen distintos referentes;
+los números no prueban preferencia por listas frente a sueños. Sí advierten que la cercanía
+temática puede puntuar alto. [Método](recompensa-embeddings.md) y
+[validación del piloto](validacion-dreambank.md).
 
 ## Recursos y límites
 
@@ -88,9 +99,10 @@ Se conservan todos los consumos previos: el presupuesto original es de 2.700 seg
 supervisada. Tras detener el último piloto quedaban aproximadamente 136 segundos. La prueba de extracción
 consumió 11,37 segundos adicionales, incluido el primer intento fallido. Junto con embeddings,
 pruebas de generación y el intento de piloto, el nuevo perfil acumula 111,52 de sus 120 segundos.
-El supervisor conserva diez segundos para detener el proceso, por lo que ese perfil ya no permite
-una ejecución útil. Se solicitó autorización para hasta cinco minutos adicionales, todavía pendiente
-al redactar este estado. La preparación del corpus no realiza inferencias. No se reinician los
+El supervisor conserva diez segundos para detener el proceso. El usuario autorizó hasta cinco minutos adicionales desde el consumo actual;
+el perfil amplió su techo acumulado a 411 segundos, sin reiniciar el contador. El piloto y
+la continuidad llevaron el consumo a 332,51 segundos; la nueva prueba de plantilla lo llevó
+a 364,38 segundos. La preparación del corpus no realiza inferencias. No se reinician los
 contadores anteriores para simular un presupuesto nuevo. Si el piloto completo no cabe, se
 presentará el trabajo preparado y la necesidad concreta de ampliar recursos.
 
@@ -114,6 +126,7 @@ Detalles históricos: [modelo base](modelo-base.md), [rúbrica v4](rubrica-v4.md
 [validación técnica](validacion-tecnica.md). Las diez respuestas con formato válido del protocolo
 anterior no validan el nuevo prompt sin ejemplo.
 
-Verificación de esta etapa: importación real y primera extracción por partición, más 124 pruebas
+Verificación de esta etapa: importación real y primera extracción por partición, más 128 pruebas
 automatizadas de corpus, recompensa, conexión con GRPO e informes, incluidas identidad, fuga,
-duplicados, manifiestos, prompt y caché. La recompensa por embeddings se ejecutó; el entrenamiento aún no completó actualizaciones.
+duplicados, manifiestos, prompt y caché. La recompensa, el piloto anterior y su continuidad se ejecutaron; la plantilla natural nueva
+se probó sin entrenamiento. Los resultados no demuestran mejora.

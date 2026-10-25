@@ -1,6 +1,5 @@
 """Consigna mínima: semillas breves, sueño libre y relato posterior."""
 
-import json
 import re
 
 CATEGORIES = ("characters", "places", "objects", "actions", "emotions")
@@ -71,11 +70,26 @@ def validate_seeds(value):
     return {k: [" ".join(t.split()) for t in value[k]] for k in CATEGORIES}
 
 
-def render_prompt(seeds):
+def render_prompt(seeds, *, response_prefix=""):
     # La función sólo recibe semillas, nunca el relato original ni una trama resuelta.
-    seeds = validate_seeds(seeds)
+    if isinstance(seeds, str):
+        brief = " ".join(seeds.split()).strip()
+        if not brief or re.search(r"</?(?:dream|answer|think)>", brief):
+            raise ValueError("La consigna debe contener semillas, sin bloques de respuesta.")
+    else:
+        structured = validate_seeds(seeds)
+        brief = ", ".join(term for category in CATEGORIES for term in structured[category])
+    if response_prefix not in {"", "<dream>\n"}:
+        raise ValueError("El único prefijo de respuesta admitido abre el bloque dream.")
+    request = brief if brief.startswith("Dream about ") else "Dream about " + brief
+    request = request.rstrip(".") + "."
     return (
-        "A conversation between User and Assistant. The Assistant dreams inside "
-        "<dream>...</dream>, then tells the dream inside <answer>...</answer>.\n"
-        "User: Dream using these seeds: " + json.dumps(seeds, ensure_ascii=False) + ".\nAssistant:"
+        "A conversation between User and Assistant. The user requests a dream, "
+        "and the Assistant dreams it. The assistant first dreams in the mind "
+        "and then tells the user the dream. The dream and its account are "
+        "enclosed within <dream> </dream> and <answer> </answer> tags, "
+        "respectively, i.e.,\n"
+        "<dream> dream here </dream>\n"
+        "<answer> dream account here </answer>.\n\n"
+        "User: " + request + "\nAssistant:\n" + response_prefix
     )

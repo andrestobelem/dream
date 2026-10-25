@@ -28,6 +28,8 @@ generation:
   top_p: 0.95
   top_k: 0
   min_p: 0.0
+  response_prefix: |
+    <dream>
 lora:
   rank: 8
   scale: 16.0
@@ -62,7 +64,7 @@ evaluation:
   seed: 4242
   samples_per_problem: 1
 runtime:
-  budget_seconds: 120
+  budget_seconds: 411
   poll_seconds: 1
   swap_growth_limit_gib: 2
   min_free_disk_gib: 20

@@ -100,6 +100,9 @@ anterior sin esa envoltura no respetó el formato en un intento. Se conservaron 
 
 El primer intento de piloto completó su evaluación inicial (un formato válido de dos) y
 se interrumpió por tiempo al preparar LoRA, antes de actualizar pesos. No creó un checkpoint.
-Faltan las actualizaciones reales, recarga, evaluación posterior y comprobación de continuidad.
-No se presenta este intento como evidencia de aprendizaje. No se reinician los contadores
+Después de la ampliación autorizada se completaron los ensayos documentados en
+[validación DreamBank](validacion-dreambank.md): con apertura de dream en la entrada hubo
+actualizaciones no nulas, recarga idéntica y continuidad verificada. No hubo mejora demostrada
+en las dos muestras reservadas. La [nueva plantilla natural](plantilla-natural.md) se probó
+por separado sin entrenamiento; sus resultados no se atribuyen al piloto anterior. No se reinician los contadores
 para disponer de más tiempo: cualquier ampliación requiere autorización del usuario.

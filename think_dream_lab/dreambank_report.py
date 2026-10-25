@@ -3,6 +3,41 @@
 from .storage import digest, read_json, read_jsonl, write_json
 
 
+def cached_source_similarity(root, rows, pilot):
+    """Diagnóstico respecto del relato de origen; nunca ejecuta inferencia ni cambia r."""
+    import numpy as np
+
+    from .dream_task import extract_blocks
+    from .embedding_reward import Encoder
+
+    if not pilot or "config" not in pilot:
+        return []
+    encoder = Encoder(pilot["config"]["embeddings"], root)
+    references = {r["problem_id"]: r["reference"] for values in rows.values() for r in values}
+    result = []
+    for record in read_jsonl(root / "dream/smoke/responses.jsonl"):
+        prefix = record["reward"].get("response_prefix_in_prompt", "")
+        blocks = extract_blocks(prefix + record["text"], "D")
+        if not blocks["format"]:
+            continue
+        source = references[record["problem_id"]]
+        answer = blocks["answer"]
+        if any(digest(text) not in encoder.cache for text in (answer, source)):
+            continue  # El informe no carga modelos para completar datos ausentes.
+        vectors = encoder.encode([answer, source])
+        result.append(
+            {
+                "problem_id": record["problem_id"],
+                "phase": record["phase"],
+                "step": record["step"],
+                "candidate": record["candidate"],
+                "source_cosine": float(np.clip(vectors[0] @ vectors[1], -1, 1)),
+                "bank_cosine": record["reward"]["cosine"],
+            }
+        )
+    return result
+
+
 def report(root):
     folder = root / "dream"
     corpus = read_json(folder / "data/manifest.json")
@@ -15,6 +50,7 @@ def report(root):
         "pilot": folder / "smoke/run.json",
         "training": folder / "smoke/training-validation.json",
         "reload": folder / "smoke/reload-validation.json",
+        "continuity": folder / "smoke/continuity-validation.json",
     }
     evidence = {k: read_json(p) if p.exists() else None for k, p in paths.items()}
     checkpoint = folder / "smoke/checkpoints/latest.json"
@@ -23,6 +59,7 @@ def report(root):
         latest = read_json(checkpoint)
         completed = read_json(checkpoint.parent / latest["directory"] / "state.json")["step"]
     pilot = evidence["pilot"] or {}
+    source_similarity = cached_source_similarity(root, rows, pilot)
     summary = {
         "corpus_hash": corpus["hash"],
         "counts": corpus["counts"],
@@ -32,6 +69,7 @@ def report(root):
         "pilot_status": pilot.get("status", "not_started"),
         "operational_only": True,
         "subjective_experience_claimed": False,
+        "source_similarity_diagnostic": source_similarity,
     }
     lines = [
         "# Dream: estado del protocolo DreamBank",
@@ -102,6 +140,36 @@ def report(root):
         ),
         "",
     ]
+    if evidence["training"]:
+        train = evidence["training"]
+        lines += [
+            "## Comprobaciones del entrenamiento",
+            "",
+            (
+                f"Adaptadores modificados: {train['adapters_changed']}. "
+                f"Pesos base intactos: {train['base_unchanged']}."
+            ),
+            "",
+        ]
+    if evidence["reload"]:
+        lines += [f"Recarga idéntica: {evidence['reload']['same_weights']}.", ""]
+    if evidence["continuity"]:
+        lines += [f"Continuidad real: {evidence['continuity']['status']}.", ""]
+    if source_similarity:
+        lines += [
+            "## Relato de origen frente al banco",
+            "",
+            "Diagnóstico calculado sólo con vectores ya guardados; no cambia la recompensa.",
+            "",
+            "| Paso | Candidato | Coseno al origen | Coseno al banco |",
+            "| ---: | ---: | ---: | ---: |",
+        ]
+        lines += [
+            f"| {r['step']} | {r['candidate']} | {r['source_cosine']:.4f} | "
+            f"{r['bank_cosine']:.4f} |"
+            for r in source_similarity
+        ]
+        lines.append("")
     target = folder / "report"
     target.mkdir(parents=True, exist_ok=True)
     (target / "report.md").write_text("\n".join(lines), encoding="utf-8")

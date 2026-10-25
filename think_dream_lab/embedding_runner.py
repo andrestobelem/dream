@@ -14,7 +14,9 @@ class EmbeddingRunner(Runner):
     def render_prompt(self, row, condition):
         if condition != "D":
             raise ValueError("El protocolo DreamBank sólo usa Dream (D).")
-        return render_prompt(row["seeds"])
+        return render_prompt(
+            row["seeds"], response_prefix=self.config["generation"].get("response_prefix", "")
+        )
 
     def stop_sequence(self):
         return "</answer>"
@@ -22,7 +24,12 @@ class EmbeddingRunner(Runner):
     def completion_reward(self, text, row, condition):
         if condition != "D":
             raise ValueError("El protocolo DreamBank sólo usa D.")
-        return self.embedding_reward.score(text)
+        prefix = self.config["generation"].get("response_prefix", "")
+        return {
+            **self.embedding_reward.score(prefix + text),
+            "response_prefix_in_prompt": prefix,
+            "scored_response": prefix + text,
+        }
 
     def generate(self, row, condition, *, count=1):
         # Familia sólo para el registro común; no forma parte de la consigna.
