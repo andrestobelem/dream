@@ -35,6 +35,14 @@ Auditoría completa aprobada y 166 pruebas exitosas.
 [Método, resultados y límites](docs/experimento-ampliado-v17.md),
 [datos numéricos](docs/resultados-v17.json), [auditoría](docs/auditoria-v17.json).
 
+La [revisión posterior de 12 pares](docs/revision-v18.md) matizó la confianza en el juez.
+En los ocho pares donde MiniLM subía y Phi-4 bajaba, mi revisión dio seis empates globales
+y dos descensos, con preferencias finas repartidas 4–4. También encontré valoraciones
+altas de Phi-4 sobre respuestas con cambios importantes de agencia. Es revisión del asistente,
+con procedencia oculta hasta congelar notas, no validación humana independiente ni muestra
+representativa. No se cambió la recompensa ni se volvió a entrenar; queda propuesto validar
+un verificador de hechos y relaciones sobre respuestas existentes.
+
 ## Preparación y diagnóstico previos
 
 El [diagnóstico de longitud y el lote ampliado](docs/preparacion-v16.md) están completos.
@@ -108,6 +116,7 @@ el [experimento ampliado](docs/experimento-ampliado-v17.md).
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Revisión asistida de doce pares y límites del juez](docs/revision-v18.md).
 - [Experimento ampliado: una pasada por 128 relatos](docs/experimento-ampliado-v17.md).
 - [Preparación del lote de 128 y diagnóstico de longitud](docs/preparacion-v16.md).
 - [Continuación hasta el paso 144](docs/continuacion-v15.md).

@@ -1,0 +1,486 @@
+{
+  "reviewer": "assistant",
+  "independent_human_review": false,
+  "provenance_hidden_until_annotations_frozen": true,
+  "reviewer_knew_aggregate_results_and_selection": true,
+  "not_representative_sample": true,
+  "unique_reports": 11,
+  "author_groups": 6,
+  "all": {
+    "pairs": 12,
+    "assistant_global_direction": {
+      "higher": 0,
+      "equal": 9,
+      "lower": 3
+    },
+    "assistant_preferences": {
+      "after": 4,
+      "before": 6,
+      "tie": 2
+    },
+    "assistant_delta_mean": -0.25,
+    "phi4_delta_mean": -0.9166666666666666
+  },
+  "discordant": {
+    "pairs": 8,
+    "assistant_global_direction": {
+      "higher": 0,
+      "equal": 6,
+      "lower": 2
+    },
+    "assistant_preferences": {
+      "after": 4,
+      "before": 4
+    },
+    "assistant_delta_mean": -0.25,
+    "phi4_delta_mean": -1.375
+  },
+  "contrast": {
+    "pairs": 4,
+    "assistant_global_direction": {
+      "higher": 0,
+      "equal": 3,
+      "lower": 1
+    },
+    "assistant_preferences": {
+      "before": 2,
+      "tie": 2
+    },
+    "assistant_delta_mean": -0.25,
+    "phi4_delta_mean": 0
+  },
+  "dimensions": {
+    "characters": {
+      "exact_agreement": 6,
+      "accounts": 24,
+      "mean_absolute_difference": 1.25,
+      "phi4_minus_assistant_mean": -1.1666666666666667,
+      "difference_at_least_two_points": 11
+    },
+    "events": {
+      "exact_agreement": 6,
+      "accounts": 24,
+      "mean_absolute_difference": 1.0416666666666667,
+      "phi4_minus_assistant_mean": 0.125,
+      "difference_at_least_two_points": 7
+    },
+    "relations": {
+      "exact_agreement": 12,
+      "accounts": 24,
+      "mean_absolute_difference": 0.7916666666666666,
+      "phi4_minus_assistant_mean": 0.375,
+      "difference_at_least_two_points": 7
+    },
+    "overall": {
+      "exact_agreement": 9,
+      "accounts": 24,
+      "mean_absolute_difference": 0.8333333333333334,
+      "phi4_minus_assistant_mean": 0.3333333333333333,
+      "difference_at_least_two_points": 5
+    }
+  },
+  "cases": [
+    {
+      "review_id": "R01",
+      "selection": "discordant",
+      "minilm_delta": 0.12391269207000732,
+      "assistant_preference": "after",
+      "confidence": "medium",
+      "assistant_after": {
+        "characters": 3,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_after": {
+        "characters": 2,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "assistant_before": {
+        "characters": 3,
+        "events": 2,
+        "relations": 1,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_delta": 0,
+      "phi4_delta": -1
+    },
+    {
+      "review_id": "R02",
+      "selection": "discordant",
+      "minilm_delta": 0.06562453508377075,
+      "assistant_preference": "before",
+      "confidence": "high",
+      "assistant_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "phi4_before": {
+        "characters": 2,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "assistant_after": {
+        "characters": 3,
+        "events": 2,
+        "relations": 1,
+        "overall": 2
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_delta": -1,
+      "phi4_delta": -1
+    },
+    {
+      "review_id": "R03",
+      "selection": "discordant",
+      "minilm_delta": 0.06462788581848145,
+      "assistant_preference": "before",
+      "confidence": "medium",
+      "assistant_before": {
+        "characters": 4,
+        "events": 2,
+        "relations": 3,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_after": {
+        "characters": 3,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_after": {
+        "characters": 2,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "assistant_delta": 0,
+      "phi4_delta": -1
+    },
+    {
+      "review_id": "R04",
+      "selection": "contrast",
+      "minilm_delta": 0.09219670295715332,
+      "assistant_preference": "before",
+      "confidence": "medium",
+      "assistant_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_after": {
+        "characters": 2,
+        "events": 3,
+        "relations": 1,
+        "overall": 2
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_delta": 0,
+      "phi4_delta": 0
+    },
+    {
+      "review_id": "R05",
+      "selection": "discordant",
+      "minilm_delta": 0.03410053253173828,
+      "assistant_preference": "after",
+      "confidence": "low",
+      "assistant_before": {
+        "characters": 2,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_after": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_delta": 0,
+      "phi4_delta": -2
+    },
+    {
+      "review_id": "R06",
+      "selection": "discordant",
+      "minilm_delta": 0.15451079607009888,
+      "assistant_preference": "before",
+      "confidence": "high",
+      "assistant_before": {
+        "characters": 3,
+        "events": 2,
+        "relations": 3,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 2
+      },
+      "assistant_after": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_delta": -1,
+      "phi4_delta": -1
+    },
+    {
+      "review_id": "R07",
+      "selection": "contrast",
+      "minilm_delta": 0.11465394496917725,
+      "assistant_preference": "tie",
+      "confidence": "medium",
+      "assistant_after": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_after": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_before": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_delta": 0,
+      "phi4_delta": 0
+    },
+    {
+      "review_id": "R08",
+      "selection": "discordant",
+      "minilm_delta": 0.02035045623779297,
+      "assistant_preference": "before",
+      "confidence": "medium",
+      "assistant_after": {
+        "characters": 3,
+        "events": 2,
+        "relations": 1,
+        "overall": 2
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_before": {
+        "characters": 3,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_delta": 0,
+      "phi4_delta": -2
+    },
+    {
+      "review_id": "R09",
+      "selection": "discordant",
+      "minilm_delta": 0.2318183183670044,
+      "assistant_preference": "after",
+      "confidence": "low",
+      "assistant_before": {
+        "characters": 3,
+        "events": 2,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_after": {
+        "characters": 3,
+        "events": 2,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_delta": 0,
+      "phi4_delta": -2
+    },
+    {
+      "review_id": "R10",
+      "selection": "contrast",
+      "minilm_delta": -0.15332400798797607,
+      "assistant_preference": "tie",
+      "confidence": "medium",
+      "assistant_after": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_before": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_before": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_delta": 0,
+      "phi4_delta": 0
+    },
+    {
+      "review_id": "R11",
+      "selection": "contrast",
+      "minilm_delta": -0.03600883483886719,
+      "assistant_preference": "before",
+      "confidence": "high",
+      "assistant_after": {
+        "characters": 3,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "phi4_after": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_before": {
+        "characters": 4,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 3,
+        "events": 3,
+        "relations": 3,
+        "overall": 3
+      },
+      "assistant_delta": -1,
+      "phi4_delta": 0
+    },
+    {
+      "review_id": "R12",
+      "selection": "discordant",
+      "minilm_delta": 0.012319564819335938,
+      "assistant_preference": "after",
+      "confidence": "low",
+      "assistant_after": {
+        "characters": 4,
+        "events": 3,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_after": {
+        "characters": 1,
+        "events": 1,
+        "relations": 1,
+        "overall": 1
+      },
+      "assistant_before": {
+        "characters": 4,
+        "events": 2,
+        "relations": 2,
+        "overall": 2
+      },
+      "phi4_before": {
+        "characters": 2,
+        "events": 3,
+        "relations": 2,
+        "overall": 2
+      },
+      "assistant_delta": 0,
+      "phi4_delta": -1
+    }
+  ],
+  "packet_hash": "a01ed6065c4dd49e8b37b302819945b3425b59e199096561ee15cd773a3787a9",
+  "annotations_hash": "dc5ad5c2dc154c94a2d1e394efec32d664c8a9107371747e229c4fab4379e748",
+  "rubric_hash": "a05b45695cfbe7922e176ef45d747fe306fc399de556fe1ec3b0b1a18e628124",
+  "training_updates": 0,
+  "test_reports_used": 0,
+  "caution": "Diagnóstico seleccionado por discrepancias. Las notas del asistente no son verdad de referencia ni validación humana independiente. No estima calidad general ni precisión del juez en todo el corpus."
+}

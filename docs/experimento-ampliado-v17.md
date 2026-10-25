@@ -5,6 +5,11 @@ válidos comunes, MiniLM subió 0,0050 y el juez independiente bajó 0,1642 punt
 Ambos intervalos exploratorios incluyen cero. El formato y la longitud empeoraron.
 El checkpoint 32 sigue como referencia práctica; el 160 se conserva como resultado del ensayo.
 
+La [revisión posterior de doce pares](revision-v18.md) matizó la confianza en Phi-4:
+el asistente no corroboró todos sus descensos y encontró valoraciones altas sobre errores
+importantes de agencia. Los números de este experimento se mantienen; sus scores no se
+tratan como verdad de referencia. La revisión posterior no entrenó ni cambió la recompensa.
+
 Diseño fijado antes de entrenar, a partir del lote revisado y aprobado por el usuario.
 Origen: checkpoint 32; destino: paso 160, **128 actualizaciones nuevas**. Los 128 relatos
 se visitan exactamente una vez, con cuatro candidatos por actualización: 512 rollouts.

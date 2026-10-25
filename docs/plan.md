@@ -22,6 +22,23 @@ Formato: 70/72 → 69/72; error de longitud: 0,3643 → 0,7443. No se siguió en
 después de la pasada fijada. Los 200 relatos de prueba siguen sin usarse.
 [Diseño, resultados y comandos](experimento-ampliado-v17.md), [datos](resultados-v17.json).
 
+## Revisión posterior del evaluador: completada
+
+- [x] Seleccionar ocho discrepancias MiniLM↑/Phi-4↓ y cuatro contrastes, dos pares por grupo.
+- [x] Revisar 24 respuestas de 11 referencias sin procedencia ni scores visibles durante la lectura.
+- [x] Congelar las doce anotaciones antes de revelar la clave; protocolo y hash en `4b771ea`.
+- [x] Comparar notas y preferencias del asistente con Phi-4, exponiendo dudas y selección diagnóstica.
+- [x] Conservar las referencias completas y notas detalladas localmente; publicar sólo informe y métricas.
+- [x] Comprobar después de congelar las notas qué hechos centrales estaban incluidos en las semillas.
+- [ ] Separar hechos disponibles en las semillas breves de detalles ocultos de referencia; probar un verificador con evidencia y abstención sobre otros pares de desarrollo.
+- [ ] Comprobarlo antes de cambiar recompensa o iniciar otro entrenamiento desde el 32.
+
+En las ocho discrepancias, la nota global del asistente quedó igual en seis y bajó en dos;
+las preferencias finas se repartieron 4–4. Sobre los doce pares, seis preferencias fueron
+por el 32, cuatro por el 160 y dos empates. También aparecieron desacuerdos importantes
+con Phi-4. Son juicios del asistente, no verdad de referencia ni validación humana independiente.
+No se entrenó ni se usaron los 200 relatos de prueba. [Revisión y decisión](revision-v18.md).
+
 ## Alcance vigente
 
 Pedirle a Qwen3-1.7B-Base que sueñe dentro de `<dream>` y cuente lo soñado dentro de
