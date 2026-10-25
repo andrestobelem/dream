@@ -1,11 +1,12 @@
 """Juez congelado de otra familia, ciego a fase/modelo, sólo sobre answer."""
 
+import json
 from pathlib import Path
 
 from .backend import fingerprint
 from .dream_task import extract_blocks
-from .judge import GUARD, Judge, validate_ratings
-from .storage import digest, read_json, read_jsonl, write_json
+from .judge import GUARD, Judge, protected_json, validate_ratings
+from .storage import append_jsonl, digest, read_json, read_jsonl, write_json
 
 RULE = GUARD + (
     "Compare the candidate dream account with the human reference. Assess semantic closeness, "
@@ -64,6 +65,39 @@ CONTROLS = [
 ]
 
 
+def complete_required_prefix(raw):
+    """Conservar cinco campos completos antes de una copia sobrante, sin inferir notas."""
+    decoder = json.JSONDecoder()
+    text = raw.strip()
+    if not text.startswith("{"):
+        raise ValueError("La salida no comienza con el objeto de evaluación.")
+    position = 1
+    result = {}
+    for _ in range(5):
+        while position < len(text) and text[position].isspace():
+            position += 1
+        key, position = decoder.raw_decode(text, position)
+        if key not in KEYS + ["reason"] or key in result:
+            raise ValueError("Campos ambiguos o inesperados antes de completar la evaluación.")
+        while position < len(text) and text[position].isspace():
+            position += 1
+        if text[position : position + 1] != ":":
+            raise ValueError("Falta un separador de campo.")
+        position += 1
+        while position < len(text) and text[position].isspace():
+            position += 1
+        result[key], position = decoder.raw_decode(text, position)
+        while position < len(text) and text[position].isspace():
+            position += 1
+        if text[position : position + 1] not in {",", "}"}:
+            raise ValueError("Un campo no terminó antes del truncamiento.")
+        position += 1
+    validate_ratings(result, KEYS)
+    if set(result) != set(KEYS + ["reason"]) or not isinstance(result["reason"], str):
+        raise ValueError("No están completos los cinco campos requeridos.")
+    return result
+
+
 class ReferenceJudge(Judge):
     def __init__(self, config, root):
         super().__init__(config, root)
@@ -80,6 +114,43 @@ class ReferenceJudge(Judge):
                 "independent_human_review": False,
             },
         )
+
+    def call(self, purpose, system, payload):
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": protected_json(payload)},
+        ]
+        key = digest([self.spec, purpose, messages])
+        target = self.cache / f"{key}.json"
+        try:
+            value = super().call(purpose, system, payload)
+        except json.JSONDecodeError:
+            errors = read_jsonl(self.root / "dream/judge-errors.jsonl")
+            error = next(e for e in reversed(errors) if e["key"] == key)
+            raw = error["raw"]
+            value = complete_required_prefix(raw)
+            record = {
+                "key": key,
+                "purpose": purpose,
+                "model": self.spec,
+                "messages": messages,
+                "raw": raw,
+                "seconds": error["seconds"],
+                "generated_tokens": len(self.tokenizer.encode(raw, add_special_tokens=False)),
+            }
+        else:
+            if set(value) == set(KEYS + ["reason"]):
+                return value
+            record = read_json(target)
+            value = complete_required_prefix(record["raw"])
+        record.update(
+            value=value,
+            normalization="complete-required-fields-before-extra-output",
+            inferred_scores=False,
+        )
+        write_json(target, record)
+        append_jsonl(self.root / "dream/judge-normalizations.jsonl", record)
+        return value
 
     def assess(self, reference, account):
         value = self.call(
