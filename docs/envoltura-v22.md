@@ -1,8 +1,11 @@
 # V22: comprobar el cierre sin entrenar más
 
-Ensayo en ejecución, 25 de octubre de 2026. Se comparan el checkpoint 32 y el candidato
-v21 de 19 actualizaciones, con **la misma envoltura de inferencia**. No se actualizan
-pesos. Los 200 relatos de prueba siguen sin usarse.
+Ensayo completado, 25 de octubre de 2026. Se compararon el checkpoint 32 y el candidato
+v21 de 19 actualizaciones, con **la misma envoltura de inferencia**. Formato y contenido
+finalizado: **96/96 muestras y 18/18 regresiones por sistema**, sin agotar límites.
+La ventaja de calidad del candidato no quedó confirmada: 20 victorias frente a 14 y
+62 empates; se conserva el 32. No se actualizaron pesos. Los 200 relatos de prueba siguen
+sin usarse. [Informe local con todas las notas](http://127.0.0.1:62878/index.html).
 
 ## Cambio propuesto
 
@@ -67,3 +70,68 @@ El mismo asistente revisa los textos; no es validación humana independiente. La
 detiene marcadores reservados también si aparecen en una cita dentro de una narración:
 se registrarán las fronteras observadas. La intención es controlar la estructura del mensaje,
 manteniendo libre el contenido de sueño, no demostrar experiencia subjetiva.
+
+## Resultado del protocolo fijado
+
+| Medida | 32 + envoltura | Candidato v21 + envoltura |
+| --- | ---: | ---: |
+| Calidad, preferencias a favor /96 | 14 | 20 |
+| Empates de calidad compartidos | 62 | 62 |
+| Envoltura válida /96 | 96 | 96 |
+| Contenido finalizado y formato /96 | 96 | 96 |
+| Muestras con límite agotado | 0 | 0 |
+| Desvío literal importante de motivos /96 | 42 | 49 |
+| Preferencias de variedad /24 | 3 | 11 |
+| Empates de variedad compartidos | 10 | 10 |
+| Grupos con menos de dos episodios utilizables | 0 | 0 |
+| Hechos completos de dependencia /18 | 16 | 17 |
+| Contenido finalizado y formato de dependencia /18 | 18 | 18 |
+| Palabras en dream, media | 83,2 | 110,4 |
+| Palabras en answer, media | 67,9 | 80,3 |
+
+Ventaja neta de calidad del candidato **+0,0625**, intervalo exploratorio por pedido
+**[−0,0625; +0,1875]**. No alcanza ≥0,15 ni el límite inferior >0. El resultado es una
+ventaja incierta en este desarrollo, no prueba de igualdad ni de deterioro causado por
+la envoltura. Los pedidos y semillas son nuevos respecto de v21 y la generación cambió;
+no se aísla causalmente el efecto del controlador entre rondas.
+
+### Qué hizo el programa y qué emitió el modelo
+
+En desarrollo, ambos modelos emitieron el cierre esperado de dream en 95/96 casos. El
+32 terminó la otra etapa dream por EOS; el candidato avanzó directamente a una etiqueta
+answer. El programa completó la estructura en ambos. Los dos emitieron el cierre esperado
+de answer en 96/96. Por tanto, el formato observado no se obtiene sólo de un cierre
+aprendido perfecto; el sistema se encarga de la envoltura.
+
+En dependencia, el 32 emitió cierre de answer en 18/18 y el candidato en 17/18. La respuesta
+restante terminó al aparecer otra etiqueta answer dentro de una instrucción repetida,
+antes de inventar turnos nuevos. Conserva la moneda escondida por el narrador y una cola
+textual «Write the dream account in». Esa cola se muestra sin limpiar: controlar etiquetas
+y turnos no garantiza que toda la prosa sea un relato impecable.
+
+Se reutilizaron **35 etiquetas congeladas por coincidencia textual exacta** y se revisó
+la respuesta distinta. No se afirma que sean 36 juicios nuevos independientes: son
+regresiones conocidas, los textos previos pueden reconocerse y las nuevas claves no se
+abrieron antes de congelar. La única respuesta distinta se anotó como narrador, sin borrar
+la cola. Se comprobaron prefijos y semillas iguales a ambos lados.
+
+### Decisión y orientación conceptual recibida
+
+La selección formal es **keep32**: el candidato no pasa los dos requisitos de calidad y
+el control literal de motivos. Aunque formato, dependencia y variedad sí pasan, no se
+promueve otro checkpoint ni se activa el controlador nuevo por defecto en la selección
+guardada. La envoltura queda implementada y probada para uso experimental, sin tocar
+los generadores históricos ni los pesos.
+
+Durante la revisión llegó la orientación de permitir condensaciones y transformaciones
+sin exigir literalidad. Se registró en [transformaciones oníricas](transformaciones-oniricas.md),
+sin modificar notas anteriores, umbrales o ganador. Los 42 y 49 desvíos del control viejo
+**no son automáticamente sueños de baja calidad**: esa medida no distingue elaboración
+admisible de ausencia de material. Incluso sin usar ese control, el criterio primario
+de calidad de esta ronda no alcanza lo fijado; no se recalculó una promoción alternativa.
+
+[Resultados agregados](envoltura-v22-resultados.json), [auditoría](envoltura-v22-auditoria.json).
+Se comprobaron huellas de ambos adaptadores, archivos del origen y parámetros invariantes
+durante generación. **Cero actualizaciones, cero reintentos, cero relatos de prueba usados.**
+Validación: 197 pruebas aprobadas y una omitida por Torch opcional ausente; Ruff y la auditoría
+real de muestras, claves, congelaciones y criterio aprobaron. Los textos completos quedan locales.

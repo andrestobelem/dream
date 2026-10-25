@@ -1,16 +1,27 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: v21 completado, con mejora de calidad en la revisión del
-asistente (30 preferencias frente a 11 y 55 empates), pero fallo de formato en dependencia
-(17/18). Se conserva el 32 conforme al criterio previo; el candidato v21 queda guardado.
+Estado al 25 de octubre de 2026: v22 completado sin entrenar; la envoltura alcanza 96/96
+y 18/18 formatos completos por sistema. La ventaja de calidad del candidato v21 no se
+confirma en los pedidos nuevos (20 frente a 14, 62 empates); se conserva el 32.
+
+## Envoltura v22: comparación nueva completada
+
+- [x] Implementar dos etapas de contenido libre con etiquetas aportadas por el programa.
+- [x] Guardar tokens/textos originales, fronteras, sufijos separados y límites agotados.
+- [x] Generar 96 muestras nuevas por checkpoint y 18 regresiones de dependencia por sistema.
+- [x] Congelar 96 juicios de calidad/motivos y 24 de variedad antes de abrir claves privadas.
+- [x] Reutilizar 35 etiquetas previas sólo por texto exacto y revisar una salida distinta.
+- [x] Aplicar criterios sin cambiarlos: pasa formato, no se confirma magnitud/certidumbre de calidad.
+- [x] Registrar orientación de permitir transformaciones sin relabelar ni cambiar esta ronda.
+
+[Resultados y límites](envoltura-v22.md), [orientación conceptual para el trabajo posterior](transformaciones-oniricas.md).
+No se promovió el candidato ni se inició más entrenamiento. Los 200 relatos de prueba siguen fuera.
 
 ## Ensayo v21: completado, sin promover por formato
 
-Prueba posterior v22 en ejecución: misma envoltura de salida por etapas en el 32 y el
-candidato v21, sin actualizar pesos; 24 pedidos nuevos y cuatro muestras por sistema,
-además de regenerar las 18 regresiones de dependencia en ambos.
-[Diseño y límites](envoltura-v22.md). Las etiquetas aportadas por el programa no se
-presentan como cierre aprendido. Un límite agotado sigue contando como fallo.
+La prueba posterior v22 ya se completó y está resumida arriba. Las etiquetas aportadas
+por el programa no se presentan como cierre aprendido. Un límite agotado sigue contando
+como fallo; no hubo agotamiento en estas muestras.
 
 - [x] Auditar el filtro de longitud del pool v20 sin relabelar las notas históricas.
 - [x] Seleccionar 24 pedidos nuevos de 24 personas de entrenamiento, separados de reservados.

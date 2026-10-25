@@ -195,6 +195,11 @@ def report(root):
         "variety_counts": dict(variety),
         "dependency": deps,
         "controller": intervention,
+        "dependency_label_review": {
+            "exact_frozen_text_reuse": dn.get("exact_text_reuse_count", 0),
+            "manual_review": dn.get("manual_review_count", 0),
+            "independent_blinding_claimed": False,
+        },
         "training_updates": 0,
         "test_reports_used": 0,
         "independent_human_review": False,
@@ -204,6 +209,7 @@ def report(root):
             "Mismo asistente revisa; desarrollo nuevo, no validación humana independiente.",
             "Las 18 pruebas de dependencia son regresiones conocidas y se regeneraron para ambos sistemas.",
             "El intervalo por pedido no incorpora incertidumbre del revisor; comparación bajo generación nueva, no causal entre rondas.",
+            "El control heredado de motivos mide desviación literal. No distingue elaboración onírica admisible de pérdida; la nueva orientación conceptual no cambió estas etiquetas ni los umbrales. La calidad también falla sus dos requisitos por sí sola.",
         ],
     }
     audit = {

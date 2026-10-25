@@ -26,6 +26,7 @@ def render(root):
         f"<p><strong>{heading}.</strong></p>",
         f"<p>96 comparaciones sobre 24 pedidos nuevos: candidato gana {q['counts'].get('after', 0)}, 32 gana {q['counts'].get('before', 0)}, empates {q['counts'].get('tie', 0)}, dudas {q['counts'].get('no_se', 0)}. Ventaja neta {q['net_mean']:.3f}, intervalo exploratorio por pedido [{q['interval_95'][0]:.3f}, {q['interval_95'][1]:.3f}]. Revisión del asistente, no humana independiente.</p>",
         "<p><b>Las etiquetas las escribe el programa.</b> El contenido lo genera el modelo en dos etapas. Se separan etiquetas, turnos nuevos y EOS; no se reescribe la prosa. Cuerpo vacío o etapa que agota el límite cuentan como fallo incluso si la envoltura es válida. No hay nuevos pesos ni reintentos.</p>",
+        "<p>El cierre pasó en esta prueba: 96/96 muestras por sistema y 18/18 regresiones de dependencia, sin límites agotados. La calidad del candidato no alcanzó la magnitud ni la certeza exigidas. El control de motivos heredado mide literalidad, no si una transformación es oníricamente admisible; se conserva para no cambiar esta prueba después de verla.</p>",
         '<nav><a href="#checks">Criterios</a> · <a href="#quality">96 pares</a> · <a href="#variety">Variedad</a> · <a href="#dependency">36 regresiones</a></nav>',
         '<h2 id="checks">Criterios fijados y resultados</h2><ul>',
     ]
@@ -97,7 +98,7 @@ def render(root):
                 body += ["</details>"]
             body += ["</section>"]
     body += [
-        '<h2 id="dependency">Dependencia conocida: ambos sistemas regenerados</h2><p>Se ocultaron modelo y condición durante la anotación; estas son regresiones ya conocidas, no confirmación independiente.</p>'
+        '<h2 id="dependency">Dependencia conocida: ambos sistemas regenerados</h2><p>Se reutilizaron 35 etiquetas congeladas porque el texto coincide exactamente y se revisó una respuesta diferente. Las claves nuevas de modelo y condición no se consultaron antes de congelar, pero los textos previos pueden reconocerse: no se reclama revisión independiente cegada. La respuesta con cola «Write the dream account in» se conserva tal cual; la envoltura evita turnos adicionales, no repara esa prosa.</p>'
     ]
     keys = {r["review_id"]: r for r in read_json(root / "dependency/key.json")}
     labels = {r["review_id"]: r for r in read_json(root / "dependency/annotations.json")["labels"]}

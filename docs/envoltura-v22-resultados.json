@@ -1,0 +1,149 @@
+{
+  "quality": {
+    "net_mean": 0.0625,
+    "interval_95": [
+      -0.0625,
+      0.1875
+    ],
+    "request_units": 24,
+    "comparisons": 96,
+    "counts": {
+      "after": 20,
+      "tie": 62,
+      "before": 14
+    }
+  },
+  "promotion": {
+    "quality": {
+      "net_mean": 0.0625,
+      "interval_95": [
+        -0.0625,
+        0.1875
+      ],
+      "request_units": 24,
+      "comparisons": 96,
+      "counts": {
+        "after": 20,
+        "tie": 62,
+        "before": 14
+      }
+    },
+    "checks": {
+      "quality_effect": false,
+      "quality_interval": false,
+      "format": true,
+      "motifs": false,
+      "variety_preference": true,
+      "usable_groups": true,
+      "dependency": true,
+      "dependency_format": true,
+      "all_reviews_frozen": true
+    },
+    "promote": false,
+    "decision": "keep32"
+  },
+  "before": {
+    "format_valid": 96,
+    "syntax_valid": 96,
+    "truncated": 0,
+    "dream_words_mean": 83.20833333333333,
+    "answer_words_mean": 67.9375,
+    "motif_major": 42,
+    "groups_fewer_than_two_episodes": 0,
+    "dependency_full": 16,
+    "dependency_format": 18
+  },
+  "after": {
+    "format_valid": 96,
+    "syntax_valid": 96,
+    "truncated": 0,
+    "dream_words_mean": 110.4375,
+    "answer_words_mean": 80.34375,
+    "motif_major": 49,
+    "groups_fewer_than_two_episodes": 0,
+    "dependency_full": 17,
+    "dependency_format": 18
+  },
+  "variety_counts": {
+    "after": 11,
+    "tie": 10,
+    "before": 3
+  },
+  "dependency": {
+    "before": {
+      "full": 16,
+      "format_valid": 18,
+      "stop_reasons": {
+        "</answer>": 18
+      }
+    },
+    "after": {
+      "full": 17,
+      "format_valid": 18,
+      "stop_reasons": {
+        "</answer>": 17,
+        "<answer>": 1
+      }
+    }
+  },
+  "controller": {
+    "before": {
+      "dream": {
+        "stop_reasons": {
+          "</dream>": 95,
+          "eos": 1
+        },
+        "nonempty": 96,
+        "complete": 96,
+        "model_emitted_expected_delimiter": 95,
+        "all_envelope_tags_written_by_program": true
+      },
+      "answer": {
+        "stop_reasons": {
+          "</answer>": 96
+        },
+        "nonempty": 96,
+        "complete": 96,
+        "model_emitted_expected_delimiter": 96,
+        "all_envelope_tags_written_by_program": true
+      }
+    },
+    "after": {
+      "dream": {
+        "stop_reasons": {
+          "</dream>": 95,
+          "<answer>": 1
+        },
+        "nonempty": 96,
+        "complete": 96,
+        "model_emitted_expected_delimiter": 95,
+        "all_envelope_tags_written_by_program": true
+      },
+      "answer": {
+        "stop_reasons": {
+          "</answer>": 96
+        },
+        "nonempty": 96,
+        "complete": 96,
+        "model_emitted_expected_delimiter": 96,
+        "all_envelope_tags_written_by_program": true
+      }
+    }
+  },
+  "dependency_label_review": {
+    "exact_frozen_text_reuse": 35,
+    "manual_review": 1,
+    "independent_blinding_claimed": false
+  },
+  "training_updates": 0,
+  "test_reports_used": 0,
+  "independent_human_review": false,
+  "decision": "keep32",
+  "limitations": [
+    "Envoltura del programa, no cierre aprendido; contenido sin reescribir pero fronteras separadas y prefijo de answer recodificado.",
+    "Mismo asistente revisa; desarrollo nuevo, no validación humana independiente.",
+    "Las 18 pruebas de dependencia son regresiones conocidas y se regeneraron para ambos sistemas.",
+    "El intervalo por pedido no incorpora incertidumbre del revisor; comparación bajo generación nueva, no causal entre rondas.",
+    "El control heredado de motivos mide desviación literal. No distingue elaboración onírica admisible de pérdida; la nueva orientación conceptual no cambió estas etiquetas ni los umbrales. La calidad también falla sus dos requisitos por sí sola."
+  ]
+}

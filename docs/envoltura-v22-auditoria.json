@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "protocol_hash": "c6cc74f28fe323d4f58a9fe42f94133b2b8227564db379deace42b1578b2b79d",
+  "quality_hash": "c9d3da37c97ac876c836e4204bef4c525f780e1e2d32dea2fd8a157ec5e4bac1",
+  "variety_hash": "504b4cbdb190a8422037583e500a4e62dd7d7eeffae4a72fb949397526199ddb",
+  "dependency_hash": "3b42dd78cdf9056546892f0bb5ba074f03658156680bb40949e2309e5933a95f",
+  "source_files_unchanged": true,
+  "both_checkpoint_adapters_unchanged": true,
+  "same_controller_on_both": true,
+  "training_updates": 0,
+  "test_reports_used": 0,
+  "result_hash": "d9b30c4b7193d93e55e2ad221b21176ba5c94feccd2de61e6ad40b3e68d241a5"
+}
