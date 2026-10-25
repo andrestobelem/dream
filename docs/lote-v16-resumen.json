@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "train_reports": 128,
+  "retained_original_reports": 8,
+  "new_reports": 120,
+  "training_author_groups": 30,
+  "group_sizes": {
+    "5": 8,
+    "4": 22
+  },
+  "reserved_reports_in_training": 0,
+  "reserved_people_in_training": 0,
+  "seed_words_min": 17,
+  "seed_words_max": 30,
+  "target_words_min": 40,
+  "target_words_max": 344,
+  "assistant_seed_corrections": 92,
+  "reference_normalizations": 3,
+  "training_updates": 0,
+  "pack_hash": "d910fdda3577dfd3b0188face94a99ad6ac0cff09a92ecd85ed9f8a338e2453e",
+  "actor_has_reference_field": false,
+  "all_128_source_pairs_reviewed": true,
+  "independent_human_review": false,
+  "unique_cleaned_references": 128
+}

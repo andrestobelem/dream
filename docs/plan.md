@@ -1,6 +1,6 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 144 y evaluación completadas.
+Estado al 25 de octubre de 2026: último entrenamiento y evaluación hasta el paso 144; diagnóstico de longitud y lote ampliado preparados, sin nuevo entrenamiento.
 
 ## Alcance vigente
 
@@ -201,6 +201,27 @@ no se ejecutó la propuesta de 128 relatos. Los reservados siguen fuera de las a
 y los 200 de prueba no se usaron.
 [Método y resultados](continuacion-v15.md), [datos numéricos](resultados-v15.json).
 
+## Diagnóstico y preparación completados, sin entrenar
+
+- [x] Diagnóstico en seis relatos que incluyen los cuatro truncamientos previos del paso 144,
+  comparando checkpoints 32/144 y límites 1.024/2.048 con prompts y semillas idénticos.
+- [x] 36 salidas largas nuevas, 36 anteriores reutilizadas; prefijos idénticos en todos los pares.
+- [x] Los cuatro truncamientos del 144 se completaron a 2.048 tokens: formato 14/18 → 18/18.
+  En el 32 no hubo cambios (17/18). Muestra enriquecida por fallos, sin ranking general.
+- [x] 128 relatos de entrenamiento: ocho retenidos + 120 nuevos, balanceados en 30 personas,
+  cuatro o cinco por persona; todos los reservados excluidos por relato y por persona.
+- [x] Extracción completa y revisión por el asistente de las 128 semillas, con 92 correcciones.
+- [x] Tres referencias con recortes explícitos y hashes originales conservados; los ocho
+  ejemplos aprobados se mantienen exactamente. Vista revisable y archivo de prompts sin referencia.
+- [x] Auditorías de integridad y modelos congelados; 149 pruebas aprobadas; cero actualizaciones.
+- [ ] Fijar el límite y la evaluación inicial completa del checkpoint elegido antes de entrenar el lote.
+- [ ] Juez independiente y ciego de cercanía, separado de oniricidad.
+- [ ] Ejecutar el recorrido completo del lote nuevo. No se inició en esta etapa.
+
+[Diagnóstico, lote y límites](preparacion-v16.md), [datos de longitud](resultados-longitud-v16.json),
+[auditoría del lote](lote-v16-resumen.json). Los 24 relatos siguen siendo desarrollo y los
+200 de prueba se reservan para el protocolo final. No se asumió que el checkpoint más reciente sea mejor.
+
 ## Recursos y recuperación del piloto inicial
 
 Se consumieron 794,45 de los 900 segundos adicionales autorizados, incluidos tres procesos
@@ -215,7 +236,8 @@ originales ni pesos automáticamente. DreamBank declara CC BY-NC-SA 4.0, atribuc
 
 ## Propuesta recibida del panel lateral: siguiente experimento
 
-Propuesta registrada, sin ejecutar ni alterar la corrida 96 → 112:
+Propuesta recibida durante la corrida 96 → 112. Después se ejecutaron sólo el diagnóstico
+de longitud y la preparación del lote; el entrenamiento ampliado y el juez siguen pendientes:
 
 - Comparación breve sin entrenar de 1.024 frente a 2.048 tokens, con checkpoints y consignas
   idénticos, para distinguir truncamientos de problemas de generación.

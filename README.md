@@ -13,12 +13,26 @@ humana asociada**: `(1 + coseno) / 2`, usando MiniLM congelado. GRPO asigna esa 
 todos los tokens muestreados, incluidos los del bloque de sueño. No hay penalización por
 coincidencias textuales ni por diferencias de longitud. Un formato inválido recibe cero.
 
-## Resultado actual
+## Próximo experimento preparado, sin entrenar
+
+El [diagnóstico de longitud y el lote ampliado](docs/preparacion-v16.md) están completos.
+En una muestra de seis relatos elegida para incluir los truncamientos del paso 144,
+aumentar de 1.024 a 2.048 tokens recuperó los cuatro formatos incompletos: 14/18 → 18/18.
+Los prefijos coincidieron exactamente; las respuestas ya cerradas no cambiaron.
+Es un diagnóstico de fallos, no evidencia de mejor cercanía ni un ranking general de modelos.
+
+El lote contiene los ocho relatos anteriores más 120 nuevos, balanceados entre 30 personas
+de entrenamiento. Todos los reservados quedan fuera. Las 128 semillas fueron revisadas
+contra sus fuentes; se registraron 92 correcciones y tres recortes trazables de referencia.
+El lote local, sus prompts separados y la vista `results/dream-v16/preparation/revision.html`
+están listos para revisar. **No se inició otro entrenamiento.**
+
+## Último entrenamiento completado
 
 Se continuó desde el checkpoint 128 hasta el **144**, con el mismo lote de ocho relatos,
 restaurando optimizador y aleatoriedad. Los **24 relatos reservados de seis personas**
 quedaron fuera del entrenamiento y se evaluaron con tres generaciones por modelo y relato.
-La propuesta de ampliar a 128 relatos sigue pendiente; este segmento conserva los ocho originales.
+Este entrenamiento conservó los ocho relatos originales; el lote ampliado se preparó después, sin entrenarlo.
 
 | Medida | Base | Paso 128 | Paso 144 |
 | --- | ---: | ---: | ---: |
@@ -69,6 +83,7 @@ locales antes de ejecutar este ensayo.
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Preparación del lote de 128 y diagnóstico de longitud](docs/preparacion-v16.md).
 - [Continuación hasta el paso 144](docs/continuacion-v15.md).
 - [Continuación hasta el paso 128](docs/continuacion-v14.md).
 - [Continuación hasta el paso 112](docs/continuacion-v13.md).

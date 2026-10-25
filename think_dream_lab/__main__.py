@@ -23,6 +23,7 @@ def parser():
         "seeds",
         "embedding-check",
         "prompt-check",
+        "expanded-prepare",
         "continue-training",
         "holdout-prepare",
         "holdout-evaluate",
@@ -93,6 +94,7 @@ def parser():
                     "seeds",
                     "embedding-check",
                     "prompt-check",
+                    "expanded-prepare",
                     "continue-training",
                     "holdout-prepare",
                     "holdout-evaluate",
@@ -137,6 +139,31 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
+    if config.get("expanded_preparation"):
+        if args.command == "_worker" and args.action == "expanded-prepare":
+            from .expanded_preparation import prepare
+
+            def stop_preparation(_signal, _frame):
+                raise KeyboardInterrupt("Preparación interrumpida; se conservan las extracciones.")
+
+            signal.signal(signal.SIGTERM, stop_preparation)
+            prepare(config, args.results.resolve())
+            return 0
+        if args.command != "expanded-prepare":
+            raise ValueError("Este perfil sólo prepara el lote; entrenar está prohibido.")
+        from .supervisor import supervise
+
+        return supervise(
+            config,
+            args.results.resolve(),
+            [
+                "expanded-prepare",
+                "--config",
+                str(Path(args.config).resolve()),
+                "--results",
+                str(args.results.resolve()),
+            ],
+        )
     if args.command == "continue-training" or (
         args.command == "_worker" and args.action == "continue-training"
     ):
