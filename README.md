@@ -9,12 +9,30 @@ La referencia humana completa queda fuera del prompt. El contenido de dream es l
 no se le exige reproducir esa referencia ni se impone fidelidad detallada entre bloques
 como recompensa. La calidad de sus escenas y su uso por answer se examinan como diagnóstico.
 
-En el último entrenamiento completado, la recompensa dependió de la similitud de answer con **su referencia
+En el entrenamiento GRPO anterior, la recompensa dependió de la similitud de answer con **su referencia
 humana asociada**: `(1 + coseno) / 2`, usando MiniLM congelado. GRPO asigna esa recompensa a
 todos los tokens muestreados, incluidos los del bloque de sueño. No hay penalización por
 coincidencias textuales ni por diferencias de longitud. Un formato inválido recibe cero.
+El último piloto usó preferencias revisadas y DPO sobre la continuación completa, sin
+usar MiniLM o Phi-4 para elegir ganadores.
 
-## Diagnóstico actual: escenas y uso de dream
+## Último piloto: preferencias de calidad
+
+El [piloto v20](docs/preferencias-v20.md) completó una pasada DPO de **14 actualizaciones
+desde el checkpoint 32**, con preferencias claras revisadas de 24 pares de entrenamiento.
+La pérdida del lote bajó de 0,6931 a 0,2500, pero la calidad observada empeoró en los pedidos nuevos:
+preferí el **32 en 12 pares**, el **piloto en 4** y hubo **8 empates**.
+
+Ambos conservaron formato en 24/24; las repeticiones literales del pedido dentro de dream
+aumentaron de 1/24 a 5/24. No se acreditó preservar variedad. La dependencia local de detalles
+se mantuvo en 17/18 frente a 16/18, sin compensar el resultado de calidad.
+La revisión es del asistente, no humana independiente; la de variedad tuvo un orden deducible
+y se informa como exploratoria, no cegada. Se conserva el **checkpoint 32 como referencia práctica**.
+Base y origen quedaron intactos; no se prolongó el piloto y los 200 relatos de prueba siguen sin usarse.
+
+[Resultados agregados](docs/preferencias-v20-resultados.json), [auditoría](docs/preferencias-v20-auditoria.json).
+
+## Diagnóstico previo: escenas y uso de dream
 
 El [diagnóstico v19](docs/diagnostico-dream-v19.md) revisó seis pares de bloques dream:
 ya contienen escenas; preferí el 32 en tres, el 160 en uno y empaté dos. Es revisión del
@@ -31,7 +49,7 @@ pérdidas por segmento, penalizaciones o pesos. La cercanía a la referencia que
 diagnóstico histórico; el siguiente trabajo propuesto son preferencias de calidad revisadas
 sobre material de entrenamiento. Los 200 relatos de prueba siguen sin usarse.
 
-## Último experimento completado
+## Entrenamiento anterior: pasada por 128 relatos
 
 Se completó una pasada de **128 actualizaciones nuevas desde el checkpoint 32 hasta el 160**,
 una por cada relato aprobado y cuatro candidatos por actualización. Ambas evaluaciones
@@ -134,6 +152,7 @@ el [experimento ampliado](docs/experimento-ampliado-v17.md).
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Piloto DPO con preferencias revisadas](docs/preferencias-v20.md).
 - [Escenas, calidad e intervenciones sobre dream](docs/diagnostico-dream-v19.md).
 - [Revisión asistida de doce pares y límites del juez](docs/revision-v18.md).
 - [Experimento ampliado: una pasada por 128 relatos](docs/experimento-ampliado-v17.md).

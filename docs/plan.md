@@ -1,6 +1,28 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: experimento ampliado completado, desde el checkpoint 32
+Estado al 25 de octubre de 2026: piloto de preferencias v20 completado; resultado desfavorable
+en la revisión del asistente. Se conserva el checkpoint 32 como referencia práctica.
+
+## Piloto de preferencias v20: completado
+
+- [x] Veinticuatro pedidos de entrenamiento de 24 personas, con 108 candidatos y selección por longitud comparable.
+- [x] Veinticuatro pares revisados: 14 preferencias claras congeladas y 10 empates fuera del entrenamiento.
+- [x] Una pasada DPO de 14 actualizaciones desde el 32, optimizador nuevo y referencia estacionaria en caché.
+- [x] Base y cuatro archivos del origen intactos; adaptadores cambiados y recarga exacta.
+- [x] Evaluación antes/después de doce pedidos nuevos, dos semillas por pedido y modelo, sin usarlos para actualizar pesos.
+- [x] Notas de calidad congeladas antes de revelar procedencias: 32 preferido 12 veces, piloto 4, ocho empates.
+- [x] Variedad exploratoria: dos preferencias por el 32, cinco empates y cinco indeterminados. Orden deducible, sin reclamar cegado.
+- [x] Dependencia posterior: 17/18 hechos completos frente a 16/18; prefijos y semillas iguales a v19.
+- [x] Replay de la referencia y diagnóstico de log-ratios: dream sí recibió señal; no se cambiaron pérdidas por bloque.
+- [x] Auditoría y validación: 178 pruebas aprobadas; una prueba opcional de Torch omitida, sin efecto en DPO.
+
+La pérdida entrenada bajó de 0,6931 a 0,2500, pero las repeticiones de consigna aumentaron
+de 1/24 a 5/24. El piloto no cumplió mejorar calidad sin perder variedad y no se prolongó.
+No se evaluaron los 200 relatos de prueba. [Método, resultados y límites](preferencias-v20.md).
+
+## Antecedentes inmediatos
+
+Experimento ampliado completado, desde el checkpoint 32
 hasta el 160. Los pasos 33–160 recorrieron una sola vez los 128 relatos aprobados.
 La comparación no mostró una mejora convincente; el 32 sigue como referencia práctica.
 
@@ -17,7 +39,7 @@ la calibración y no se eligió una recompensa nueva.
 - [x] Comprobar cambios de ubicación, actor y desenlace, paráfrasis, intercambio de dream y generación directa.
 - [x] Congelar las etiquetas de los hechos antes de revelar las condiciones; conservar la salida fallida.
 - [x] Auditar pesos intactos, adaptadores exactos, contextos nuevos y ausencia de referencias completas en el prompt.
-- [ ] Preparar preferencias revisadas sobre material de entrenamiento y definir su piloto antes de actualizar pesos.
+- [x] Preparar preferencias revisadas y ejecutar el piloto fijado en v20; el resultado fue desfavorable y se conserva el 32.
 
 Los doce bloques de modelo ya presentan contenido escénico. Preferencias: 32 en tres pares,
 160 en uno, dos empates. En las intervenciones, detalle agregado 5/6, cambiado 5/6,
@@ -73,13 +95,14 @@ cortas y el tamaño aproximado del relato esperado. La referencia humana complet
 mantiene fuera del prompt. La apertura de dream pertenece a la entrada; el modelo genera
 el contenido, los cierres y el relato final, sin un ejemplo resuelto.
 
-El objetivo de la última corrida entrenada (v17) fue acercar answer a **su relato humano asociado** mediante
+El objetivo de la corrida GRPO v17 fue acercar answer a **su relato humano asociado** mediante
 embeddings. Esa recompensa alcanza todos los tokens muestreados. No hay castigo automático
 por similitud alta o copia, ni una recompensa adicional por longitud. Formato inválido: cero.
 
-La etapa actual (v19) examina calidad de las escenas y dependencia textual sin entrenar.
-No usa la cercanía a una referencia particular como medida de calidad onírica, y no impone
-fidelidad entre bloques como una nueva recompensa. No se modificó el backend ni el reparto de crédito.
+El diagnóstico v19 examinó calidad de las escenas y dependencia textual sin entrenar.
+El piloto v20 usó preferencias revisadas de calidad, sin cercanía a una referencia particular
+ni fidelidad entre bloques como nueva recompensa. Se mantuvo crédito a toda la continuación,
+con un objetivo DPO nuevo y optimizador reiniciado. Su resultado fue desfavorable.
 
 ## Implementación comprobada
 

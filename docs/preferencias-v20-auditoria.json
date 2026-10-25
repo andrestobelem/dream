@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "train_only": true,
+  "training_pairs": 14,
+  "one_pass": true,
+  "source_files_unchanged": true,
+  "reference_cache_replayed": true,
+  "max_reference_replay_difference": 2.227794539066963e-05,
+  "base_unchanged": true,
+  "reload_exact": true,
+  "train_loss_and_gradients_finite": true,
+  "development_distinct_from_training": true,
+  "paired_contexts_and_seeds_equal": true,
+  "quality_annotations_frozen": true,
+  "variety_blinded_claim": false,
+  "dependency_annotations_frozen": true,
+  "all_generated_outputs_retained": true,
+  "test_reports_used": 0
+}

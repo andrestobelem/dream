@@ -1,0 +1,840 @@
+{
+  "training": {
+    "reviewed_pairs": 24,
+    "source_candidates": 108,
+    "eligible_pairs": 14,
+    "updates": 14,
+    "epochs": 1,
+    "source_step": 32,
+    "optimizer_reset": true,
+    "initial_loss": 0.6931471805599453,
+    "final_train_loss": 0.25001970931355444,
+    "base_unchanged": true,
+    "source_unchanged": true,
+    "reload_exact": true
+  },
+  "development_prompts": 12,
+  "samples_per_prompt": 2,
+  "quality": {
+    "counts": {
+      "before": 12,
+      "tie": 8,
+      "after": 4
+    },
+    "comparisons": 24,
+    "rows": [
+      {
+        "review_id": "E01",
+        "problem_id": "novel-01",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E02",
+        "problem_id": "novel-08",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E03",
+        "problem_id": "novel-02",
+        "preference": "before",
+        "confidence": "high"
+      },
+      {
+        "review_id": "E04",
+        "problem_id": "novel-03",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E05",
+        "problem_id": "novel-11",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E06",
+        "problem_id": "novel-06",
+        "preference": "after",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E07",
+        "problem_id": "novel-07",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E08",
+        "problem_id": "novel-06",
+        "preference": "after",
+        "confidence": "high"
+      },
+      {
+        "review_id": "E09",
+        "problem_id": "novel-03",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E10",
+        "problem_id": "novel-09",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E11",
+        "problem_id": "novel-12",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E12",
+        "problem_id": "novel-01",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E13",
+        "problem_id": "novel-11",
+        "preference": "tie",
+        "confidence": "high"
+      },
+      {
+        "review_id": "E14",
+        "problem_id": "novel-04",
+        "preference": "before",
+        "confidence": "high"
+      },
+      {
+        "review_id": "E15",
+        "problem_id": "novel-07",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E16",
+        "problem_id": "novel-10",
+        "preference": "before",
+        "confidence": "high"
+      },
+      {
+        "review_id": "E17",
+        "problem_id": "novel-09",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E18",
+        "problem_id": "novel-05",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E19",
+        "problem_id": "novel-04",
+        "preference": "after",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E20",
+        "problem_id": "novel-02",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E21",
+        "problem_id": "novel-10",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E22",
+        "problem_id": "novel-05",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E23",
+        "problem_id": "novel-08",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "E24",
+        "problem_id": "novel-12",
+        "preference": "after",
+        "confidence": "medium"
+      }
+    ],
+    "annotations_hash": "3dff25b56c224b8d5165072704e797a6f882ee11f2de0c3c98ccc52017b8d485",
+    "independent_human_review": false,
+    "net_preference": -0.3333333333333333,
+    "conditional_win_rate": 0.25,
+    "exploratory_interval": {
+      "low": -0.5833333333333334,
+      "high": -0.041666666666666664,
+      "unit": "development_prompt",
+      "groups": 12,
+      "samples": 20000,
+      "seed": 20261029,
+      "caution": "Request resampling, not uncertainty over reviewers; twelve authored development prompts, not population evidence."
+    }
+  },
+  "variety": {
+    "counts": {
+      "tie": 5,
+      "no_se": 5,
+      "before": 2
+    },
+    "comparisons": 12,
+    "rows": [
+      {
+        "review_id": "V01",
+        "problem_id": "novel-01",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "V02",
+        "problem_id": "novel-02",
+        "preference": "no_se",
+        "confidence": "high"
+      },
+      {
+        "review_id": "V03",
+        "problem_id": "novel-03",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "V04",
+        "problem_id": "novel-04",
+        "preference": "no_se",
+        "confidence": "high"
+      },
+      {
+        "review_id": "V05",
+        "problem_id": "novel-05",
+        "preference": "before",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "V06",
+        "problem_id": "novel-06",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "V07",
+        "problem_id": "novel-07",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "V08",
+        "problem_id": "novel-08",
+        "preference": "tie",
+        "confidence": "medium"
+      },
+      {
+        "review_id": "V09",
+        "problem_id": "novel-09",
+        "preference": "no_se",
+        "confidence": "high"
+      },
+      {
+        "review_id": "V10",
+        "problem_id": "novel-10",
+        "preference": "no_se",
+        "confidence": "high"
+      },
+      {
+        "review_id": "V11",
+        "problem_id": "novel-11",
+        "preference": "no_se",
+        "confidence": "high"
+      },
+      {
+        "review_id": "V12",
+        "problem_id": "novel-12",
+        "preference": "tie",
+        "confidence": "medium"
+      }
+    ],
+    "annotations_hash": "30bf480adb4c4c823ab32d8becde68f912868a2de2c9f770031160e56507fde5",
+    "independent_human_review": false,
+    "blinded_review_claimed": false,
+    "source_assignment_predictable": true,
+    "abstentions_for_insufficient_usable_scenes": 5,
+    "caution": "Exploratory nonblinded review with two samples per model/prompt. Does not establish preservation of diversity."
+  },
+  "before": {
+    "n": 24,
+    "format_valid": 24,
+    "truncations": 0,
+    "dream_words_mean": 100.79166666666667,
+    "answer_words_mean": 80.54166666666667,
+    "request_echoes": 1,
+    "identical_dream_pairs": 0,
+    "within_prompt_word4_jaccard_mean": 0.0064381481720032704,
+    "diversity_proxy_caution": "Lexical similarity, not semantic or oniric quality."
+  },
+  "after": {
+    "n": 24,
+    "format_valid": 24,
+    "truncations": 0,
+    "dream_words_mean": 68.91666666666667,
+    "answer_words_mean": 73.08333333333333,
+    "request_echoes": 5,
+    "identical_dream_pairs": 0,
+    "within_prompt_word4_jaccard_mean": 0.0076140272116356576,
+    "diversity_proxy_caution": "Lexical similarity, not semantic or oniric quality."
+  },
+  "dependency": {
+    "before": {
+      "n": 18,
+      "exact_probe_match": 16,
+      "by_condition": {
+        "anchor": 5,
+        "edited": 5,
+        "paraphrase": 6
+      },
+      "paired_edit_following": 4,
+      "format_valid": 18,
+      "rows": [
+        {
+          "task_id": "2b725f9a9eb96119",
+          "case_id": "I1",
+          "seed": 29,
+          "condition": "edited",
+          "state": "absent",
+          "expected": "inside_cupboard",
+          "match": false,
+          "format_valid": true
+        },
+        {
+          "task_id": "6a0a328e2bcdabae",
+          "case_id": "I3",
+          "seed": 29,
+          "condition": "anchor",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "59af7f105a659790",
+          "case_id": "I1",
+          "seed": 17,
+          "condition": "edited",
+          "state": "inside_cupboard",
+          "expected": "inside_cupboard",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "70ac58fc82d302c2",
+          "case_id": "I3",
+          "seed": 17,
+          "condition": "edited",
+          "state": "reached_without_sinking",
+          "expected": "reached_without_sinking",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "adf3592ea9d57897",
+          "case_id": "I1",
+          "seed": 17,
+          "condition": "paraphrase",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "2198443c5ccc1cbc",
+          "case_id": "I3",
+          "seed": 17,
+          "condition": "anchor",
+          "state": "nonarrival_unspecified",
+          "expected": "sank_before_shore",
+          "match": false,
+          "format_valid": true
+        },
+        {
+          "task_id": "3e595058ae4a3593",
+          "case_id": "I2",
+          "seed": 29,
+          "condition": "edited",
+          "state": "narrator",
+          "expected": "narrator",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "e4dfacabd37b3f63",
+          "case_id": "I2",
+          "seed": 29,
+          "condition": "paraphrase",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "8bb664042da8e9b1",
+          "case_id": "I1",
+          "seed": 17,
+          "condition": "anchor",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "e7ff1e16cc0b5689",
+          "case_id": "I2",
+          "seed": 17,
+          "condition": "paraphrase",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "3d668b642eeebd14",
+          "case_id": "I1",
+          "seed": 29,
+          "condition": "paraphrase",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "c42cbfa49720f493",
+          "case_id": "I2",
+          "seed": 29,
+          "condition": "anchor",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "cc5393df2c54e9e3",
+          "case_id": "I3",
+          "seed": 29,
+          "condition": "paraphrase",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "2b5972375e9dba4a",
+          "case_id": "I2",
+          "seed": 17,
+          "condition": "anchor",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "f1a81eaa9265a86d",
+          "case_id": "I2",
+          "seed": 17,
+          "condition": "edited",
+          "state": "narrator",
+          "expected": "narrator",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "b7fdf7232ee2f899",
+          "case_id": "I1",
+          "seed": 29,
+          "condition": "anchor",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "eab0c839ff75e421",
+          "case_id": "I3",
+          "seed": 29,
+          "condition": "edited",
+          "state": "reached_without_sinking",
+          "expected": "reached_without_sinking",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "57f2190a20993a4b",
+          "case_id": "I3",
+          "seed": 17,
+          "condition": "paraphrase",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        }
+      ]
+    },
+    "after": {
+      "n": 18,
+      "exact_probe_match": 17,
+      "by_condition": {
+        "anchor": 6,
+        "edited": 5,
+        "paraphrase": 6
+      },
+      "paired_edit_following": 5,
+      "format_valid": 18,
+      "rows": [
+        {
+          "task_id": "3d668b642eeebd14",
+          "case_id": "I1",
+          "seed": 29,
+          "condition": "paraphrase",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "57f2190a20993a4b",
+          "case_id": "I3",
+          "seed": 17,
+          "condition": "paraphrase",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "cc5393df2c54e9e3",
+          "case_id": "I3",
+          "seed": 29,
+          "condition": "paraphrase",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "e4dfacabd37b3f63",
+          "case_id": "I2",
+          "seed": 29,
+          "condition": "paraphrase",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "f1a81eaa9265a86d",
+          "case_id": "I2",
+          "seed": 17,
+          "condition": "edited",
+          "state": "narrator",
+          "expected": "narrator",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "59af7f105a659790",
+          "case_id": "I1",
+          "seed": 17,
+          "condition": "edited",
+          "state": "inside_cupboard",
+          "expected": "inside_cupboard",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "adf3592ea9d57897",
+          "case_id": "I1",
+          "seed": 17,
+          "condition": "paraphrase",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "b7fdf7232ee2f899",
+          "case_id": "I1",
+          "seed": 29,
+          "condition": "anchor",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "c42cbfa49720f493",
+          "case_id": "I2",
+          "seed": 29,
+          "condition": "anchor",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "8bb664042da8e9b1",
+          "case_id": "I1",
+          "seed": 17,
+          "condition": "anchor",
+          "state": "under_chair",
+          "expected": "under_chair",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "3e595058ae4a3593",
+          "case_id": "I2",
+          "seed": 29,
+          "condition": "edited",
+          "state": "narrator",
+          "expected": "narrator",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "2b5972375e9dba4a",
+          "case_id": "I2",
+          "seed": 17,
+          "condition": "anchor",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "2198443c5ccc1cbc",
+          "case_id": "I3",
+          "seed": 17,
+          "condition": "anchor",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "2b725f9a9eb96119",
+          "case_id": "I1",
+          "seed": 29,
+          "condition": "edited",
+          "state": "inside_cupboard",
+          "expected": "inside_cupboard",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "6a0a328e2bcdabae",
+          "case_id": "I3",
+          "seed": 29,
+          "condition": "anchor",
+          "state": "sank_before_shore",
+          "expected": "sank_before_shore",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "e7ff1e16cc0b5689",
+          "case_id": "I2",
+          "seed": 17,
+          "condition": "paraphrase",
+          "state": "sister",
+          "expected": "sister",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "eab0c839ff75e421",
+          "case_id": "I3",
+          "seed": 29,
+          "condition": "edited",
+          "state": "reached_without_sinking",
+          "expected": "reached_without_sinking",
+          "match": true,
+          "format_valid": true
+        },
+        {
+          "task_id": "70ac58fc82d302c2",
+          "case_id": "I3",
+          "seed": 17,
+          "condition": "edited",
+          "state": "unloading_without_sinking",
+          "expected": "reached_without_sinking",
+          "match": false,
+          "format_valid": true
+        }
+      ]
+    }
+  },
+  "block_logratio_diagnostic": {
+    "pairs": 14,
+    "max_reference_replay_difference": 2.227794539066963e-05,
+    "mean_margin_gain": {
+      "dream": 11.455670099123832,
+      "answer": 4.808904282550819,
+      "boundary": 0.0305645765952899,
+      "total": 16.29513895826994
+    },
+    "pairs_with_positive_gain": {
+      "dream": 14,
+      "answer": 14,
+      "total": 14
+    },
+    "rows": [
+      {
+        "pair_id": "T02",
+        "margin_gain": {
+          "dream": 19.847764101992652,
+          "answer": 6.660701238248521,
+          "boundary": -0.03239896026207134,
+          "total": 26.476066379979102
+        }
+      },
+      {
+        "pair_id": "T03",
+        "margin_gain": {
+          "dream": 9.88814734396874,
+          "answer": 2.580624840010387,
+          "boundary": 0.11441275395918638,
+          "total": 12.583184937938313
+        }
+      },
+      {
+        "pair_id": "T05",
+        "margin_gain": {
+          "dream": 11.761795922109059,
+          "answer": 10.064844020004784,
+          "boundary": -0.02329496556194499,
+          "total": 21.803344976551898
+        }
+      },
+      {
+        "pair_id": "T08",
+        "margin_gain": {
+          "dream": 7.736406167070527,
+          "answer": 3.185363523443357,
+          "boundary": -0.0622254298068583,
+          "total": 10.859544260707025
+        }
+      },
+      {
+        "pair_id": "T09",
+        "margin_gain": {
+          "dream": 15.036270324562793,
+          "answer": 4.328252211904328,
+          "boundary": 0.4440665391157381,
+          "total": 19.80858907558286
+        }
+      },
+      {
+        "pair_id": "T11",
+        "margin_gain": {
+          "dream": 22.393899828624967,
+          "answer": 4.963873147490176,
+          "boundary": 0.1398396899458021,
+          "total": 27.497612666060945
+        }
+      },
+      {
+        "pair_id": "T12",
+        "margin_gain": {
+          "dream": 11.412309414503397,
+          "answer": 6.049353653554135,
+          "boundary": -0.3672455265186727,
+          "total": 17.09441754153886
+        }
+      },
+      {
+        "pair_id": "T13",
+        "margin_gain": {
+          "dream": 13.00284417149851,
+          "answer": 8.145457916392843,
+          "boundary": 0.05286489537684247,
+          "total": 21.201166983268195
+        }
+      },
+      {
+        "pair_id": "T14",
+        "margin_gain": {
+          "dream": 24.550958616004664,
+          "answer": 15.927903949032839,
+          "boundary": -0.028094990528188646,
+          "total": 40.450767574509314
+        }
+      },
+      {
+        "pair_id": "T16",
+        "margin_gain": {
+          "dream": 3.957247441430809,
+          "answer": 0.3152199625619687,
+          "boundary": 0.01310536073287949,
+          "total": 4.285572764725657
+        }
+      },
+      {
+        "pair_id": "T17",
+        "margin_gain": {
+          "dream": 12.76391109049655,
+          "answer": 2.2028761130204657,
+          "boundary": 0.0867474275873974,
+          "total": 15.053534631104412
+        }
+      },
+      {
+        "pair_id": "T18",
+        "margin_gain": {
+          "dream": 4.2556525663213165,
+          "answer": 1.0427430694497843,
+          "boundary": 0.4758576348540373,
+          "total": 5.774253270625138
+        }
+      },
+      {
+        "pair_id": "T21",
+        "margin_gain": {
+          "dream": 1.2315317521351972,
+          "answer": 0.15536680029617855,
+          "boundary": -0.42017194506479427,
+          "total": 0.9667266073665814
+        }
+      },
+      {
+        "pair_id": "T22",
+        "margin_gain": {
+          "dream": 2.540642647014465,
+          "answer": 1.7020795103017008,
+          "boundary": 0.03444158850470558,
+          "total": 4.2771637458208716
+        }
+      }
+    ],
+    "training_updates": 0,
+    "weights_unchanged": true,
+    "post_hoc": true,
+    "caution": "Diagnostic on training pairs, not causal attribution or evaluation quality. Boundary-spanning original sampled tokens remain intact in a separate boundary bin. No new loss masks or segmented training."
+  },
+  "test_reports_used": 0,
+  "independent_human_review": false,
+  "decision": "Keep checkpoint32 as practical reference. This fixed pilot is worse in the assistant's review; do not continue this run based on lower training loss.",
+  "limitations": [
+    "Same assistant reviewed training and evaluation, not independent human validation.",
+    "Novel authored development prompts, not population sampling; small fixed set.",
+    "Quality notes frozen before revealing identities; source ordering for variety was inferable and that review is explicitly nonblinded.",
+    "Two samples per prompt do not establish preservation of diversity; five variety comparisons abstained.",
+    "Probe sensitivity is local and does not establish full retelling fidelity."
+  ]
+}

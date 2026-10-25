@@ -1,7 +1,14 @@
 # Piloto de preferencias de calidad desde el checkpoint 32
 
-25 de octubre de 2026. Protocolo y lote revisado antes de entrenar. Estado: piloto autorizado
-por el usuario, lote congelado y evaluación inicial guardada; falta completar entrenamiento y comparación.
+25 de octubre de 2026. **Piloto completado: resultado desfavorable en la revisión del asistente.**
+Se entrenó una pasada de 14 actualizaciones desde el 32. En 24 comparaciones de desarrollo
+preferí el 32 doce veces, el piloto cuatro y empaté ocho. Se mantiene el 32 como referencia
+práctica y el checkpoint DPO como resultado experimental, sin prolongar esta corrida.
+
+El protocolo y lote revisado se registraron antes de entrenar en `944a6bd`. Las notas de
+evaluación se congelaron antes de revelar la clave. Son juicios del asistente, no validación
+humana independiente. [Resultados agregados](preferencias-v20-resultados.json),
+[auditoría](preferencias-v20-auditoria.json).
 
 ## Objetivo
 
@@ -86,6 +93,97 @@ reconstruyen desde cero y las etiquetas del asistente se congelan antes de revel
 No se ajustará la duración ni se elegirá otro checkpoint mirando estas fluctuaciones.
 Los datos de prueba de DreamBank no se usan. Este conjunto nuevo de pedidos sigue siendo
 desarrollo y no ofrece una evaluación humana independiente.
+No hay un relato humano único esperado para estos doce pedidos nuevos, por lo que aquí no
+se recalculó la cercanía MiniLM usada en v17. Las métricas no se mezclan con aquella cohorte.
+
+## Resultados observados
+
+Se completaron los 14 pasos fijados, una visita por par elegido. La pérdida DPO media sobre
+esos pares bajó de **0,6931 a 0,2500**. Los adaptadores cambiaron; los pesos base y los cuatro
+archivos del checkpoint 32 permanecieron idénticos. La recarga del checkpoint DPO coincidió.
+No se seleccionó duración mirando la evaluación ni se entrenó otra pasada después.
+
+| Medida de desarrollo | Checkpoint 32 | Piloto DPO |
+| --- | ---: | ---: |
+| Preferencias a favor, 24 pares | 12 | 4 |
+| Empates compartidos | 8 | 8 |
+| Formato válido | 24/24 | 24/24 |
+| Dream que repite literalmente el pedido | 1/24 | 5/24 |
+| Palabras en dream, media | 100,8 | 68,9 |
+| Palabras en answer, media | 80,5 | 73,1 |
+
+Entre los 16 pares decisivos el piloto obtuvo 4/16 preferencias. Incluyendo empates como cero,
+el cambio neto fue **−0,3333**, donde +1 favorece al piloto y −1 al 32. El intervalo exploratorio
+por pedido fue **[-0,5833; −0,0417]**, remuestreando los doce pedidos completos con 20.000 réplicas,
+semilla 20261029. No se trataron las dos generaciones por pedido como personas independientes.
+Ese intervalo no incluye incertidumbre entre revisores ni convierte doce pedidos escritos
+por el asistente en evidencia poblacional de calidad humana.
+
+La reducción de longitud no se usó como penalización. Un fragmento breve puede ser un buen
+relato; el caso problemático es sustituir la vivencia por la consigna. El contador de repeticiones
+es un diagnóstico posterior, no una recompensa por evitar coincidencias textuales. La selección
+de pares de entrenamiento por longitud comparable tampoco demuestra ausencia de sesgos de longitud.
+
+### Variedad: no se acreditó preservación
+
+Sobre doce comparaciones de dos muestras por modelo, la revisión exploratoria favoreció
+al 32 en dos, empató cinco y quedó indeterminada en cinco. En esos cinco faltaban dos escenas
+utilizables en al menos un grupo; una consigna repetida no se contó como una escena diferente.
+
+Esta revisión **no se presenta como cegada**: el mismo asistente implementó un orden alternado
+de fuentes que se podía deducir desde el código y detectó esa limitación durante la lectura.
+La revisión primaria de calidad ya estaba congelada antes de detectar el problema. No se
+cambiaron sus notas. La variedad no permite afirmar que el piloto la haya conservado.
+
+La similitud léxica media de grupos de cuatro palabras entre las dos muestras fue 0,00644
+antes y 0,00761 después; no hubo pares completamente idénticos dentro de un modelo. Es un
+proxy superficial, no una medición de diversidad semántica. No se usa para premiar rareza.
+
+### Dependencia textual: conservada en esta prueba pequeña
+
+| Hecho completo observado | Antes | Después |
+| --- | ---: | ---: |
+| Detalle agregado | 5/6 | 6/6 |
+| Detalle cambiado | 5/6 | 5/6 |
+| Detalle parafraseado | 6/6 | 6/6 |
+| Total | 16/18 | 17/18 |
+| Ambos lados de la edición correctos | 4/6 | 5/6 |
+
+Las 18 respuestas posteriores conservaron el formato. Las nuevas etiquetas se congelaron
+sin consultar la condición. En el caso parcial posterior, el texto dice que nosotros llegamos
+a la costa y que el barco descarga sin hundirse, pero no afirma inequívocamente que el barco
+llegó: no se inventó esa relación para conceder el acierto. La prueba mide hechos agregados
+artificialmente y no demuestra fidelidad completa al dream ni compensa la baja de calidad.
+
+## Diagnóstico posterior del objetivo aprendido
+
+Se volvieron a calcular, sin actualizar pesos, las probabilidades de las continuaciones de
+los 14 pares de entrenamiento con el 32 y con el piloto. La caché de referencia original
+coincidió con el replay, con diferencia máxima de **0,0000223** en log-probabilidad acumulada.
+
+La ganancia media de margen chosen−rejected respecto del 32 fue **+16,2951**: +11,4557 en
+tokens de dream, +4,8089 en answer y +0,0306 en tokens de frontera. En los 14 pares ambos
+bloques aumentaron el margen a favor del elegido. Los tokens originales que cruzan cierres
+se conservaron enteros en un grupo de frontera para este diagnóstico; no se recortaron ni
+se crearon máscaras nuevas de entrenamiento.
+
+Por tanto, **dream sí recibió señal de aprendizaje**. El resultado no se explica simplemente
+por ausencia de crédito a ese bloque, ni demuestra que separar la pérdida sea una solución.
+El margen es una medida sobre datos entrenados, no calidad generada, y no identifica la causa
+de la regresión. Sobreajuste, preferencias poco transferibles, selección de pares y diferencias
+entre pedidos de entrenamiento y desarrollo quedan como hipótesis, no hallazgos causales.
+
+## Decisión y límites
+
+Se conserva el **checkpoint 32** como referencia práctica. No se aumentaron épocas ni se
+promovió el último checkpoint porque bajara la pérdida entrenada. El piloto cumplió el
+procedimiento, pero **no cumplió el objetivo de mejorar calidad sin perder variedad**.
+
+El mismo asistente preparó preferencias y revisó resultados, los pares son pocos y la
+evaluación es de desarrollo. Las etiquetas pueden discutirse en la vista local. Antes de
+otro entrenamiento conviene revisar el diseño de los contrastes —incluido escena frente
+a repetición de motivos— y su transferencia a pedidos nuevos. No se relabeló este lote
+después de ver los resultados y no se inició otro ensayo.
 
 ## Artefactos locales
 
@@ -98,8 +196,19 @@ desarrollo y no ofrece una evaluación humana independiente.
 .venv/bin/python -m experiments.review_preferences_v20 build
 .venv/bin/python -m experiments.dpo_preferences_v20
 .venv/bin/python -m experiments.preferences_v20 after
+.venv/bin/python -m experiments.evaluate_preferences_v20 prepare
+.venv/bin/python -m experiments.evaluate_preferences_v20 probes
+.venv/bin/python -m experiments.dpo_logratio_v20
+.venv/bin/python -m experiments.report_preferences_v20
+.venv/bin/python -m experiments.view_preferences_v20
 ```
 
 Freeze/build requieren las anotaciones reales del asistente; no las generan automáticamente.
+La calidad, variedad y dependencia también requieren sus notas y hashes congelados.
+Vista de resultados: `results/dream-v20/report.html`; la vista del lote sigue en `index.html`.
 El lote, las referencias, las continuaciones completas y los pesos se mantienen fuera de Git.
+Validación final: **178 pruebas aprobadas y una omitida** porque el paquete opcional Torch
+no estaba instalado. Esa prueba corresponde al encoder de embeddings anterior, no usado
+en este piloto DPO. Las pruebas nuevas de gradiente, máscara, congelación y agrupación
+por pedido aprobaron; también se auditó la corrida real y el replay de referencia.
 DreamBank: CC BY-NC-SA 4.0, dreambank.net. Código MIT.
