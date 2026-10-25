@@ -21,6 +21,7 @@ def parser():
         "doctor",
         "corpus",
         "seeds",
+        "embedding-check",
         "judge",
         "anchor-check",
         "anchor-holdout",
@@ -49,8 +50,8 @@ def parser():
                 choices=["A", "B", "C", "D"] + (["neutral"] if command == "_worker" else []),
             )
             cmd.add_argument("--seed", type=int)
-        if command in {"evaluate", "seeds", "_worker"}:
-            cmd.add_argument("--limit", type=int, default=1)
+        if command in {"evaluate", "seeds", "embedding-check", "base-check", "_worker"}:
+            cmd.add_argument("--limit", type=int, default=12 if command == "embedding-check" else 1)
             cmd.add_argument("--start-index", type=int, default=0)
         if command == "evaluate":
             cmd.add_argument("--condition", choices=["A", "B", "C", "D", "neutral"], default="D")
@@ -61,6 +62,7 @@ def parser():
                     "doctor",
                     "corpus",
                     "seeds",
+                    "embedding-check",
                     "judge",
                     "judge-check",
                     "anchor-check",
@@ -85,10 +87,10 @@ def main(argv=None):
 
         manifest = args.results / "dream" / "data" / "manifest.json"
         if manifest.exists() and read_json(manifest).get("protocol") == "dreambank-embeddings-v1":
-            raise ValueError(
-                "El informe de embeddings aún no está implementado. "
-                "El manifiesto DreamBank registra corpus y semillas; no hay entrenamiento nuevo."
-            )
+            from .dreambank_report import report
+
+            report(args.results.resolve())
+            return 0
         if (args.results / "dream").exists():
             from .dream_report import report
         else:
@@ -104,14 +106,34 @@ def main(argv=None):
             _, manifest = prepare(config, args.results.resolve())
             print("DreamBank preparado:", manifest["counts"], "SHA-256:", manifest["hash"])
             return 0
-        if args.command == "seeds":
+        if args.command == "smoke":
+            from .supervisor import supervise
+
+            if args.verify_continuity:
+                raise ValueError(
+                    "La prueba automática de continuidad DreamBank aún está pendiente."
+                )
+            extra = ["--resume"] if args.resume else []
+            return supervise(
+                config,
+                args.results.resolve(),
+                [
+                    "smoke",
+                    "--config",
+                    str(Path(args.config).resolve()),
+                    "--results",
+                    str(args.results.resolve()),
+                    *extra,
+                ],
+            )
+        if args.command in {"seeds", "embedding-check", "base-check"}:
             from .supervisor import supervise
 
             return supervise(
                 config,
                 args.results.resolve(),
                 [
-                    "seeds",
+                    args.command,
                     "--config",
                     str(Path(args.config).resolve()),
                     "--results",
@@ -120,19 +142,31 @@ def main(argv=None):
                     str(args.limit),
                 ],
             )
-        if args.command == "_worker" and args.action == "seeds":
-            from .dreambank_workflow import extract_seeds
+        if args.command == "_worker" and args.action in {
+            "seeds",
+            "embedding-check",
+            "base-check",
+            "smoke",
+        }:
+            from .dreambank_workflow import check_base, embedding_check, extract_seeds, smoke
 
             def stop_seed_extraction(_signal, _frame):
                 raise KeyboardInterrupt("Extracción interrumpida; se conservan semillas completas.")
 
             signal.signal(signal.SIGTERM, stop_seed_extraction)
-            extract_seeds(config, args.results.resolve(), args.limit)
+            if args.action == "smoke":
+                smoke(config, args.results.resolve(), args.resume)
+                return 0
+            stage = {
+                "seeds": extract_seeds,
+                "embedding-check": embedding_check,
+                "base-check": check_base,
+            }[args.action]
+            stage(config, args.results.resolve(), args.limit)
             return 0
         raise ValueError(
-            "El protocolo DreamBank está en implementación. corpus y seeds están disponibles; "
-            "la recompensa por embeddings y el entrenamiento "
-            "todavía no están habilitados. No se ejecutará el juez histórico."
+            "Etapa no implementada para DreamBank. Están disponibles corpus, seeds, "
+            "embedding-check, base-check, smoke y report. No se ejecutará el juez histórico."
         )
     if (
         args.command in {"smoke", "experiment"}

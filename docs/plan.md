@@ -14,14 +14,16 @@ Conservamos **Qwen/Qwen3-1.7B-Base**, revisión
    Alias conocidos y hogares identificados permanecen juntos. Las colecciones colectivas sin
    identificación individual se catalogan, pero quedan fuera del piloto.
 2. **Semillas mínimas extraídas por otro LLM.** Personajes, lugares, objetos, acciones y emociones:
-   de tres a ocho frases, hasta cuatro palabras por frase y 24 palabras totales. No se extrae una
+   el primer ensayo usa de tres a ocho frases, hasta cuatro palabras por frase y 24 palabras totales.
+   La riqueza adecuada queda abierta: esas cotas no son un requisito definitivo. No se extrae una
    trama ni se entrega el relato humano al generador.
 3. **Prompt mínimo, sin ejemplo resuelto.** `<dream>` queda libre. No se evalúa su contenido ni
    se exige fidelidad detallada entre bloques. El límite de tokens limita recursos, no prescribe
    la longitud o el estilo del sueño.
 4. **Recompensa basada en embeddings de `<answer>` respecto del corpus.** Se aplica a toda la
    secuencia generada, incluidos los tokens de `<dream>`. No interviene el juez histórico de
-   cumplimiento, fidelidad u oniricidad. La fórmula y el encoder todavía deben contrastarse y fijarse.
+   cumplimiento, fidelidad u oniricidad. La primera fórmula exploratoria está fijada: máximo coseno con el banco de entrenamiento,
+   reescalado a [0,1], usando MiniLM congelado. Fue comprobada operativamente, sin validar oniricidad.
 5. **La similitud alta es favorable.** No se penalizan automáticamente coincidencias textuales ni
    se introduce evitar copias como objetivo. Una coincidencia literal no permite distinguir generación
    y memorización previa: es una limitación interpretativa, no un castigo en la recompensa.
@@ -48,33 +50,47 @@ Conservamos **Qwen/Qwen3-1.7B-Base**, revisión
   Se seleccionan hasta ocho frases mediante rondas por categoría, sin escribir ni completar términos.
   Estas tres extracciones comprueban el circuito; no validan la calidad semántica de las categorías.
 - [x] Perfil `configs/dream-v5.yaml` como predeterminado. La CLI impide ejecutar por accidente
-  el entrenamiento/juez histórico con el nuevo protocolo.
+  el juez histórico con el nuevo protocolo.
+- [x] Encoder MiniLM versionado, procesamiento completo de fragmentos, caché y banco de 1.000
+  referencias de entrenamiento. Diagnóstico real de doce casos por grupo conservado.
+- [x] Recompensa del relato conectada a GRPO para todos los tokens. Las pruebas verifican
+  independencia respecto del contenido de dream y separación de las reservas.
+- [x] Prompt mínimo sin ejemplo probado: un formato válido de tres, una truncación, pesos base intactos.
+- [x] Informe local por CLI que distingue estado, diagnóstico y entrenamiento incompleto.
+- [x] Site publicado, versión 11, con DreamBank, embeddings, riqueza de semillas abierta y límites.
 - [x] Infraestructura histórica de GRPO, LoRA, checkpoints y cierre textual disponible para adaptar.
   Su funcionamiento anterior no demuestra eficacia del nuevo protocolo.
 
 ## Trabajo pendiente, en orden
 
-1. Ampliar y revisar la muestra de semillas extraídas. El circuito y su caché ya funcionan con
-   el modelo real; falta comprobar calidad y cobertura para las consignas del piloto. Mantener
-   reservado el relato original. Algunas categorías extraídas pueden ser imprecisas: no son oro humano.
-2. Implementar encoder versionado, tratamiento explícito de relatos largos y banco de entrenamiento.
-   Explorar cercanía a varias referencias, agregación y escala; contrastar sueños reservados y textos
-   temáticos. Documentar los casos favorables y fallos antes de congelar la fórmula. No agregar
-   penalizaciones por similitud alta o copia.
-3. Conectar la recompensa de `<answer>` con GRPO para toda la secuencia. Verificar que cambiar
-   el contenido de `<dream>` sin cambiar `<answer>` no cambia el score. La estructura permite
-   identificar los bloques, sin juez semántico del proceso ni de su fidelidad.
-4. Probar el prompt mínimo con el modelo original y ejecutar un piloto D pequeño. Comprobar
-   actualización de adaptadores, evaluación con reservas y recuperación desde checkpoint.
-5. Publicar método y resultados en el repositorio y el site, distinguiendo implementación,
-   diagnóstico operativo y evidencia de aprendizaje. El site aún describe el protocolo anterior.
+1. Revisar y ampliar semillas: su riqueza queda abierta. Una comparación de niveles breve,
+   intermedio y rico para los mismos relatos es una propuesta para estudiar, no una decisión
+   cerrada ni un ensayo ejecutado. Deben aportar suficiente contexto sin entregar una trama.
+2. Completar el piloto de tres actualizaciones. Su primer intento completó la evaluación inicial,
+   pero se interrumpió por tiempo durante la preparación de LoRA, sin actualizaciones ni checkpoint.
+   Falta verificar cambios de adaptadores, pesos base congelados, recarga y evaluación posterior.
+3. Verificar continuidad real con el protocolo nuevo. Las pruebas con dobles comprueban el
+   recorrido de interrupción/reanudación; todavía no sustituyen la ejecución con pesos reales.
+4. Ampliar el diagnóstico de cercanía: distinguir vecino del banco y relato que originó la semilla.
+   La recompensa actual usa el banco; la métrica respecto del relato fuente puede registrarse
+   aparte. No incorporar validación/prueba al banco ni penalizaciones por coincidencias.
+5. Publicar los resultados efectivos del piloto una vez que existan; el site ya describe el
+   método actual y su estado incompleto.
+
+El diagnóstico encontró recompensa media 1,000 para referencias exactas, 0,777 para relatos
+reservados y 0,793 para listas temáticas. Los grupos tienen distintos referentes; los números
+no prueban una preferencia por listas frente a sueños. Sí advierten que la cercanía temática
+puede puntuar alto. Detalles en [recompensa por embeddings](recompensa-embeddings.md).
 
 ## Recursos y límites
 
 Se conservan todos los consumos previos: el presupuesto original es de 2.700 segundos de ejecución
 supervisada. Tras detener el último piloto quedaban aproximadamente 136 segundos. La prueba de extracción
-consumió 11,37 segundos adicionales, incluido el primer intento fallido; el nuevo perfil
-reserva como máximo 120. La preparación del corpus no realiza inferencias. No se reinician los
+consumió 11,37 segundos adicionales, incluido el primer intento fallido. Junto con embeddings,
+pruebas de generación y el intento de piloto, el nuevo perfil acumula 111,52 de sus 120 segundos.
+El supervisor conserva diez segundos para detener el proceso, por lo que ese perfil ya no permite
+una ejecución útil. Se solicitó autorización para hasta cinco minutos adicionales, todavía pendiente
+al redactar este estado. La preparación del corpus no realiza inferencias. No se reinician los
 contadores anteriores para simular un presupuesto nuevo. Si el piloto completo no cabe, se
 presentará el trabajo preparado y la necesidad concreta de ampliar recursos.
 
@@ -98,6 +114,6 @@ Detalles históricos: [modelo base](modelo-base.md), [rúbrica v4](rubrica-v4.md
 [validación técnica](validacion-tecnica.md). Las diez respuestas con formato válido del protocolo
 anterior no validan el nuevo prompt sin ejemplo.
 
-Verificación de esta etapa: importación real y primera extracción por partición, más 117 pruebas
-automatizadas aprobadas, incluidas identidad, fuga, duplicados, manifiestos, prompt y caché. La recompensa por
-embeddings y el entrenamiento del nuevo protocolo siguen sin ejecutar.
+Verificación de esta etapa: importación real y primera extracción por partición, más 124 pruebas
+automatizadas de corpus, recompensa, conexión con GRPO e informes, incluidas identidad, fuga,
+duplicados, manifiestos, prompt y caché. La recompensa por embeddings se ejecutó; el entrenamiento aún no completó actualizaciones.

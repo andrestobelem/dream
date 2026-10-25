@@ -49,10 +49,10 @@ training:
   checkpoint_every: 1
   dropout: 0.0
 reward:
-  status: draft
+  status: exploratory_frozen
   scored_block: answer
   credit_assignment: entire_sequence
-  formula: null
+  formula: nearest-dream-cosine-v1
   automatic_copy_penalty: false
 smoke:
   steps: 3
@@ -77,7 +77,10 @@ seed_extractor:
   max_seeds: 8
   max_words: 24
 embeddings:
-  candidate_id: sentence-transformers/all-MiniLM-L6-v2
-  status: pending_comparison
+  id: sentence-transformers/all-MiniLM-L6-v2
+  revision: 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
   pooling: masked_mean_l2
-  long_text: token_chunks_then_mean_l2
+  long_text: token_weighted_chunk_mean_l2
+  max_tokens: 256
+  batch_size: 16
+  device: cpu

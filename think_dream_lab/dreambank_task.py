@@ -75,6 +75,7 @@ def render_prompt(seeds):
     # La función sólo recibe semillas, nunca el relato original ni una trama resuelta.
     seeds = validate_seeds(seeds)
     return (
-        "Dream using these seeds: " + json.dumps(seeds, ensure_ascii=False) + ".\n"
-        "Dream inside <dream>...</dream>, then tell the dream inside <answer>...</answer>.\n"
+        "A conversation between User and Assistant. The Assistant dreams inside "
+        "<dream>...</dream>, then tells the dream inside <answer>...</answer>.\n"
+        "User: Dream using these seeds: " + json.dumps(seeds, ensure_ascii=False) + ".\nAssistant:"
     )

@@ -152,8 +152,20 @@ def validate_dreambank(config):
         )
     if config["training"]["loss_type"] != "grpo" or config["training"]["group_size"] < 2:
         raise ValueError("El entrenamiento requiere GRPO con al menos dos candidatos.")
-    if not 0 < config["runtime"]["budget_seconds"] <= 120:
-        raise ValueError("El perfil reserva como máximo 120 segundos del presupuesto restante.")
+    if config["runtime"]["budget_seconds"] <= 0:
+        raise ValueError("El presupuesto acumulado debe ser positivo.")
+    encoder = config["embeddings"]
+    if (
+        encoder["pooling"] != "masked_mean_l2"
+        or encoder["long_text"] != "token_weighted_chunk_mean_l2"
+        or encoder["device"] != "cpu"
+        or not encoder["revision"]
+        or not 3 <= encoder["max_tokens"] <= 256
+        or encoder["batch_size"] < 1
+    ):
+        raise ValueError("El encoder requiere revisión fija, CPU y fragmentos de hasta 256 tokens.")
+    if reward["formula"] != "nearest-dream-cosine-v1":
+        raise ValueError("Fórmula de cercanía no implementada.")
     return config
 
 
@@ -173,6 +185,8 @@ def implementation_manifest():
         "dreambank_task.py",
         "seed_extractor.py",
         "dreambank_workflow.py",
+        "embedding_reward.py",
+        "embedding_runner.py",
         "dream_task.py",
         "dream_generation.py",
         "dream_workflow.py",
