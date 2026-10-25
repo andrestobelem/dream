@@ -45,7 +45,7 @@ por similitud alta o copia, ni una recompensa adicional por longitud. Formato in
 - [x] 133 pruebas aprobadas; informe local y resultados agregados preparados para el repositorio.
 - [x] Site publicado con método y resultados de esta corrida: versión 13, despliegue exitoso.
 
-## Resultado observado
+## Resultado del piloto de cuatro relatos
 
 | Medida | Antes | Después |
 | --- | ---: | ---: |
@@ -60,6 +60,22 @@ presentando desvíos importantes. Los 200 relatos de prueba no se utilizaron.
 
 [Resultados y límites](resultado-entrenamiento-v6.md), [datos numéricos](resultados-v6.json) y
 [método de la corrida](entrenamiento-pareado-v6.md).
+
+## Evaluación ampliada completada
+
+- [x] Checkpoint 16 congelado frente al modelo base, sin seguir entrenando.
+- [x] Otros 24 relatos de validación, cuatro de cada uno de los seis grupos reservados,
+  excluyendo los cinco relatos de validación que ya habían sido generados.
+- [x] Semillas de 19–25 palabras revisadas antes de evaluar ambos modelos, misma plantilla
+  y longitud esperada. Tres generaciones por relato y modelo, con semilla por muestra.
+- [x] 72 pares comprobados; 144 scores recalculados desde caché, pesos intactos y cero
+  actualizaciones. Suite completa: 139 pruebas aprobadas.
+- [x] Informe por relato, gráfico e intervalos exploratorios por persona.
+
+Formato válido: 52/72 → 66/72. Coseno de los 48 pares válidos: cambio medio +0,0102.
+La mejora principal corresponde al formato; la cercanía subió poco y de manera heterogénea.
+[Resultados nuevos y límites](evaluacion-ampliada-v7.md), [datos numéricos](resultados-v7.json).
+El site v13 conserva el piloto anterior; esta evaluación queda documentada en el repositorio.
 
 ## Recursos y recuperación
 

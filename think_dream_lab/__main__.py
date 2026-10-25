@@ -23,6 +23,9 @@ def parser():
         "seeds",
         "embedding-check",
         "prompt-check",
+        "holdout-prepare",
+        "holdout-evaluate",
+        "holdout-report",
         "judge",
         "anchor-check",
         "anchor-holdout",
@@ -36,6 +39,10 @@ def parser():
         cmd = commands.add_parser(command, **({"help": command} if command != "_worker" else {}))
         cmd.add_argument("--config", default="configs/dream-v5.yaml")
         cmd.add_argument("--results", type=Path, default=Path("results/dream-v5"))
+        if command in {"holdout-evaluate", "_worker"}:
+            cmd.add_argument(
+                "--variant", choices=["base", "checkpoint"], required=command == "holdout-evaluate"
+            )
         if command in ["smoke", "experiment", "_worker"]:
             cmd.add_argument("--resume", action="store_true")
         if command == "smoke":
@@ -82,6 +89,8 @@ def parser():
                     "seeds",
                     "embedding-check",
                     "prompt-check",
+                    "holdout-prepare",
+                    "holdout-evaluate",
                     "judge",
                     "judge-check",
                     "anchor-check",
@@ -123,6 +132,45 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
+    if config.get("heldout_evaluation"):
+        if args.command == "holdout-report":
+            from .holdout_report import compare
+
+            compare(args.results.resolve())
+            return 0
+        if args.command == "_worker" and args.action in {"holdout-prepare", "holdout-evaluate"}:
+            from .holdout_evaluation import evaluate_variant, prepare
+
+            def stop_evaluation(_signal, _frame):
+                raise KeyboardInterrupt(
+                    "Evaluación interrumpida; se conservan las generaciones completas."
+                )
+
+            signal.signal(signal.SIGTERM, stop_evaluation)
+            if args.action == "holdout-prepare":
+                prepare(config, args.results.resolve())
+            else:
+                evaluate_variant(config, args.results.resolve(), args.variant)
+            return 0
+        if args.command not in {"holdout-prepare", "holdout-evaluate"}:
+            raise ValueError(
+                "Este perfil sólo permite preparar, evaluar e informar. Entrenar está prohibido."
+            )
+        from .supervisor import supervise
+
+        extra = ["--variant", args.variant] if args.command == "holdout-evaluate" else []
+        return supervise(
+            config,
+            args.results.resolve(),
+            [
+                args.command,
+                "--config",
+                str(Path(args.config).resolve()),
+                "--results",
+                str(args.results.resolve()),
+                *extra,
+            ],
+        )
     if config.get("protocol") == "dreambank-paired-v1":
         if args.command == "_worker" and args.action == "experiment":
             from .paired_experiment import run

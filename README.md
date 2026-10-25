@@ -13,30 +13,33 @@ humana asociada**: `(1 + coseno) / 2`, usando MiniLM congelado. GRPO asigna esa 
 todos los tokens muestreados, incluidos los del bloque de sueño. No hay penalización por
 coincidencias textuales ni por diferencias de longitud. Un formato inválido recibe cero.
 
-## Resultado del ensayo actual
+## Resultado actual
 
-Dieciséis pasos GRPO + LoRA sobre ocho relatos de entrenamiento. Cuatro relatos reservados,
-de otras personas, con tres generaciones antes y después:
+El checkpoint de 16 pasos GRPO + LoRA sobre ocho relatos se comparó con el modelo base
+en **24 relatos reservados nuevos de seis personas**, con tres generaciones por modelo y
+relato. No se siguió entrenando.
 
-| Medida | Antes | Después |
+| Medida | Base | Checkpoint 16 |
 | --- | ---: | ---: |
-| Coseno medio al relato humano, respuestas válidas | 0,533 (n=10) | 0,599 (n=12) |
-| Formato válido | 10/12 | 12/12 |
-| Recompensa media incluyendo fallos de formato | 0,639 | 0,799 |
+| Coseno medio al relato humano, sólo válidas | 0,6219 (n=52) | 0,6330 (n=66) |
+| Formato válido | 52/72 | 66/72 |
+| Score medio incluyendo fallos de formato | 0,5857 | 0,7485 |
+| Truncamientos | 11 | 2 |
 
-En los diez pares válidos en ambas fases, el coseno subió 0,039 en promedio. Tres medias
-por relato aumentaron y una bajó. Es una señal favorable en esta muestra pequeña, sin
-prueba de eficacia generalizada ni de experiencia subjetiva del modelo.
+En los 48 pares válidos en ambos modelos, el coseno subió **0,0102** en promedio.
+La mejora principal está en completar el formato; la cercanía aumentó poco y de manera
+heterogénea. Trece medias pareadas por relato subieron y diez bajaron; uno no tuvo pares
+válidos. Los pesos quedaron intactos. [Evaluación ampliada y límites](docs/evaluacion-ampliada-v7.md).
 
-Los adaptadores cambiaron, la base quedó intacta y la recarga reprodujo el checkpoint.
-El tiempo supervisado total fue 794,45 segundos de los 900 autorizados, incluidos los
-intentos fallidos por Metal. [Resultados y límites](docs/resultado-entrenamiento-v6.md).
+El [piloto anterior con cuatro relatos](docs/resultado-entrenamiento-v6.md) se conserva
+aparte; sus resultados no se mezclaron con esta cohorte.
 
 ## Datos y ejecución
 
 La importación real de DreamBank conserva 1.000 relatos de entrenamiento, 100 de validación
-y 200 de prueba, deduplicados y separados en 43 grupos. El ensayo usa un subconjunto
-aprobado de ocho y cuatro; los 200 relatos de prueba no se utilizaron. El registro de
+y 200 de prueba, deduplicados y separados en 43 grupos. El entrenamiento usó ocho relatos
+y el piloto evaluó cuatro. La evaluación ampliada usa otros 24 relatos de validación;
+los 200 de prueba no se utilizaron. El registro de
 alias y hogares está en [configs/dreambank-groups.json](configs/dreambank-groups.json).
 
 El perfil de esta corrida es [configs/dream-v6.yaml](configs/dream-v6.yaml). Con el lote
@@ -61,6 +64,7 @@ locales antes de ejecutar este ensayo.
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Evaluación ampliada sin entrenar](docs/evaluacion-ampliada-v7.md), [datos numéricos](docs/resultados-v7.json).
 - [Preparación del lote corto](docs/preparacion-natural-v6.md).
 - [Entrenamiento pareado](docs/entrenamiento-pareado-v6.md).
 - [Resultados numéricos](docs/resultados-v6.json).
