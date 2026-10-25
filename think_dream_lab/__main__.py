@@ -23,6 +23,9 @@ def parser():
         "seeds",
         "embedding-check",
         "prompt-check",
+        "expanded-experiment",
+        "reference-controls",
+        "reference-judge",
         "expanded-prepare",
         "continue-training",
         "holdout-prepare",
@@ -94,6 +97,9 @@ def parser():
                     "seeds",
                     "embedding-check",
                     "prompt-check",
+                    "expanded-experiment",
+                    "reference-controls",
+                    "reference-judge",
                     "expanded-prepare",
                     "continue-training",
                     "holdout-prepare",
@@ -139,6 +145,49 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
+    if config.get("expanded_experiment"):
+        if args.command == "_worker" and args.action in {
+            "expanded-experiment",
+            "reference-judge",
+            "reference-controls",
+        }:
+
+            def stop_expanded(_signal, _frame):
+                raise KeyboardInterrupt(
+                    "Interrumpido; se conservan los checkpoints y evaluaciones completos."
+                )
+
+            signal.signal(signal.SIGTERM, stop_expanded)
+            if args.action == "expanded-experiment":
+                from .expanded_experiment import run
+
+                run(config, args.results.resolve())
+            else:
+                from .reference_judge import run
+
+                run(
+                    config,
+                    args.results.resolve(),
+                    controls_only=args.action == "reference-controls",
+                )
+            return 0
+        if args.command not in {"expanded-experiment", "reference-judge", "reference-controls"}:
+            raise ValueError(
+                "Este perfil usa el experimento ampliado o su juez, sin otras variantes."
+            )
+        from .supervisor import supervise
+
+        return supervise(
+            config,
+            args.results.resolve(),
+            [
+                args.command,
+                "--config",
+                str(Path(args.config).resolve()),
+                "--results",
+                str(args.results.resolve()),
+            ],
+        )
     if config.get("expanded_preparation"):
         if args.command == "_worker" and args.action == "expanded-prepare":
             from .expanded_preparation import prepare

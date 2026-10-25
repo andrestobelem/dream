@@ -1,0 +1,116 @@
+task: dream
+model:
+  id: Qwen/Qwen3-1.7B-Base
+  revision: ea980cb0a6c2ae4b936e82123acc929f1cec04c1
+corpus:
+  source: dreambank
+  archive: .cache/corpora/dreambank.tar.xz
+  sha256: e24476e588d7d5e03e06b81c75c6429bb90ffe2f2ccc89bddea47060a4ee8d07
+  groups_file: configs/dreambank-groups.json
+  license: CC-BY-NC-SA-4.0
+  language: en
+  min_words: 40
+  max_words: 350
+  max_per_group: 100
+  seed: 20261025
+  train: 1000
+  validation: 100
+  test: 200
+conditions:
+- D
+seeds:
+- 11
+generation:
+  max_tokens: 2048
+  max_prompt_tokens: 768
+  format_example: false
+  temperature: 0.8
+  top_p: 0.95
+  top_k: 0
+  min_p: 0.0
+  response_prefix: '<dream>
+
+    '
+lora:
+  rank: 8
+  scale: 16.0
+  dropout: 0.0
+  keys:
+  - self_attn.q_proj
+  - self_attn.v_proj
+  layers: -1
+training:
+  group_size: 4
+  microbatch: 1
+  learning_rate: 1.0e-05
+  beta: 0.1
+  epsilon: 0.2
+  grad_clip: 1.0
+  loss_type: grpo
+  advantage_epsilon: 0.0001
+  weight_decay: 0.0
+  checkpoint_every: 1
+  dropout: 0.0
+reward:
+  status: exploratory_frozen
+  scored_block: answer
+  credit_assignment: entire_sequence
+  formula: paired-reference-cosine-v1
+  automatic_copy_penalty: false
+smoke:
+  steps: 16
+  eval_problems: 4
+  train_condition: D
+evaluation:
+  seed: 4242
+  samples_per_problem: 3
+runtime:
+  budget_seconds: 21600
+  poll_seconds: 1
+  swap_growth_limit_gib: 2
+  min_free_disk_gib: 20
+  telemetry_seconds: 5
+protocol: dreambank-paired-v1
+seed_extractor:
+  id: mlx-community/Qwen3-8B-4bit
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  temperature: 0.0
+  max_tokens: 128
+  min_seeds: 3
+  max_seeds: 8
+  max_words: 24
+embeddings:
+  id: sentence-transformers/all-MiniLM-L6-v2
+  revision: 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
+  pooling: masked_mean_l2
+  long_text: token_weighted_chunk_mean_l2
+  max_tokens: 256
+  batch_size: 16
+  device: cpu
+training_pack:
+  path: results/dream-v16/preparation/training-pack.json
+  hash: bbc79f018e88410b28c778dfa1b765fc571a63446e4fd5360b069a33da56e544
+expanded_experiment:
+  source_run: results/dream-v8/dream/paired/run.json
+  source_step: 32
+  target_step: 160
+  updates: 128
+  reports: 128
+  epochs: 1
+  approved_dataset_hash: d910fdda3577dfd3b0188face94a99ad6ac0cff09a92ecd85ed9f8a338e2453e
+  train_seed: 11
+  selection_seed: 20261025
+  evaluation_before: results/dream-v17/before
+  evaluation_after: results/dream-v17/after
+  approval: user approved reviewed 128-report pack and requested continuing expanded
+    experiment
+  original_corpus: results/dream-v5/dream/data
+  judge_rubric_hash: a05b45695cfbe7922e176ef45d747fe306fc399de556fe1ec3b0b1a18e628124
+judge:
+  id: mlx-community/Phi-4-mini-instruct-4bit
+  revision: ac1c269cb4222a4e136a3d09edad301056c1f36a
+  base_model: microsoft/Phi-4-mini-instruct
+  temperature: 0.0
+  max_tokens: 256
+  enable_thinking: false
+  rubric_version: dream-reference-v17
