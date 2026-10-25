@@ -187,6 +187,9 @@ después de ver los resultados y no se inició otro ensayo.
 
 ## Artefactos locales
 
+Revisión posterior de los cuatro aciertos, sus contracasos y el próximo diseño propuesto:
+[aprendizajes de v20](aprendizajes-v20.md). No modifica las notas ni inicia otro entrenamiento.
+
 ```sh
 .venv/bin/python -m experiments.preferences_v20 prepare
 .venv/bin/python -m experiments.preferences_v20 train-pool

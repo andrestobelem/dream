@@ -17,7 +17,31 @@ def render(root):
         f"<p>Una pasada de 14 actualizaciones sobre preferencias claras de 24 pares. En 24 comparaciones nuevas: 32 preferido {quality['counts'].get('before', 0)}, piloto preferido {quality['counts'].get('after', 0)}, empates {quality['counts'].get('tie', 0)}. Revisión del asistente, no humana independiente.</p>",
         "<p>Ambos modelos conservaron formato en 24/24. Los bloques que sólo repiten la consigna pasaron de 1 a 5. La revisión de variedad fue exploratoria y no cegada: dos descensos, cinco empates y cinco indeterminados. No se acreditó preservar variedad.</p>",
         "<p>Las pruebas locales de dependencia conservaron el hecho completo en 16/18 antes y 17/18 después. Es sensibilidad a detalles, no fidelidad completa. Base y origen intactos; los 200 relatos de prueba no se usaron.</p>",
-        '<nav><a href="#quality">Calidad</a> · <a href="#variety">Variedad</a> · <a href="#dependency">Dependencia</a> · <a href="index.html">Lote entrenado</a></nav>',
+        '<nav><a href="#learnings">Qué aprendimos</a> · <a href="#quality">Calidad</a> · <a href="#variety">Variedad</a> · <a href="#dependency">Dependencia</a> · <a href="index.html">Lote entrenado</a></nav>',
+        (
+            '<section id="learnings"><h2>Revisión posterior de los cuatro aciertos</h2>'
+            "<p>Lectura exploratoria con identidades conocidas; no modifica las notas congeladas. "
+            "Los cuatro aciertos pertenecen a tres pedidos. Sólo la sala de espera gana en ambas muestras; "
+            "tren y balcón también pierden en su otra muestra.</p>"
+            '<ul><li><a href="#E06">E06</a>: recupera al padre y hace perceptible el alejamiento de la pared '
+            "(126 → 93 palabras). No narra claramente que pinte.</li>"
+            '<li><a href="#E08">E08</a>: reduce reiteración de orgullo y conserva observación y preguntas '
+            "(364 → 115 palabras).</li>"
+            '<li><a href="#E19">E19</a>: añade banco, manta, estación y cambios de perspectiva '
+            '(49 → 104 palabras); <a href="#E14">la otra muestra</a> sólo repite la consigna.</li>'
+            '<li><a href="#E24">E24</a>: mirar, acercarse y escuchar aportan una escena '
+            "(55 → 88 palabras), pero pierde que la valija esté vacía. "
+            '<a href="#E11">La otra muestra</a> empeora.</li></ul>'
+            "<p>Dos aciertos son más breves y dos más largos. El aprendizaje propuesto es favorecer "
+            "experiencias situadas, sin premiar longitud, cantidad de verbos ni rareza. "
+            "Incluso quitando las cuatro derrotas por consigna repetida, quedan ocho derrotas, "
+            "cuatro victorias y ocho empates; esa exclusión posterior no reemplaza el resultado principal.</p>"
+            "<p>Próximo paso propuesto: auditar los contrastes descartados por longitud, preparar pares "
+            "nuevos desde el 32 y evaluar con más muestras por pedido y procedencia oculta. "
+            "Calidad y cumplimiento de motivos se revisarán por separado. "
+            "No se inició otro entrenamiento ni se usaron los 200 relatos de prueba. "
+            "Diseño detallado en docs/aprendizajes-v20.md del repositorio.</p></section>"
+        ),
         '<h2 id="quality">Calidad: identidades reveladas después de congelar notas</h2>',
     ]
     escape = html.escape
@@ -36,7 +60,7 @@ def render(root):
             else {"tie": "Empate", "no_se": "Indeterminado"}[chosen]
         )
         body += [
-            f'<section><h3>{rid}</h3><p>{escape(row["request"])}</p><p>Preferencia: <b>{pref}</b>. Confianza: {escape(n["confidence"])}.</p><p>{escape(n["note"])}</p><div class="columns">'
+            f'<section id="{rid}"><h3>{rid}</h3><p>{escape(row["request"])}</p><p>Preferencia: <b>{pref}</b>. Confianza: {escape(n["confidence"])}.</p><p>{escape(n["note"])}</p><div class="columns">'
         ]
         for side in ["A", "B"]:
             body += [

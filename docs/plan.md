@@ -22,6 +22,11 @@ No se evaluaron los 200 relatos de prueba. [Método, resultados y límites](pref
 
 ## Antecedentes inmediatos
 
+Revisión posterior completada: los cuatro aciertos de v20 se concentran en tres pedidos;
+dos también presentan regresiones en su otra muestra. [Aprendizajes y siguiente ensayo
+propuesto](aprendizajes-v20.md). Próximo paso propuesto: auditar la selección de contrastes
+antes de preparar otro lote. No se inició entrenamiento adicional ni se abrió la prueba final.
+
 Experimento ampliado completado, desde el checkpoint 32
 hasta el 160. Los pasos 33–160 recorrieron una sola vez los 128 relatos aprobados.
 La comparación no mostró una mejora convincente; el 32 sigue como referencia práctica.
