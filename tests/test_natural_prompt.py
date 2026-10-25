@@ -34,3 +34,15 @@ def test_structured_seeds_are_rendered_as_natural_text():
     prompt = render_prompt(seeds)
     assert "User: Dream about Laura, hotel, inheritance." in prompt
     assert '"characters"' not in prompt
+
+
+def test_target_length_is_given_only_for_the_account():
+    prompt = render_prompt(
+        "a river, a sister and a boat", target_words=82, response_prefix="<dream>\n"
+    )
+    assert "Write the dream account in <answer> in approximately 82 words." in prompt
+    assert prompt.endswith("Assistant:\n<dream>\n")
+    assert "<dream> in approximately" not in prompt
+    for invalid in (0, -1, True, 2.5, "82"):
+        with pytest.raises(ValueError):
+            render_prompt("a river", target_words=invalid)

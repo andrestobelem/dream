@@ -70,7 +70,7 @@ def validate_seeds(value):
     return {k: [" ".join(t.split()) for t in value[k]] for k in CATEGORIES}
 
 
-def render_prompt(seeds, *, response_prefix=""):
+def render_prompt(seeds, *, response_prefix="", target_words=None):
     # La función sólo recibe semillas, nunca el relato original ni una trama resuelta.
     if isinstance(seeds, str):
         brief = " ".join(seeds.split()).strip()
@@ -83,6 +83,13 @@ def render_prompt(seeds, *, response_prefix=""):
         raise ValueError("El único prefijo de respuesta admitido abre el bloque dream.")
     request = brief if brief.startswith("Dream about ") else "Dream about " + brief
     request = request.rstrip(".") + "."
+    length_instruction = ""
+    if target_words is not None:
+        if type(target_words) is not int or target_words < 1:
+            raise ValueError("La longitud esperada debe ser un número entero positivo de palabras.")
+        length_instruction = (
+            f"Write the dream account in <answer> in approximately {target_words} words.\n"
+        )
     return (
         "A conversation between User and Assistant. The user requests a dream, "
         "and the Assistant dreams it. The assistant first dreams in the mind "
@@ -91,5 +98,9 @@ def render_prompt(seeds, *, response_prefix=""):
         "respectively, i.e.,\n"
         "<dream> dream here </dream>\n"
         "<answer> dream account here </answer>.\n\n"
-        "User: " + request + "\nAssistant:\n" + response_prefix
+        + length_instruction
+        + "User: "
+        + request
+        + "\nAssistant:\n"
+        + response_prefix
     )

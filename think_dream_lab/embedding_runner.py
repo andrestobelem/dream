@@ -15,7 +15,9 @@ class EmbeddingRunner(Runner):
         if condition != "D":
             raise ValueError("El protocolo DreamBank sólo usa Dream (D).")
         return render_prompt(
-            row["seeds"], response_prefix=self.config["generation"].get("response_prefix", "")
+            row["seeds"],
+            response_prefix=self.config["generation"].get("response_prefix", ""),
+            target_words=row.get("target_words"),
         )
 
     def stop_sequence(self):
