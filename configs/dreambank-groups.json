@@ -1,0 +1,966 @@
+{
+  "version": 1,
+  "policy": "Agrupación conservadora: alias de una persona y hogares identificados no cruzan particiones; colecciones colectivas sin identificación individual quedan fuera. Las identidades son las etiquetas públicas de DreamBank, no identidades civiles verificadas.",
+  "series": {
+    "alta": {
+      "title": "Alta: a detailed dreamer",
+      "person": "alta",
+      "group": "alta",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./alta/info.html"
+    },
+    "angie": {
+      "title": "Angie: age 18 & 20",
+      "person": "angie",
+      "group": "angie",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./angie/info.html"
+    },
+    "arlie": {
+      "title": "Arlie: a middle-aged woman",
+      "person": "arlie",
+      "group": "arlie",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./arlie/info.html"
+    },
+    "b-baseline": {
+      "title": "Barb Sanders: baseline",
+      "person": "barb-sanders",
+      "group": "barb-sanders",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./b-baseline/info.html"
+    },
+    "b": {
+      "title": "Barb Sanders",
+      "person": "barb-sanders",
+      "group": "barb-sanders",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./b/info.html"
+    },
+    "b2": {
+      "title": "Barb Sanders #2",
+      "person": "barb-sanders",
+      "group": "barb-sanders",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./b2/info.html"
+    },
+    "bay_area_girls_456": {
+      "title": "Bay Area girls: Grades 4-6",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./bay_area_girls_456/info.html"
+    },
+    "bay_area_girls_789": {
+      "title": "Bay Area girls: Grades 7-9",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./bay_area_girls_789/info.html"
+    },
+    "bea1": {
+      "title": "Bea 1: a high school student",
+      "person": "bea",
+      "group": "bea",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./bea1/info.html"
+    },
+    "bea2": {
+      "title": "Bea 2: a college student",
+      "person": "bea",
+      "group": "bea",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./bea2/info.html"
+    },
+    "betty": {
+      "title": "Betty: a college student",
+      "person": "betty",
+      "group": "betty",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./betty/info.html"
+    },
+    "blind-f": {
+      "title": "Blind dreamers (F)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./blind-f/info.html"
+    },
+    "blind-m": {
+      "title": "Blind dreamers (M)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./blind-m/info.html"
+    },
+    "bosnak": {
+      "title": "Robert Bosnak: A dream analyst",
+      "person": "bosnak",
+      "group": "bosnak",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./bosnak/info.html"
+    },
+    "chris": {
+      "title": "Chris: a transvestite",
+      "person": "chris",
+      "group": "chris",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./chris/info.html"
+    },
+    "chuck": {
+      "title": "Chuck: a physical scientist",
+      "person": "chuck",
+      "group": "chuck",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./chuck/info.html"
+    },
+    "cicogna": {
+      "title": "Italian REM & NREM dreams (English)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./cicogna/info.html"
+    },
+    "college-f": {
+      "title": "College students, 1997-1998 (F)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./college-f/info.html"
+    },
+    "college-m": {
+      "title": "College students, 1997-1998 (M)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./college-m/info.html"
+    },
+    "dahlia": {
+      "title": "Dahlia: concerns with appearance",
+      "person": "dahlia",
+      "group": "dahlia",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./dahlia/info.html"
+    },
+    "david": {
+      "title": "David: teenage dreams",
+      "person": "david",
+      "group": "david",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./david/info.html"
+    },
+    "dorothea": {
+      "title": "Dorothea: 53 years of dreams",
+      "person": "dorothea",
+      "group": "dorothea",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./dorothea/info.html"
+    },
+    "ed": {
+      "title": "Ed: dreams of his late wife",
+      "person": "ed",
+      "group": "ed",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./ed/info.html"
+    },
+    "edna": {
+      "title": "Edna: a blind woman",
+      "person": "edna",
+      "group": "edna",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./edna/info.html"
+    },
+    "elizabeth": {
+      "title": "Elizabeth: a woman in her 40s",
+      "person": "elizabeth",
+      "group": "elizabeth",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./elizabeth/info.html"
+    },
+    "emma": {
+      "title": "Emma: 48 years of dreams",
+      "person": "emma",
+      "group": "emma-household",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./emma/info.html"
+    },
+    "emmas_husband": {
+      "title": "Emma's Husband",
+      "person": "emmas_husband",
+      "group": "emma-household",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./emmas_husband/info.html"
+    },
+    "esther": {
+      "title": "Esther: an adolescent girl",
+      "person": "esther",
+      "group": "esther",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./esther/info.html"
+    },
+    "german-f.de": {
+      "title": "German dreams (F)",
+      "person": null,
+      "group": null,
+      "language": "de",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./german-f.de/info.html"
+    },
+    "german-m.de": {
+      "title": "German dreams (M)",
+      "person": null,
+      "group": null,
+      "language": "de",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./german-m.de/info.html"
+    },
+    "hall_female": {
+      "title": "College women, late 1940s",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./hall_female/info.html"
+    },
+    "izzy-all": {
+      "title": "Izzy (ALL, including non-consecutive)",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy-all/info.html"
+    },
+    "izzy": {
+      "title": "Izzy (all)",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy/info.html"
+    },
+    "izzy0": {
+      "title": "Izzy,  uncertain dates",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy0/info.html"
+    },
+    "izzy12": {
+      "title": "Izzy,  age 12",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy12/info.html"
+    },
+    "izzy13": {
+      "title": "Izzy,  age 13",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy13/info.html"
+    },
+    "izzy14": {
+      "title": "Izzy,  age 14",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy14/info.html"
+    },
+    "izzy15": {
+      "title": "Izzy,  age 15",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy15/info.html"
+    },
+    "izzy16": {
+      "title": "Izzy,  age 16",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy16/info.html"
+    },
+    "izzy17": {
+      "title": "Izzy,  age 17",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy17/info.html"
+    },
+    "izzy18_21": {
+      "title": "Izzy,  age 18-21",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy18_21/info.html"
+    },
+    "izzy22_25": {
+      "title": "Izzy,  age 22-25",
+      "person": "izzy",
+      "group": "izzy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./izzy22_25/info.html"
+    },
+    "jasmine-all": {
+      "title": "Jasmine (ALL, including non-consecutive)",
+      "person": "jasmine",
+      "group": "jasmine",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jasmine-all/info.html"
+    },
+    "jasmine": {
+      "title": "Jasmine (all)",
+      "person": "jasmine",
+      "group": "jasmine",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jasmine/info.html"
+    },
+    "jasmine1": {
+      "title": "Jasmine 1: middle school",
+      "person": "jasmine",
+      "group": "jasmine",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jasmine1/info.html"
+    },
+    "jasmine2": {
+      "title": "Jasmine 2: high school",
+      "person": "jasmine",
+      "group": "jasmine",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jasmine2/info.html"
+    },
+    "jasmine3": {
+      "title": "Jasmine 3: college 1",
+      "person": "jasmine",
+      "group": "jasmine",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jasmine3/info.html"
+    },
+    "jasmine4": {
+      "title": "Jasmine 4: college 2",
+      "person": "jasmine",
+      "group": "jasmine",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jasmine4/info.html"
+    },
+    "jeff": {
+      "title": "Jeff: a lucid dreamer",
+      "person": "jeff",
+      "group": "jeff",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./jeff/info.html"
+    },
+    "joan": {
+      "title": "Joan: a lesbian",
+      "person": "joan",
+      "group": "joan",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./joan/info.html"
+    },
+    "kenneth": {
+      "title": "Kenneth",
+      "person": "kenneth",
+      "group": "kenneth",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./kenneth/info.html"
+    },
+    "lawrence": {
+      "title": "Lawrence, a young man",
+      "person": "lawrence",
+      "group": "lawrence",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./lawrence/info.html"
+    },
+    "mack": {
+      "title": "Mack: A poor recaller",
+      "person": "mack",
+      "group": "mack",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./mack/info.html"
+    },
+    "madeline0-childhood": {
+      "title": "Madeline 0: Childhood",
+      "person": "madeline",
+      "group": "madeline",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./madeline0-childhood/info.html"
+    },
+    "madeline1-hs": {
+      "title": "Madeline 1: High School",
+      "person": "madeline",
+      "group": "madeline",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./madeline1-hs/info.html"
+    },
+    "madeline2-dorms": {
+      "title": "Madeline 2: College Dorms",
+      "person": "madeline",
+      "group": "madeline",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./madeline2-dorms/info.html"
+    },
+    "madeline3-offcampus": {
+      "title": "Madeline 3: Off-Campus",
+      "person": "madeline",
+      "group": "madeline",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./madeline3-offcampus/info.html"
+    },
+    "madeline4-postgrad": {
+      "title": "Madeline 4: After College",
+      "person": "madeline",
+      "group": "madeline",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./madeline4-postgrad/info.html"
+    },
+    "mark": {
+      "title": "Mark: a young boy",
+      "person": "mark",
+      "group": "mark",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./mark/info.html"
+    },
+    "melissa": {
+      "title": "Melissa: a young girl",
+      "person": "melissa",
+      "group": "melissa",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./melissa/info.html"
+    },
+    "melora": {
+      "title": "Melora (Melvin's wife)",
+      "person": "melora",
+      "group": "melora-melvin-household",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./melora/info.html"
+    },
+    "melvin": {
+      "title": "Melvin (Melora's husband)",
+      "person": "melvin",
+      "group": "melora-melvin-household",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./melvin/info.html"
+    },
+    "merri": {
+      "title": "Merri: an artist",
+      "person": "merri",
+      "group": "merri",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./merri/info.html"
+    },
+    "miami-home": {
+      "title": "Miami Home-Lab: Home",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./miami-home/info.html"
+    },
+    "miami-lab": {
+      "title": "Miami Home-Lab: Lab",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./miami-lab/info.html"
+    },
+    "midwest_teens-f": {
+      "title": "Midwest teenagers (F)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./midwest_teens-f/info.html"
+    },
+    "midwest_teens-m": {
+      "title": "Midwest teenagers (M)",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./midwest_teens-m/info.html"
+    },
+    "nancy": {
+      "title": "Nancy: Caring & headstrong",
+      "person": "nancy",
+      "group": "nancy",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./nancy/info.html"
+    },
+    "natural_scientist": {
+      "title": "The Natural Scientist",
+      "person": "natural_scientist",
+      "group": "natural_scientist",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./natural_scientist/info.html"
+    },
+    "norman": {
+      "title": "Norman: a child molester",
+      "person": "norman",
+      "group": "norman",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./norman/info.html"
+    },
+    "norms-f": {
+      "title": "Hall/VdC Norms: Female",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./norms-f/info.html"
+    },
+    "norms-m": {
+      "title": "Hall/VdC Norms: Male",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./norms-m/info.html"
+    },
+    "pegasus": {
+      "title": "Pegasus: a factory worker",
+      "person": "pegasus",
+      "group": "pegasus",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./pegasus/info.html"
+    },
+    "peru-f": {
+      "title": "Peruvian women",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./peru-f/info.html"
+    },
+    "peru-m": {
+      "title": "Peruvian men",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./peru-m/info.html"
+    },
+    "phil1": {
+      "title": "Phil 1: teens",
+      "person": "phil",
+      "group": "phil",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./phil1/info.html"
+    },
+    "phil2": {
+      "title": "Phil 2: late 20s",
+      "person": "phil",
+      "group": "phil",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./phil2/info.html"
+    },
+    "phil3": {
+      "title": "Phil 3: retirement",
+      "person": "phil",
+      "group": "phil",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./phil3/info.html"
+    },
+    "physiologist": {
+      "title": "The Physiologist",
+      "person": "physiologist",
+      "group": "physiologist",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./physiologist/info.html"
+    },
+    "ringo": {
+      "title": "Ringo: from the 1960s",
+      "person": "ringo",
+      "group": "ringo",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./ringo/info.html"
+    },
+    "sally": {
+      "title": "Sally: a forester",
+      "person": "sally",
+      "group": "sally",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./sally/info.html"
+    },
+    "samantha": {
+      "title": "Samantha: in her 20s",
+      "person": "samantha",
+      "group": "samantha",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./samantha/info.html"
+    },
+    "seventh_graders": {
+      "title": "Seventh grade girls",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./seventh_graders/info.html"
+    },
+    "toby": {
+      "title": "Toby: A friendly party animal",
+      "person": "toby",
+      "group": "toby",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./toby/info.html"
+    },
+    "tom": {
+      "title": "Tom: An outgoing man",
+      "person": "tom",
+      "group": "tom",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./tom/info.html"
+    },
+    "ucsc_women": {
+      "title": "UCSC women, 1996",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./ucsc_women/info.html"
+    },
+    "van": {
+      "title": "Van: a video gamer",
+      "person": "van",
+      "group": "van",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./van/info.html"
+    },
+    "vickie": {
+      "title": "Vickie: a 10-year-old girl",
+      "person": "vickie",
+      "group": "vickie",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./vickie/info.html"
+    },
+    "vietnam_vet": {
+      "title": "Vietnam Vet: 1970-2008 war dreams",
+      "person": "vietnam-vet",
+      "group": "vietnam-vet",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./vietnam_vet/info.html"
+    },
+    "vietnam_vet2": {
+      "title": "Vietnam Vet: 2015 dreams",
+      "person": "vietnam-vet",
+      "group": "vietnam-vet",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./vietnam_vet2/info.html"
+    },
+    "vietnam_vet3": {
+      "title": "Vietnam Vet: 2016-17 dreams",
+      "person": "vietnam-vet",
+      "group": "vietnam-vet",
+      "language": "en",
+      "eligible": true,
+      "basis": "individual_named_in_series_metadata; aliases_linked_by_published_name",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./vietnam_vet3/info.html"
+    },
+    "vonuslar.de": {
+      "title": "Detlev von Uslar, auf Deutsch",
+      "person": null,
+      "group": null,
+      "language": "de",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./vonuslar.de/info.html"
+    },
+    "wedding": {
+      "title": "Wedding dreams",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./wedding/info.html"
+    },
+    "west_coast_teens": {
+      "title": "West Coast teenage girls",
+      "person": null,
+      "group": null,
+      "language": "en",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./west_coast_teens/info.html"
+    },
+    "zurich-f.de": {
+      "title": "Swiss children, auf Deutsch (F)",
+      "person": null,
+      "group": null,
+      "language": "de",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./zurich-f.de/info.html"
+    },
+    "zurich-m.de": {
+      "title": "Swiss children, auf Deutsch (M)",
+      "person": null,
+      "group": null,
+      "language": "de",
+      "eligible": false,
+      "basis": "excluded: multi_person_collection_or_non_English_not_resolved",
+      "source": "https://dreambank.net/grid.cgi",
+      "archive_metadata_member": "./zurich-m.de/info.html"
+    }
+  }
+}

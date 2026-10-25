@@ -1,0 +1,83 @@
+task: dream
+model:
+  id: Qwen/Qwen3-1.7B-Base
+  revision: ea980cb0a6c2ae4b936e82123acc929f1cec04c1
+corpus:
+  source: dreambank
+  archive: .cache/corpora/dreambank.tar.xz
+  sha256: e24476e588d7d5e03e06b81c75c6429bb90ffe2f2ccc89bddea47060a4ee8d07
+  groups_file: configs/dreambank-groups.json
+  license: CC-BY-NC-SA-4.0
+  language: en
+  min_words: 40
+  max_words: 350
+  max_per_group: 100
+  seed: 20261025
+  train: 1000
+  validation: 100
+  test: 200
+conditions:
+- D
+seeds:
+- 11
+generation:
+  max_tokens: 768
+  max_prompt_tokens: 768
+  format_example: false
+  temperature: 0.8
+  top_p: 0.95
+  top_k: 0
+  min_p: 0.0
+lora:
+  rank: 8
+  scale: 16.0
+  dropout: 0.0
+  keys:
+  - self_attn.q_proj
+  - self_attn.v_proj
+  layers: -1
+training:
+  group_size: 4
+  microbatch: 1
+  learning_rate: 1.0e-05
+  beta: 0.1
+  epsilon: 0.2
+  grad_clip: 1.0
+  loss_type: grpo
+  advantage_epsilon: 0.0001
+  weight_decay: 0.0
+  checkpoint_every: 1
+  dropout: 0.0
+reward:
+  status: draft
+  scored_block: answer
+  credit_assignment: entire_sequence
+  formula: null
+  automatic_copy_penalty: false
+smoke:
+  steps: 3
+  eval_problems: 2
+  train_condition: D
+evaluation:
+  seed: 4242
+  samples_per_problem: 1
+runtime:
+  budget_seconds: 120
+  poll_seconds: 1
+  swap_growth_limit_gib: 2
+  min_free_disk_gib: 20
+  telemetry_seconds: 5
+protocol: dreambank-embeddings-v1
+seed_extractor:
+  id: mlx-community/Qwen3-8B-4bit
+  revision: 545dc4251c05440727734bcd94334791f6ab0192
+  temperature: 0.0
+  max_tokens: 128
+  min_seeds: 3
+  max_seeds: 8
+  max_words: 24
+embeddings:
+  candidate_id: sentence-transformers/all-MiniLM-L6-v2
+  status: pending_comparison
+  pooling: masked_mean_l2
+  long_text: token_chunks_then_mean_l2

@@ -14,12 +14,15 @@ BACKEND_COMMIT = "4fa3c5148b17a5833b3074e4e58c6299baec1018"
 def load_config(path: str | Path) -> dict:
     path = Path(path)
     config = read_json(path) if path.suffix == ".json" else yaml.safe_load(path.read_text())
+    dreambank = config.get("protocol") == "dreambank-embeddings-v1"
+    if dreambank:
+        validate_dreambank(config)
     if config["model"]["id"] not in {"Qwen/Qwen3-1.7B-Base", "HuggingFaceTB/SmolLM2-1.7B"}:
         raise ValueError("El modelo debe pertenecer a los checkpoints base registrados.")
     dream_only = config.get("task") == "dream" and config["conditions"] == ["D"]
     if not dream_only and config["conditions"] != ["A", "B", "C", "D"]:
         raise ValueError("Usá [D] para Dream o [A, B, C, D] para el protocolo histórico.")
-    if len(config["seeds"]) != 3 or len(set(config["seeds"])) != 3:
+    if not dreambank and (len(config["seeds"]) != 3 or len(set(config["seeds"])) != 3):
         raise ValueError("Se requieren tres semillas distintas.")
     if config["training"]["loss_type"] != "grpo":
         raise ValueError("El protocolo principal usa GRPO.")
@@ -77,7 +80,7 @@ def load_config(path: str | Path) -> dict:
         raise ValueError("Rango y escala LoRA deben ser positivos.")
     if config["runtime"]["poll_seconds"] <= 0 or config["runtime"]["telemetry_seconds"] <= 0:
         raise ValueError("Los intervalos de supervisión deben ser positivos.")
-    if dream:
+    if dream and not dreambank:
         if config["judge"].get("rubric_version") not in {"dream-v2", "dream-v3", "dream-v4"}:
             raise ValueError("Versión de rúbrica de sueños no compatible.")
         if config["corpus"]["source"] != "dreamviews":
@@ -108,6 +111,52 @@ def load_config(path: str | Path) -> dict:
     return config
 
 
+def validate_dreambank(config):
+    """Perfil separado: no hereda los requisitos del juez ni de A/B/C/D."""
+    if config.get("task") != "dream" or config.get("conditions") != ["D"]:
+        raise ValueError("DreamBank usa únicamente D: soñar dentro de <dream>.")
+    if config["model"] != {
+        "id": "Qwen/Qwen3-1.7B-Base",
+        "revision": "ea980cb0a6c2ae4b936e82123acc929f1cec04c1",
+    }:
+        raise ValueError("Este piloto conserva el modelo y revisión del primer piloto.")
+    if config["generation"].get("format_example") is not False:
+        raise ValueError("El prompt DreamBank no lleva un ejemplo resuelto.")
+    corpus = config["corpus"]
+    if corpus["source"] != "dreambank" or corpus["license"] != "CC-BY-NC-SA-4.0":
+        raise ValueError("Fuente o licencia DreamBank incorrecta.")
+    if not isinstance(corpus["sha256"], str) or len(corpus["sha256"]) != 64:
+        raise ValueError("Falta fijar el SHA-256 del archivo DreamBank.")
+    if any(
+        type(corpus[k]) is not int or corpus[k] <= 0
+        for k in ("train", "validation", "test", "min_words", "max_words", "max_per_group")
+    ):
+        raise ValueError("Los tamaños y límites del corpus deben ser enteros positivos.")
+    if corpus["min_words"] > corpus["max_words"]:
+        raise ValueError("Intervalo de longitud del corpus inválido.")
+    if not config["seeds"] or any(
+        type(s) is not int or not 0 <= s < 2**32 for s in config["seeds"]
+    ):
+        raise ValueError("Se requiere al menos una semilla uint32.")
+    reward = config["reward"]
+    extractor = config["seed_extractor"]
+    if (extractor["min_seeds"], extractor["max_seeds"], extractor["max_words"]) != (3, 8, 24):
+        raise ValueError("El selector actual usa entre tres y ocho semillas y hasta 24 palabras.")
+    if (
+        reward["scored_block"] != "answer"
+        or reward["credit_assignment"] != "entire_sequence"
+        or reward.get("automatic_copy_penalty") is not False
+    ):
+        raise ValueError(
+            "Se puntúa answer y se recompensa la secuencia completa, sin pena por copia."
+        )
+    if config["training"]["loss_type"] != "grpo" or config["training"]["group_size"] < 2:
+        raise ValueError("El entrenamiento requiere GRPO con al menos dos candidatos.")
+    if not 0 < config["runtime"]["budget_seconds"] <= 120:
+        raise ValueError("El perfil reserva como máximo 120 segundos del presupuesto restante.")
+    return config
+
+
 def implementation_manifest():
     package = Path(__file__).parent
     names = [
@@ -120,6 +169,10 @@ def implementation_manifest():
         "storage.py",
         "workflow.py",
         "corpus.py",
+        "dreambank.py",
+        "dreambank_task.py",
+        "seed_extractor.py",
+        "dreambank_workflow.py",
         "dream_task.py",
         "dream_generation.py",
         "dream_workflow.py",

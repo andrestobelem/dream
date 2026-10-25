@@ -12,7 +12,9 @@ from think_dream_lab.storage import read_json, write_json
 def test_pilot_base_is_the_default_and_does_not_reuse_smollm2_locks(tmp_path, monkeypatch):
     config = load_config("configs/dream-v4.yaml")
     assert config["model"]["id"] == "Qwen/Qwen3-1.7B-Base" and config["conditions"] == ["D"]
-    assert str(parser().parse_args(["base-check"]).results) == "results/dream-v4-qwen"
+    default = parser().parse_args(["base-check"])
+    assert str(default.results) == "results/dream-v5"
+    assert load_config(default.config)["model"] == config["model"]
     old = load_config("configs/dream-v4-smollm2.yaml")["model"]
     write_json(tmp_path / "model-lock.json", old)
     with pytest.raises(ValueError, match="no coincide"):

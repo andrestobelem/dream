@@ -15,11 +15,12 @@ def parser():
         description="Dream: generación y evaluación local de relatos de sueños",
     )
     commands = root.add_subparsers(
-        dest="command", required=True, metavar="{doctor,corpus,judge,smoke,experiment,report}"
+        dest="command", required=True, metavar="{doctor,corpus,seeds,judge,smoke,experiment,report}"
     )
     for command in [
         "doctor",
         "corpus",
+        "seeds",
         "judge",
         "anchor-check",
         "anchor-holdout",
@@ -31,8 +32,8 @@ def parser():
         "_worker",
     ]:
         cmd = commands.add_parser(command, **({"help": command} if command != "_worker" else {}))
-        cmd.add_argument("--config", default="configs/dream-v4.yaml")
-        cmd.add_argument("--results", type=Path, default=Path("results/dream-v4-qwen"))
+        cmd.add_argument("--config", default="configs/dream-v5.yaml")
+        cmd.add_argument("--results", type=Path, default=Path("results/dream-v5"))
         if command in ["smoke", "experiment", "_worker"]:
             cmd.add_argument("--resume", action="store_true")
         if command == "smoke":
@@ -48,7 +49,7 @@ def parser():
                 choices=["A", "B", "C", "D"] + (["neutral"] if command == "_worker" else []),
             )
             cmd.add_argument("--seed", type=int)
-        if command in {"evaluate", "_worker"}:
+        if command in {"evaluate", "seeds", "_worker"}:
             cmd.add_argument("--limit", type=int, default=1)
             cmd.add_argument("--start-index", type=int, default=0)
         if command == "evaluate":
@@ -59,6 +60,7 @@ def parser():
                 choices=[
                     "doctor",
                     "corpus",
+                    "seeds",
                     "judge",
                     "judge-check",
                     "anchor-check",
@@ -79,6 +81,14 @@ def parser():
 def main(argv=None):
     args = parser().parse_args(argv)
     if args.command == "report":
+        from .storage import read_json
+
+        manifest = args.results / "dream" / "data" / "manifest.json"
+        if manifest.exists() and read_json(manifest).get("protocol") == "dreambank-embeddings-v1":
+            raise ValueError(
+                "El informe de embeddings aún no está implementado. "
+                "El manifiesto DreamBank registra corpus y semillas; no hay entrenamiento nuevo."
+            )
         if (args.results / "dream").exists():
             from .dream_report import report
         else:
@@ -87,6 +97,43 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
+    if config.get("protocol") == "dreambank-embeddings-v1":
+        if args.command == "corpus":
+            from .dreambank import prepare
+
+            _, manifest = prepare(config, args.results.resolve())
+            print("DreamBank preparado:", manifest["counts"], "SHA-256:", manifest["hash"])
+            return 0
+        if args.command == "seeds":
+            from .supervisor import supervise
+
+            return supervise(
+                config,
+                args.results.resolve(),
+                [
+                    "seeds",
+                    "--config",
+                    str(Path(args.config).resolve()),
+                    "--results",
+                    str(args.results.resolve()),
+                    "--limit",
+                    str(args.limit),
+                ],
+            )
+        if args.command == "_worker" and args.action == "seeds":
+            from .dreambank_workflow import extract_seeds
+
+            def stop_seed_extraction(_signal, _frame):
+                raise KeyboardInterrupt("Extracción interrumpida; se conservan semillas completas.")
+
+            signal.signal(signal.SIGTERM, stop_seed_extraction)
+            extract_seeds(config, args.results.resolve(), args.limit)
+            return 0
+        raise ValueError(
+            "El protocolo DreamBank está en implementación. corpus y seeds están disponibles; "
+            "la recompensa por embeddings y el entrenamiento "
+            "todavía no están habilitados. No se ejecutará el juez histórico."
+        )
     if (
         args.command in {"smoke", "experiment"}
         and config["judge"].get("rubric_version") == "dream-v4"

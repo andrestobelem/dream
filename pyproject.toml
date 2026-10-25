@@ -1,7 +1,7 @@
 [project]
 name = "think-dream-lab"
 version = "0.1.0"
-description = "Experimento local controlado de think frente a dream con MLX y GRPO"
+description = "Dream: generación local de sueños con MLX y GRPO a partir de relatos humanos"
 requires-python = ">=3.11,<3.12"
 dependencies = [
   "mlx-lm-lora @ git+https://github.com/Goekdeniz-Guelmez/mlx-lm-lora@4fa3c5148b17a5833b3074e4e58c6299baec1018",
