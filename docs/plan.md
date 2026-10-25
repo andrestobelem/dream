@@ -43,7 +43,7 @@ por similitud alta o copia, ni una recompensa adicional por longitud. Formato in
 - [x] Auditoría final: lote, dieciséis pasos, referencias correctas, scores recalculados desde
   vectores guardados, separación de validación y presupuesto dentro del autorizado.
 - [x] 133 pruebas aprobadas; informe local y resultados agregados preparados para el repositorio.
-- [ ] Publicación del site con los resultados de esta corrida: en preparación.
+- [x] Site publicado con método y resultados de esta corrida: versión 13, despliegue exitoso.
 
 ## Resultado observado
 
