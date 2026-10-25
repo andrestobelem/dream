@@ -1,0 +1,48 @@
+model:
+  id: Qwen/Qwen3-1.7B-Base
+  revision: null  # doctor resuelve una revisión inmutable y la congela en model-lock.json
+data:
+  seed: 20261024
+  train: 2000
+  validation: 200
+  test: 500
+  difficulty: medium
+conditions: [A, B, C, D]
+seeds: [11, 22, 33]
+generation:
+  max_tokens: 512
+  max_prompt_tokens: 512
+  temperature: 0.8
+  top_p: 0.95
+  top_k: 0
+  min_p: 0.0
+lora:
+  rank: 8
+  scale: 16.0
+  dropout: 0.0
+  keys: [self_attn.q_proj, self_attn.v_proj]
+  layers: -1
+training:
+  group_size: 4
+  microbatch: 1
+  learning_rate: 0.00001
+  beta: 0.1
+  epsilon: 0.2
+  grad_clip: 1.0
+  loss_type: grpo
+  advantage_epsilon: 0.0001
+  weight_decay: 0.0
+  checkpoint_every: 1
+  dropout: 0.0
+smoke:
+  steps: 5
+  eval_problems: 8
+evaluation:
+  seed: 4242
+  samples_per_problem: 1
+runtime:
+  budget_seconds: 2700
+  poll_seconds: 1
+  swap_growth_limit_gib: 2
+  min_free_disk_gib: 20
+  telemetry_seconds: 5

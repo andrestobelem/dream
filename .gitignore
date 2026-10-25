@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Artefactos locales del experimento
+.cache/
+results/
+data/
+models/
+.DS_Store

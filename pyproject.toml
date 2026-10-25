@@ -1,0 +1,32 @@
+[project]
+name = "think-dream-lab"
+version = "0.1.0"
+description = "Experimento local controlado de think frente a dream con MLX y GRPO"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "mlx-lm-lora @ git+https://github.com/Goekdeniz-Guelmez/mlx-lm-lora@4fa3c5148b17a5833b3074e4e58c6299baec1018",
+  "huggingface-hub>=0.34,<2",
+  "matplotlib>=3.9,<4",
+  "psutil>=6,<8",
+  "pyyaml>=6,<7",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "ruff>=0.9"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["think_dream_lab"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["metal: prueba numérica que requiere Apple Silicon y MLX"]
+
+[tool.ruff]
+line-length = 100

@@ -1,0 +1,73 @@
+task: dream
+model:
+  id: Qwen/Qwen3-1.7B-Base
+  revision: ea980cb0a6c2ae4b936e82123acc929f1cec04c1
+judge:
+  id: mlx-community/Phi-4-mini-instruct-4bit
+  base_model: microsoft/Phi-4-mini-instruct
+  revision: ac1c269cb4222a4e136a3d09edad301056c1f36a
+  max_tokens: 768
+  temperature: 0.0
+  rubric_version: dream-v3
+  evidence_mode: passage_selection
+  calibration_margin: 1.0
+corpus:
+  source: dreamviews
+  record: '19161757'
+  file: dreamviews-posts.tsv
+  md5: d78a499937e063add677a3ed28393d36
+  license: CC-BY-NC-4.0
+  min_words: 80
+  max_words: 350
+  max_per_author: 10
+  include_categories: [lucid, non-lucid, nightmare, false_awakening, dream_fragment, memorable]
+  seed: 20261024
+  train: 1000
+  validation: 100
+  test: 200
+conditions: [A, B, C, D]
+seeds: [11, 22, 33]
+generation:
+  max_tokens: 768
+  max_prompt_tokens: 512
+  temperature: 0.8
+  top_p: 0.95
+  top_k: 0
+  min_p: 0.0
+lora:
+  rank: 8
+  scale: 16.0
+  dropout: 0.0
+  keys: [self_attn.q_proj, self_attn.v_proj]
+  layers: -1
+training:
+  group_size: 4
+  microbatch: 1
+  learning_rate: 0.00001
+  beta: 0.1
+  epsilon: 0.2
+  grad_clip: 1.0
+  loss_type: grpo
+  advantage_epsilon: 0.0001
+  weight_decay: 0.0
+  checkpoint_every: 1
+  dropout: 0.0
+reward:
+  dream_likeness: 0.5
+  content_compliance: 0.3
+  retelling_fidelity: 0.2
+  quality_weight: 0.9
+  format_weight: 0.1
+smoke:
+  steps: 5
+  eval_problems: 2
+  train_condition: D
+evaluation:
+  seed: 4242
+  samples_per_problem: 1
+runtime:
+  budget_seconds: 600  # Diez minutos acumulados para validar v3 antes de ampliarlo.
+  poll_seconds: 1
+  swap_growth_limit_gib: 2
+  min_free_disk_gib: 20
+  telemetry_seconds: 5
