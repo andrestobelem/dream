@@ -1,6 +1,6 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 48 y evaluación completadas.
+Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 64 y evaluación completadas.
 
 ## Alcance vigente
 
@@ -108,7 +108,22 @@ truncamientos 0 → 1. Resultado mixto, sin mejora concluyente respecto del paso
 Se terminó en el paso 48. Los 24 relatos siguen fuera de las actualizaciones y los 200 de
 prueba permanecen sin usar. [Método y resultados](continuacion-v9.md), [datos numéricos](resultados-v9.json).
 
-## Recursos y recuperación
+## Continuación completada: paso 48 → 64
+
+- [x] Restauración completa del checkpoint 48; 16 pasos y 64 rollouts nuevos con el lote original.
+- [x] Personas y relatos reservados fuera de las actualizaciones; base y origen intactos.
+- [x] Recarga exacta del checkpoint 64 y 72 respuestas nuevas de evaluación congelada.
+- [x] Comparación con las salidas originales de base y paso 48, mismos prompts y semillas.
+- [x] Auditoría de 216 scores de evaluación y 64 de entrenamiento desde caché, sin cambios de código.
+
+En 66 pares válidos, coseno 0,6584 → 0,6469 (−0,0115). Catorce medias por relato suben y diez
+bajan, con pérdidas mayores. La media por relato/persona tiene intervalo [−0,0251; +0,0030].
+Formato 69/72 → 67/72; truncamientos 1 → 4. Esta ronda retrocedió en promedio y no muestra
+mejora respecto del paso 48; la incertidumbre incluye cero. Se terminó en el paso 64 y se
+conserva el 48. Los reservados siguen fuera de las actualizaciones y los 200 de prueba no se usaron.
+[Método y resultados](continuacion-v10.md), [datos numéricos](resultados-v10.json).
+
+## Recursos y recuperación del piloto inicial
 
 Se consumieron 794,45 de los 900 segundos adicionales autorizados, incluidos tres procesos
 fallidos por Metal. La corrida se recuperó desde el checkpoint 7 sin cambiar lote, objetivo,
