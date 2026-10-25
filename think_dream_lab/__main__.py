@@ -102,6 +102,11 @@ def parser():
 def main(argv=None):
     args = parser().parse_args(argv)
     if args.command == "report":
+        if (args.results / "dream/paired/run.json").exists():
+            from .paired_report import compare
+
+            compare(args.results.resolve())
+            return 0
         from .storage import read_json
 
         manifest = args.results / "dream" / "data" / "manifest.json"
@@ -118,6 +123,37 @@ def main(argv=None):
         report(args.results.resolve())
         return 0
     config = load_config(args.config)
+    if config.get("protocol") == "dreambank-paired-v1":
+        if args.command == "_worker" and args.action == "experiment":
+            from .paired_experiment import run
+
+            def stop_paired(_signal, _frame):
+                raise KeyboardInterrupt("Ensayo interrumpido; se conserva el último checkpoint.")
+
+            signal.signal(signal.SIGTERM, stop_paired)
+            run(config, args.results.resolve(), args.resume)
+            return 0
+        if args.command != "experiment" or args.steps != config["smoke"]["steps"]:
+            raise ValueError("Este ensayo usa experiment con los 16 pasos aprobados.")
+        if args.condition not in {None, "D"} or args.seed not in {None, config["seeds"][0]}:
+            raise ValueError("El lote aprobado usa sólo D y la semilla configurada.")
+        from .supervisor import supervise
+
+        extra = ["--resume"] if args.resume else []
+        return supervise(
+            config,
+            args.results.resolve(),
+            [
+                "experiment",
+                "--config",
+                str(Path(args.config).resolve()),
+                "--results",
+                str(args.results.resolve()),
+                "--steps",
+                str(args.steps),
+                *extra,
+            ],
+        )
     if config.get("protocol") == "dreambank-embeddings-v1":
         if args.command == "corpus":
             from .dreambank import prepare
@@ -319,5 +355,9 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except (ValueError, RuntimeError, FloatingPointError) as error:
+        if os.environ.get("DREAM_TRACEBACK") == "1":
+            import traceback
+
+            traceback.print_exc()
         print(f"Error: {error}", file=sys.stderr)
         sys.exit(2)

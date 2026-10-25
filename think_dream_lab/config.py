@@ -14,7 +14,7 @@ BACKEND_COMMIT = "4fa3c5148b17a5833b3074e4e58c6299baec1018"
 def load_config(path: str | Path) -> dict:
     path = Path(path)
     config = read_json(path) if path.suffix == ".json" else yaml.safe_load(path.read_text())
-    dreambank = config.get("protocol") == "dreambank-embeddings-v1"
+    dreambank = config.get("protocol") in {"dreambank-embeddings-v1", "dreambank-paired-v1"}
     if dreambank:
         validate_dreambank(config)
     if config["model"]["id"] not in {"Qwen/Qwen3-1.7B-Base", "HuggingFaceTB/SmolLM2-1.7B"}:
@@ -45,7 +45,9 @@ def load_config(path: str | Path) -> dict:
     ]:
         if config[section][key] <= 0:
             raise ValueError(f"{section}.{key} debe ser positivo.")
-    if config["evaluation"]["samples_per_problem"] != 1:
+    if config["evaluation"]["samples_per_problem"] != (
+        3 if config.get("protocol") == "dreambank-paired-v1" else 1
+    ):
         raise ValueError("La versión inicial calcula pass@1 con una muestra por problema.")
     if config["smoke"]["steps"] > 20:
         raise ValueError("El smoke debe tener entre 1 y 20 actualizaciones.")
@@ -164,7 +166,12 @@ def validate_dreambank(config):
         or encoder["batch_size"] < 1
     ):
         raise ValueError("El encoder requiere revisión fija, CPU y fragmentos de hasta 256 tokens.")
-    if reward["formula"] != "nearest-dream-cosine-v1":
+    expected_formula = (
+        "paired-reference-cosine-v1"
+        if config.get("protocol") == "dreambank-paired-v1"
+        else "nearest-dream-cosine-v1"
+    )
+    if reward["formula"] != expected_formula:
         raise ValueError("Fórmula de cercanía no implementada.")
     return config
 
@@ -187,6 +194,7 @@ def implementation_manifest():
         "dreambank_workflow.py",
         "embedding_reward.py",
         "embedding_runner.py",
+        "paired_experiment.py",
         "dream_task.py",
         "dream_generation.py",
         "dream_workflow.py",
