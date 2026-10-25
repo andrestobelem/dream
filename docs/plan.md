@@ -165,6 +165,24 @@ los tokens y los checkpoints se guardan en `results/dream-v6/`. No se publican r
 originales ni pesos automáticamente. DreamBank declara CC BY-NC-SA 4.0, atribución a
 [dreambank.net](https://dreambank.net/); MIT se aplica al código.
 
+## Propuesta recibida del panel lateral: siguiente experimento
+
+Propuesta registrada, sin ejecutar ni alterar la corrida 96 → 112:
+
+- Comparación breve sin entrenar de 1.024 frente a 2.048 tokens, con checkpoints y consignas
+  idénticos, para distinguir truncamientos de problemas de generación.
+- Ampliar a 128 relatos balanceados entre personas de la partición de entrenamiento,
+  excluyendo reservados tanto por relato como por persona. Conservar plantilla, semillas
+  cortas, longitud orientativa, recompensa e hiperparámetros para aislar el cambio de lote.
+- Fijar antes de ejecutar un recorrido completo por ese lote y evaluar al inicio y al final,
+  sin decidir la duración mirando fluctuaciones cada 16 pasos.
+- Mantener MiniLM por continuidad y sumar un juez independiente y ciego de cercanía de
+  answer a su referencia: personajes, sucesos y relaciones. Dream continúa libre; calidad
+  onírica se puntúa aparte. No agregar penalización por copia ni cambiar a la vez la recompensa.
+- Conservar los 24 relatos como validación de desarrollo y los 200 de prueba para una
+  evaluación final con modelo y protocolo fijados. Comparar checkpoints en pares válidos
+  comunes e informar formato y score integral por separado; el más reciente no se asume mejor.
+
 ## Investigación posterior
 
 La comparación de distintos niveles de riqueza de semillas sigue siendo una propuesta,
