@@ -1,8 +1,15 @@
-# Lote v21 listo para revisar antes de entrenar
+# Preferencias v21: mejora de calidad, sin promoción por fallo de formato
 
-Preparación completada el 25 de octubre de 2026. **19 pares claros, cinco empates fuera
-del entrenamiento. No se entrenó.** Se generaron y revisaron cuatro candidatos para cada
-uno de 24 pedidos nuevos, provenientes de 24 personas de entrenamiento.
+Ensayo completado el 25 de octubre de 2026: **19 actualizaciones desde el 32**. En la
+revisión de 96 comparaciones nuevas, el piloto ganó 30, el 32 ganó 11 y hubo 55 empates.
+Superó el criterio de calidad, pero falló formato en una prueba de dependencia:
+**17/18 en vez de 18/18**. Se conserva el 32 según el protocolo previo; el nuevo queda
+guardado como candidato experimental. [Informe local completo](http://127.0.0.1:62877/report.html).
+
+La preparación produjo 19 pares claros y cinco empates fuera del entrenamiento. Se
+generaron y revisaron cuatro candidatos para cada uno de 24 pedidos nuevos, provenientes
+de 24 personas de entrenamiento. Las secciones de diseño siguientes conservan lo fijado
+antes de ejecutar; el resultado está al final.
 
 Vista local con los 24 prompts exactos, los 96 dreams y answers completos y las notas de
 selección: [abrir el lote](http://127.0.0.1:62877/index.html). Las cuatro alternativas se
@@ -67,8 +74,8 @@ una alternativa en chino: se revisó su escena y no se descartó por cambiar de 
 **24 pedidos nuevos de desarrollo, escritos antes de generar los candidatos de entrenamiento,
 con cuatro muestras por modelo y pedido: 96 comparaciones antes/después.** Ninguno se usará
 para actualizar pesos. Los doce pedidos observados en v20 quedan como diagnóstico histórico,
-no se reutilizan como confirmación nueva. No se generaron aún estas 192 continuaciones de
-evaluación; sus prompts, semillas y reglas quedaron congelados.
+no se reutilizan como confirmación nueva. Sus prompts, semillas y reglas se congelaron
+antes de generar las 192 continuaciones de evaluación, que ahora están completas.
 
 Se comparará el 32 exacto con el único checkpoint final de la pasada. Semillas 54242,
 54343, 54444 y 54545; temperatura 0,8, top-p 0,95, sin top-k ni min-p, límite total de
@@ -135,7 +142,7 @@ Las notas y el lote quedaron congelados. Huella de los pares:
 `21e603aee86d4f4c2385d03e92002cb0209c7c1011860e206fd819ee27189dab`.
 Se verificó contra las muestras originales cada dream, prompt y trayectoria elegida;
 los cuatro archivos del checkpoint 32 conservan sus huellas. No se creó optimizador
-ni se actualizó el modelo durante esta preparación.
+ni se actualizó el modelo durante esa preparación; después se ejecutó la única pasada autorizada.
 
 [Resumen del lote](preferencias-v21-lote.json), [auditoría de preparación](preferencias-v21-auditoria.json),
 [integridad de trayectorias](preferencias-v21-integridad.json).
@@ -144,3 +151,71 @@ Validación: **187 pruebas aprobadas y una omitida** por el paquete opcional Tor
 incluye nueve pruebas nuevas de preparación y criterio, además de las pruebas previas de
 DPO. Ruff y comprobación de la vista local aprobados. Los datos completos, las referencias
 y los pesos quedan fuera de Git. DreamBank: CC BY-NC-SA 4.0, dreambank.net; código MIT.
+
+## Resultado del ensayo cerrado
+
+Se recorrieron una sola vez los 19 pares elegidos, con el orden y los hiperparámetros
+fijados. La pérdida DPO entrenada bajó de 0,6931 a 0,2219. Los adaptadores cambiaron;
+la base y los cuatro archivos del checkpoint 32 conservaron sus huellas; recarga exacta.
+No se continuó el entrenamiento después de mirar la evaluación.
+
+| Medida | Checkpoint 32 | Piloto v21 |
+| --- | ---: | ---: |
+| Preferencias de calidad a favor, 96 pares | 11 | 30 |
+| Empates compartidos | 55 | 55 |
+| Formato en desarrollo | 95/96 | 95/96 |
+| Muestras con pérdida importante de motivos | 28/96 | 26/96 |
+| Preferencias de variedad, 24 grupos | 4 | 8 |
+| Empates de variedad compartidos | 12 | 12 |
+| Grupos con menos de dos episodios utilizables | 0 | 0 |
+| Hechos completos de dependencia | 16/18 | 17/18 |
+| Formato de dependencia | 18/18 | **17/18** |
+| Palabras en dream, media | 81,8 | 109,8 |
+| Palabras en answer, media | 64,0 | 78,9 |
+
+La ventaja neta de calidad fue **+0,1979**, intervalo exploratorio por pedido
+**[+0,09375; +0,30208]**, frente al umbral ≥0,15 y límite inferior >0. Son preferencias
+del mismo asistente, no validación humana independiente. Calidad y variedad se congelaron
+antes de consultar claves privadas sorteadas; no se usó una alternancia deducible.
+No hubo dudas en estas notas; los empates se conservaron.
+
+No se observó ninguna copia literal completa del pedido en dream en ninguno de los dos
+modelos. Eso no constituye una métrica integral de calidad. Los motivos perdidos bajaron
+en dos muestras; es un control descriptivo, no una mejora de fidelidad establecida.
+
+### El control que impide promoverlo
+
+En P11, la prueba de dependencia conserva el hecho de que el narrador escondió la moneda,
+pero **no cierra answer, inventa otros turnos User/Assistant y alcanza 1.024 tokens**.
+El hecho correcto y el formato fallido se cuentan por separado. P07 omite la ubicación
+de la llave; las otras 17 respuestas conservan el hecho completo. Por condición: agregado
+6/6, cambiado 6/6 y paráfrasis 5/6. No se repitió ninguna generación para reemplazar el fallo.
+
+El requisito era formato 18/18 en dependencia. No se cambia por 17/18 después de observarlo.
+El piloto satisface los demás controles numéricos, pero la decisión conjunta es **keep32**.
+El checkpoint experimental queda en
+`results/dream-v21/dpo/checkpoints/step-000019`, con identidad distinta del origen; no es
+el checkpoint 51 de una continuación GRPO histórica.
+
+### Sensibilidad posterior y límites de lectura
+
+En el desarrollo ambos modelos fallaron una vez, en pedidos diferentes. La salida del 32
+omite el cierre de dream: hay texto en bruto, pero el extractor deja el bloque vacío.
+Una victoria primaria del nuevo incluye ese fallo. El piloto omite el cierre de answer
+en otro pedido, conservando un dream legible. No se repararon etiquetas ni se descartaron
+esos casos de la métrica primaria.
+
+Como diagnóstico posterior, en los **94 pares con formato válido en ambos lados** quedan
+29 victorias del piloto, 11 del 32 y 54 empates, ventaja por par +0,1915. No reemplaza las
+96 comparaciones, no se usa para promover y no incorpora una prueba confirmatoria nueva.
+La dirección observada no depende sólo de aquella victoria por extracción vacía.
+
+La variedad favoreció al piloto en ocho pedidos y al 32 en cuatro, con doce empates.
+No demuestra preservación poblacional de diversidad; sólo aplica el control pequeño fijado.
+El fallo de P11 apunta a estudiar estabilidad de cierre y de turnos en otro ensayo separado,
+con protocolo fijado y evaluación nueva. No se realizó ese ensayo ni se añadieron épocas.
+
+[Resultados agregados](preferencias-v21-resultados.json),
+[auditoría del resultado](preferencias-v21-resultados-auditoria.json).
+Validación final: **189 pruebas aprobadas y una omitida** por Torch opcional ausente;
+Ruff y auditoría de la corrida real aprobados. Los 200 relatos de prueba siguen sin usarse.

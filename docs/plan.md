@@ -1,9 +1,10 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: piloto de preferencias v20 completado; resultado desfavorable
-en la revisión del asistente. Se conserva el checkpoint 32 como referencia práctica.
+Estado al 25 de octubre de 2026: v21 completado, con mejora de calidad en la revisión del
+asistente (30 preferencias frente a 11 y 55 empates), pero fallo de formato en dependencia
+(17/18). Se conserva el 32 conforme al criterio previo; el candidato v21 queda guardado.
 
-## Preparación v21: lista para mostrar, sin entrenar
+## Ensayo v21: completado, sin promover por formato
 
 - [x] Auditar el filtro de longitud del pool v20 sin relabelar las notas históricas.
 - [x] Seleccionar 24 pedidos nuevos de 24 personas de entrenamiento, separados de reservados.
@@ -11,11 +12,12 @@ en la revisión del asistente. Se conserva el checkpoint 32 como referencia prá
 - [x] Congelar 19 preferencias claras; cinco empates fuera, once elegidos más largos y ocho más cortos.
 - [x] Fijar 24 pedidos nuevos de evaluación con cuatro muestras por modelo y criterio de promoción previo.
 - [x] Verificar trayectorias íntegras, origen intacto y pruebas de preparación y criterio.
-- [ ] Entrenar una sola pasada de 19 actualizaciones desde el 32, después de mostrar el lote.
-- [ ] Ejecutar y revisar las 96 comparaciones nuevas, variedad, motivos y dependencia.
+- [x] Entrenar una sola pasada de 19 actualizaciones desde el 32, después de mostrar el lote.
+- [x] Ejecutar y revisar las 96 comparaciones nuevas, variedad, motivos y dependencia.
+- [x] Aplicar todos los criterios sin cambiar umbrales: calidad pasa, dependencia falla formato; keep32.
 
-[Lote, método, límites y criterio fijo](preferencias-v21.md). No se inició entrenamiento
-adicional. Los 200 relatos de prueba siguen sin usarse.
+[Lote, método, límites, criterio fijo y resultados](preferencias-v21.md). No se añadieron
+pasos después de evaluar. Los 200 relatos de prueba siguen sin usarse.
 
 ## Piloto de preferencias v20: completado
 

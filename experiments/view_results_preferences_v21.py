@@ -3,7 +3,7 @@
 import html
 
 from experiments.preferences_v21 import ROOT
-from think_dream_lab.storage import read_json
+from think_dream_lab.storage import read_json, read_jsonl
 
 
 def render(root):
@@ -27,7 +27,7 @@ def render(root):
         f"<p><strong>{heading}.</strong></p>",
         f"<p>Una pasada de 19 actualizaciones desde el 32. En 96 comparaciones nuevas: 32 gana {q['counts'].get('before', 0)}, piloto gana {q['counts'].get('after', 0)}, empates {q['counts'].get('tie', 0)}, dudas {q['counts'].get('no_se', 0)}. Revisión del asistente, no humana independiente.</p>",
         f"<p>Ventaja neta del nuevo: {q['net_mean']:.3f}; intervalo exploratorio por pedido [{q['interval_95'][0]:.3f}, {q['interval_95'][1]:.3f}]. Umbral fijado: ≥0,15 y límite inferior &gt;0. Los 200 relatos de prueba no se usaron.</p>",
-        '<nav><a href="#gates">Criterios</a> · <a href="#quality">96 comparaciones</a> · <a href="#variety">Variedad</a> · <a href="index.html">Lote entrenado</a></nav>',
+        '<nav><a href="#gates">Criterios</a> · <a href="#quality">96 comparaciones</a> · <a href="#variety">Variedad</a> · <a href="#dependency">Dependencia y formato</a> · <a href="index.html">Lote entrenado</a></nav>',
         '<h2 id="gates">Criterios aplicados sin cambiar umbrales</h2><ul>',
     ]
     translations = {
@@ -96,6 +96,26 @@ def render(root):
             body += [f"<pre>{escape(t)}</pre><hr>" for t in row[s]]
             body += ["</details>"]
         body += ["</section>"]
+    dep_rows = {t["task_id"]: t for t in read_jsonl(root / "dependency/answers.jsonl")}
+    dep_key = {t["review_id"]: t for t in read_json(root / "dependency/key.json")}
+    dep_labels = {
+        t["review_id"]: t for t in read_json(root / "dependency/annotations.json")["labels"]
+    }
+    body += [
+        '<h2 id="dependency">Dependencia: hechos y formato por separado</h2><p>Se conservaron 17/18 hechos completos, frente a 16/18 del 32. Pero el formato bajó de 18/18 a 17/18: P11 añade otra conversación y alcanza el límite de 1.024 tokens sin cerrar la respuesta. Ese fallo impide promover el modelo con el criterio fijado. No se repitió la muestra ni se cambió el límite.</p>'
+    ]
+    for item in read_json(root / "dependency/packet.json"):
+        rid = item["review_id"]
+        raw = dep_rows[dep_key[rid]["task_id"]]
+        state = dep_labels[rid]["state"]
+        body += [
+            f'<section id="{rid}"><h3>{rid} · {"formato válido" if raw["format_valid"] else "FORMATO FALLIDO"}</h3><p>Hecho observado: {escape(state)}. {escape(dep_labels[rid]["note"])}</p><details><summary>Leer respuesta completa</summary><pre>{escape(raw["raw"])}</pre></details></section>'
+        ]
+    common = r["valid_pair_sensitivity"]
+    body += [
+        "<h2>Sensibilidad posterior al formato</h2>",
+        f"<p>En los {common['common_valid_pairs']} pares donde ambos formatos son válidos: piloto gana {common['counts'].get('after', 0)}, 32 gana {common['counts'].get('before', 0)} y hay {common['counts'].get('tie', 0)} empates. No reemplaza la métrica primaria de 96 casos ni el criterio de promoción. Una salida del 32 tiene texto pero omite el cierre de dream; el extractor deja ese bloque vacío y una victoria primaria del nuevo incluye ese fallo de análisis de etiquetas.</p>",
+    ]
     body += (
         ["<h2>Límites</h2><ul>"]
         + [f"<li>{escape(t)}</li>" for t in r["limitations"]]

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "protocol_hash": "6f9d9b277a52f22b539fb139b5af403bf2248be07a137e5468d379afbe30d048",
+  "pairs_hash": "21e603aee86d4f4c2385d03e92002cb0209c7c1011860e206fd819ee27189dab",
+  "training_updates": 19,
+  "one_pass": true,
+  "source_unchanged": true,
+  "quality_annotations_hash": "e271e701d248f22f886acba700c2c6c0810fc927b3a2b9be7ceb1e0ed285fc70",
+  "variety_annotations_hash": "36fbee5bce1af4806f732ea71b4d1e53d05acfc62a0078121667090109d83898",
+  "full96_comparisons": true,
+  "quality_and_variety_keys_match_original_samples": true,
+  "criterion_code_unchanged": true,
+  "test_reports_used": 0,
+  "result_hash": "2112a6e37cda90d5f079aa8e6ca6e1e5a457cc5bcc0ce9667d818bc7905cabe1"
+}

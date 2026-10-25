@@ -1,0 +1,156 @@
+{
+  "training": {
+    "status": "complete",
+    "identity": "d39ab7bad59348d4e9ffc2c82f9cef75aab2e2d85d7a4e2acdf00d49159f4e77",
+    "checkpoint": "/Users/andrestobelem/ws/at/dream/results/dream-v21/dpo/checkpoints/step-000019",
+    "source_step": 32,
+    "new_updates": 19,
+    "epochs": 1,
+    "optimizer_reset": true,
+    "source_files": {
+      "adapters.safetensors": "8a9f70147480a3976e85b4c7c110cc231029081bc6a2571086924e07a8e54c6a",
+      "optimizer.safetensors": "a6953668d1440b8a66f36c57caace47f8e141668be007595cb54ac19f0c1a7b6",
+      "mlx_random.safetensors": "1d26696b969d2842a080e372f1000edcb7bf78073ee8c99375e6f5d3d0c24147",
+      "state.json": "36617177be6fa5bf87d54c4846ac381a46a8f62b69171bacbd2a66b0eb7eed22"
+    },
+    "initial_adapters": "2618fc4299c9f4b2d2e2caa18e64b2dd3e6b2cf81274f07b9dbb69f758068db5",
+    "final_adapters": "d9e2b2abe1229f41e247faca3e4d2135ab25797f719f38c80b1671358e1e3427",
+    "adapters_changed": true,
+    "base_unchanged": true,
+    "source_unchanged": true,
+    "reload_exact": true,
+    "training_pairs_hash": "21e603aee86d4f4c2385d03e92002cb0209c7c1011860e206fd819ee27189dab",
+    "initial_loss": 0.6931471805599453,
+    "final_train_loss": 0.22190747743374423,
+    "not_used_for_checkpoint_selection": true
+  },
+  "development_prompts": 24,
+  "samples_per_prompt": 4,
+  "before": {
+    "format_valid": 95,
+    "truncated": 0,
+    "prompt_only_echoes": 0,
+    "dream_words_mean": 81.78125,
+    "answer_words_mean": 64.04166666666667,
+    "motif_major": 28,
+    "groups_fewer_than_two_episodes": 0
+  },
+  "after": {
+    "format_valid": 95,
+    "truncated": 0,
+    "prompt_only_echoes": 0,
+    "dream_words_mean": 109.83333333333333,
+    "answer_words_mean": 78.92708333333333,
+    "motif_major": 26,
+    "groups_fewer_than_two_episodes": 0,
+    "dependency_full": 17,
+    "dependency_format": 17
+  },
+  "quality": {
+    "net_mean": 0.19791666666666666,
+    "interval_95": [
+      0.09375,
+      0.3020833333333333
+    ],
+    "request_units": 24,
+    "comparisons": 96,
+    "counts": {
+      "tie": 55,
+      "before": 11,
+      "after": 30
+    }
+  },
+  "variety_counts": {
+    "after": 8,
+    "before": 4,
+    "tie": 12
+  },
+  "dependency": {
+    "before": {
+      "full": 16,
+      "format_valid": 18,
+      "by_condition": {
+        "anchor": 5,
+        "edited": 5,
+        "paraphrase": 6
+      }
+    },
+    "after": {
+      "full": 17,
+      "format_valid": 17,
+      "by_condition": {
+        "anchor": 6,
+        "edited": 6,
+        "paraphrase": 5
+      }
+    }
+  },
+  "promotion": {
+    "quality": {
+      "net_mean": 0.19791666666666666,
+      "interval_95": [
+        0.09375,
+        0.3020833333333333
+      ],
+      "request_units": 24,
+      "comparisons": 96,
+      "counts": {
+        "tie": 55,
+        "before": 11,
+        "after": 30
+      }
+    },
+    "checks": {
+      "quality_effect": true,
+      "quality_interval": true,
+      "format": true,
+      "motifs": true,
+      "variety_preference": true,
+      "usable_groups": true,
+      "dependency": true,
+      "dependency_format": false,
+      "all_reviews_frozen": true
+    },
+    "promote": false,
+    "decision": "keep32"
+  },
+  "valid_pair_sensitivity": {
+    "post_hoc_not_primary": true,
+    "common_valid_pairs": 94,
+    "counts": {
+      "tie": 54,
+      "before": 11,
+      "after": 29
+    },
+    "net_per_pair": 0.19148936170212766,
+    "excluded_for_this_diagnostic_only": [
+      {
+        "review_id": "E09",
+        "problem_id": "v21-dev-22",
+        "candidate": 2,
+        "format_valid": {
+          "before": true,
+          "after": false
+        }
+      },
+      {
+        "review_id": "E24",
+        "problem_id": "v21-dev-05",
+        "candidate": 3,
+        "format_valid": {
+          "before": false,
+          "after": true
+        }
+      }
+    ],
+    "caution": "Primary96 retained unchanged. One malformed base output lacks dream closing tag; extraction yields an empty dream despite nonempty raw text, so one quality win includes a parsing failure. This subset is not a new confirmatory test."
+  },
+  "test_reports_used": 0,
+  "independent_human_review": false,
+  "limitations": [
+    "Mismo asistente prepara y revisa; no es validación humana independiente.",
+    "Desarrollo nuevo escrito por el asistente; el intervalo por pedido no incorpora incertidumbre entre revisores.",
+    "Calidad y motivos son ejes distintos; no se mide cercanía a un único relato humano esperado.",
+    "Variedad y dependencia son controles locales, no pruebas poblacionales ni experiencia subjetiva."
+  ]
+}

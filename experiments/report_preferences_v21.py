@@ -186,6 +186,36 @@ def report(root):
     )
     diagnostics = {**metrics, "variety_counts": dict(variety), "all_reviews_frozen": True}
     decision = promotion_decision(spec, ratings, diagnostics)
+    # Diagnóstico posterior: no cambia las notas ni el criterio primario sobre 96 casos.
+    common_valid = [
+        r
+        for r in ratings
+        if all(records[p][(r["problem_id"], r["candidate"])]["format_valid"] for p in records)
+    ]
+    common_counts = Counter(r["preference"] for r in common_valid)
+    invalid_cases = []
+    for r in qnotes["ratings"]:
+        k = qkey[r["review_id"]]
+        if any(not records[p][(k["problem_id"], k["candidate"])]["format_valid"] for p in records):
+            invalid_cases.append(
+                {
+                    "review_id": r["review_id"],
+                    "problem_id": k["problem_id"],
+                    "candidate": k["candidate"],
+                    "format_valid": {
+                        p: records[p][(k["problem_id"], k["candidate"])]["format_valid"]
+                        for p in records
+                    },
+                }
+            )
+    sensitivity = {
+        "post_hoc_not_primary": True,
+        "common_valid_pairs": len(common_valid),
+        "counts": dict(common_counts),
+        "net_per_pair": (common_counts["after"] - common_counts["before"]) / len(common_valid),
+        "excluded_for_this_diagnostic_only": invalid_cases,
+        "caution": "Primary96 retained unchanged. One malformed base output lacks dream closing tag; extraction yields an empty dream despite nonempty raw text, so one quality win includes a parsing failure. This subset is not a new confirmatory test.",
+    }
     result = {
         "training": train,
         "development_prompts": 24,
@@ -195,6 +225,7 @@ def report(root):
         "variety_counts": dict(variety),
         "dependency": deps,
         "promotion": decision,
+        "valid_pair_sensitivity": sensitivity,
         "test_reports_used": 0,
         "independent_human_review": False,
         "limitations": [
