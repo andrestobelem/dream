@@ -90,7 +90,7 @@ La estimación histórica de `dream-v2` fue de unas 15 horas de evaluación para
 
 ## Entrega del trabajo
 
-- [ ] Crear commits atómicos con los cambios implementados y revisados.
-- [ ] Subirlos a GitHub y comprobar que la documentación describa el estado publicado.
+- [x] Crear commits con los cambios implementados y revisados.
+- [x] Subirlos a GitHub y comprobar que la documentación describa el estado publicado.
 
-La implementación actual está local, sin commits ni publicación de estos cambios. Este plan distingue trabajo implementado, validación pendiente y propuestas todavía sin programar.
+La implementación y documentación se publicaron en `main` de `andrestobelem/dream` el 25 de octubre de 2026 (código y documentación hasta `97c7d73`, con actualizaciones de este estado posteriores). La entrega del código no completa el experimento: siguen pendientes integración, calibración humana, nuevo piloto, continuidad y comparación completa.
