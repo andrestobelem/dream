@@ -1,0 +1,178 @@
+{
+  "candidate_records": 108,
+  "requests": 24,
+  "rows": [
+    {
+      "problem_id_hash": "ef7c2e70c3cbeaf5a8feffa0a3f9d5e832952b38f0257913c7f0df092ea8a7df",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.04
+    },
+    {
+      "problem_id_hash": "0855f6344d088dbba53ca19ee0ff746d55936867928cab19b359bf61e9933bc1",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 3,
+      "selected_ratio": 1.2077922077922079
+    },
+    {
+      "problem_id_hash": "b9864486e2cb0a32ac55d7a1ec861bb1809ef8036725865a4de1ab55ac3654be",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.3461538461538463
+    },
+    {
+      "problem_id_hash": "439b4baa2f771ff2840b2e2ca431dfe9b90482177bf294b209b845c26bedf989",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 4,
+      "selected_ratio": 1.4179104477611941
+    },
+    {
+      "problem_id_hash": "18407d6fcbac82f8cb05308649998c4091f8d385285c8d402168d58ea0888ffc",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 4,
+      "selected_ratio": 1.1846153846153846
+    },
+    {
+      "problem_id_hash": "fcb118c0fa7ac9b4464b18547a1209d1409e4aab737982bf98b738aa7c1e9dc3",
+      "valid_candidates": 3,
+      "distinct_pairs": 3,
+      "ratio_above_1_5": 1,
+      "selected_ratio": 1.26
+    },
+    {
+      "problem_id_hash": "a0d19b2e6fa401afc691260832c227bae375f56c79dbddf254276b310f6361c4",
+      "valid_candidates": 8,
+      "distinct_pairs": 28,
+      "ratio_above_1_5": 23,
+      "selected_ratio": 1.0740740740740742
+    },
+    {
+      "problem_id_hash": "295c36c3593693309869e65f912fe39bcb4c85307f074028897d9d318568b02b",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.3636363636363635
+    },
+    {
+      "problem_id_hash": "fb7264f9978ec3e649ffa6e630c147307860d89e012a1c456d0723b77477f572",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.0625
+    },
+    {
+      "problem_id_hash": "15fdb9341bb0e09879debd856347e5e6f9e3bc4d3f64b57ec904c2ea7b2832db",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.4067796610169492
+    },
+    {
+      "problem_id_hash": "a4859ea793f1143ee8b98ce7f46c50ddc5771e51a3b2fd37e2d11955e44bf876",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 4,
+      "selected_ratio": 1.2456140350877194
+    },
+    {
+      "problem_id_hash": "b84c9f31bcb75b7e95c3feb116c03e5d36581305e9d004b9098938a471836da9",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 3,
+      "selected_ratio": 1.31
+    },
+    {
+      "problem_id_hash": "cfb9d5c93f1762e3e6c3e1762e309482bbe7b85a8428313ff1a581153293c7b7",
+      "valid_candidates": 8,
+      "distinct_pairs": 28,
+      "ratio_above_1_5": 21,
+      "selected_ratio": 1.1612903225806452
+    },
+    {
+      "problem_id_hash": "330bbf53c3b319ebb81c35b0dc707f68742e52ff2c752c90944599512c149621",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 4,
+      "selected_ratio": 1.3017241379310345
+    },
+    {
+      "problem_id_hash": "142b3b2f2c90ea399ccb8fa39004f95074398787f31058be5b45a582e89e3e00",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 3,
+      "selected_ratio": 1.0802469135802468
+    },
+    {
+      "problem_id_hash": "14cd7d4958a867abb0bb65632292efc742baaff2568843202ef72ca9a913f514",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.423529411764706
+    },
+    {
+      "problem_id_hash": "d961797845f134a07ccea5da20ce9b95f406884e7635cb6c22a7206d61dcf9a9",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.11875
+    },
+    {
+      "problem_id_hash": "118d120d516730fa47a8fbb9d6f14a99e3cf8691467cbc77b04aefb0f56a7a82",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.4864864864864864
+    },
+    {
+      "problem_id_hash": "6c55cc55e08f6f324c53eb3c17275d1e858b3611963e4f61e64f25248a29b728",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 3,
+      "selected_ratio": 1.162162162162162
+    },
+    {
+      "problem_id_hash": "79dc049cf69e591f85ec4d3f7e9c0eaf3ff70960d220bf85ba612c2d6a7a5238",
+      "valid_candidates": 8,
+      "distinct_pairs": 28,
+      "ratio_above_1_5": 22,
+      "selected_ratio": 1.1025641025641026
+    },
+    {
+      "problem_id_hash": "f0e9d36556325c397225cf39b3b0aa0d2ad1878fe5125eafbc3f226d33f6ecd8",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.5
+    },
+    {
+      "problem_id_hash": "481250b1e39f61ffe50468cd1a6252433a60cf3dae6c2d0a7eae8d0591323b80",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 5,
+      "selected_ratio": 1.205128205128205
+    },
+    {
+      "problem_id_hash": "54e8a504f69cb9543f317c090c82db65066a4ca555972d1d2b4635416429f804",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 3,
+      "selected_ratio": 1.1144578313253013
+    },
+    {
+      "problem_id_hash": "afec7a2f6692417f269c418a8d0444ceca62cab56ee71eb0b38fd47857533b5a",
+      "valid_candidates": 4,
+      "distinct_pairs": 6,
+      "ratio_above_1_5": 3,
+      "selected_ratio": 1.1428571428571428
+    }
+  ],
+  "distinct_pairs": 207,
+  "ratio_above_1_5": 151,
+  "quality_of_discarded_pairs_reviewed": false,
+  "interpretation": "Counts describe the length filter opportunity set, not quality or a causal explanation of regression."
+}

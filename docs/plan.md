@@ -3,6 +3,20 @@
 Estado al 25 de octubre de 2026: piloto de preferencias v20 completado; resultado desfavorable
 en la revisión del asistente. Se conserva el checkpoint 32 como referencia práctica.
 
+## Preparación v21: lista para mostrar, sin entrenar
+
+- [x] Auditar el filtro de longitud del pool v20 sin relabelar las notas históricas.
+- [x] Seleccionar 24 pedidos nuevos de 24 personas de entrenamiento, separados de reservados.
+- [x] Generar 96 candidatos desde el 32 y revisar cuatro alternativas por pedido.
+- [x] Congelar 19 preferencias claras; cinco empates fuera, once elegidos más largos y ocho más cortos.
+- [x] Fijar 24 pedidos nuevos de evaluación con cuatro muestras por modelo y criterio de promoción previo.
+- [x] Verificar trayectorias íntegras, origen intacto y pruebas de preparación y criterio.
+- [ ] Entrenar una sola pasada de 19 actualizaciones desde el 32, después de mostrar el lote.
+- [ ] Ejecutar y revisar las 96 comparaciones nuevas, variedad, motivos y dependencia.
+
+[Lote, método, límites y criterio fijo](preferencias-v21.md). No se inició entrenamiento
+adicional. Los 200 relatos de prueba siguen sin usarse.
+
 ## Piloto de preferencias v20: completado
 
 - [x] Veinticuatro pedidos de entrenamiento de 24 personas, con 108 candidatos y selección por longitud comparable.

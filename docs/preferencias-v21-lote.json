@@ -1,0 +1,34 @@
+{
+  "pairs_hash": "21e603aee86d4f4c2385d03e92002cb0209c7c1011860e206fd819ee27189dab",
+  "annotations_hash": "a204fe1012911ede5d0ef1854436d80c3b1802e3f41bd08afa3c1543f57e56b3",
+  "reviewed_pairs": 24,
+  "eligible_pairs": 19,
+  "excluded": [
+    {
+      "review_id": "N07",
+      "reason": "tie"
+    },
+    {
+      "review_id": "N08",
+      "reason": "tie"
+    },
+    {
+      "review_id": "N11",
+      "reason": "tie"
+    },
+    {
+      "review_id": "N16",
+      "reason": "tie"
+    },
+    {
+      "review_id": "N22",
+      "reason": "tie"
+    }
+  ],
+  "reference_in_prompt": false,
+  "length_directions": {
+    "longer": 11,
+    "shorter": 8
+  },
+  "ready": true
+}

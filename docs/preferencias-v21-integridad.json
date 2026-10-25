@@ -1,0 +1,14 @@
+{
+  "protocol_hash": "6f9d9b277a52f22b539fb139b5af403bf2248be07a137e5468d379afbe30d048",
+  "pool_records_hash": "83726200dce4d6b5cf790ce6122c7ff8410d61c115951bbb152cfb2261077ea4",
+  "training_pairs_hash": "21e603aee86d4f4c2385d03e92002cb0209c7c1011860e206fd819ee27189dab",
+  "packet_key_matches_samples": true,
+  "selected_tokens_exactly_original": true,
+  "train_requests_disjoint_v20": true,
+  "train_people": 24,
+  "source_unchanged": true,
+  "review_freeze_hash": "a5606d19c3db7d3310148ec01f373ecd32fc795e349683325d35c4ca2815ac90",
+  "training_updates": 0,
+  "criterion_code_sha256": "6294fd6dff7eb432a0c8e952d2c37ae742faf38741420a0e949092786648ffa5",
+  "preparation_code_sha256": "47e356bd6b2ccdb7b85bb4be75bba3742ad48643f61f9dc219bc595766a424de"
+}

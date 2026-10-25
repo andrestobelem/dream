@@ -1,0 +1,13 @@
+{
+  "protocol_hash": "6f9d9b277a52f22b539fb139b5af403bf2248be07a137e5468d379afbe30d048",
+  "pairs_hash": "21e603aee86d4f4c2385d03e92002cb0209c7c1011860e206fd819ee27189dab",
+  "annotations_hash": "a204fe1012911ede5d0ef1854436d80c3b1802e3f41bd08afa3c1543f57e56b3",
+  "source_files_unchanged": true,
+  "generated_candidates": 96,
+  "valid_candidates": 96,
+  "truncated_candidates": 0,
+  "selected_pairs": 19,
+  "ready": true,
+  "training_updates": 0,
+  "test_reports_used": 0
+}

@@ -1,0 +1,248 @@
+{
+  "version": "v21-preparation",
+  "source_run": "results/dream-v8/dream/paired/run.json",
+  "source_step": 32,
+  "dataset_hash": "44d474542ff4d4c349f39c3e2a1bc612f79b5b79a852bb44230c52110a856dce",
+  "generation": {
+    "max_tokens": 2048,
+    "temperature": 0.8,
+    "top_p": 0.95,
+    "top_k": 0,
+    "min_p": 0.0
+  },
+  "train_candidates": 4,
+  "selection": "Review all four dreams first; at most one clear best/worse contrast per request. No length-ratio cutoff or minimum-ratio pair selection. No fabricated negatives. Ties/uncertainty excluded.",
+  "training": {
+    "algorithm": "DPO sigmoid, completion token sums",
+    "beta": 0.1,
+    "learning_rate": 5e-06,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "epochs": 1,
+    "train_seed": 13,
+    "max_total_sequence_tokens": 1536,
+    "minimum_clear_preferences": 12,
+    "optimizer": "new AdamW, reset moments; source optimizer untouched",
+    "credit_assignment": "entire sampled continuation including dream and answer; prompt/prefill excluded",
+    "reference": "stationary checkpoint 32, scores cached before first update",
+    "selection": "12 to 24 clear pairs, one per request; at least three chosen dreams longer and three shorter; otherwise not ready. Operational sequence <=1536, never truncate/recode."
+  },
+  "evaluation": {
+    "unit": "24 novel development requests, four paired samples per model/request",
+    "seeds": [
+      54242,
+      54343,
+      54444,
+      54545
+    ],
+    "comparisons": 96,
+    "primary": "Blind assistant preference on dream quality; ties and no_se allowed; frozen before source key; no source-alternating order",
+    "quality_score": {
+      "after": 1,
+      "before": -1,
+      "tie": 0,
+      "no_se": 0
+    },
+    "aggregation": "Mean score within each request, then equally across 24 requests; no dropped failures",
+    "interval": "Percentile bootstrap of 24 entire request clusters, 20000 replicates, seed 20261031; 95% exploratory interval including all ties/no_se",
+    "promotion_all_required": {
+      "quality_net_mean_minimum": 0.15,
+      "quality_interval_lower_strictly_above": 0,
+      "format_valid_minimum": 95,
+      "format_count_not_below_before": true,
+      "motif_major_omissions_or_contradictions_not_above_before": true,
+      "motif_review": "Independent axis on all 96 dreams/model, including copied requests: central roles, objects and relations; count any major unsupported omission or contradiction once/sample. No single human target for these requests.",
+      "variety_after_group_preferences_at_least_before": true,
+      "variety_groups_with_fewer_than_two_usable_episodes_not_above_before": true,
+      "variety_review": "24 blind groups of four samples/model; distinct episodes/relations, not lexical novelty; ties/no_se allowed and reported",
+      "dependency_full_facts_minimum": 16,
+      "dependency_valid_format_required": 18,
+      "dependency": "Repeat exactly v19 anchor/edited/paraphrase, 18 after answers vs frozen 32 baseline; do not grant partial facts"
+    },
+    "failure_policy": "Any gate fails or review missing => keep32; no additional epochs, checkpoint selection or threshold changes based on results",
+    "secondary": [
+      "prompt-only echoes",
+      "lengths",
+      "length-direction strata",
+      "motif vs quality tradeoffs"
+    ],
+    "limitations": "Same assistant reviews training and evaluation; development, not independent human validation; bootstrap does not include reviewer uncertainty. Success is provisional, no subjective-experience claim."
+  },
+  "reserved_report_content_read": false,
+  "test_reports_used": 0,
+  "reference_in_generator_prompt": false,
+  "automatic_copy_penalty": false,
+  "automatic_length_penalty": false,
+  "independent_human_review": false,
+  "training_authorized_this_turn": false,
+  "dev_rows": [
+    {
+      "problem_id": "v21-dev-01",
+      "seeds": "Dream about washing dishes, a cracked blue cup, your aunt at the sink, and water that feels unexpectedly warm.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about washing dishes, a cracked blue cup, your aunt at the sink, and water that feels unexpectedly warm.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-02",
+      "seeds": "Dream about a dentist's office, a coat on the wrong hook, your name called twice, and an unfinished conversation.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a dentist's office, a coat on the wrong hook, your name called twice, and an unfinished conversation.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-03",
+      "seeds": "Dream about watering a rooftop garden, a ladder growing shorter, a neighbor below, and a misplaced watering can.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about watering a rooftop garden, a ladder growing shorter, a neighbor below, and a misplaced watering can.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-04",
+      "seeds": "Dream about a ferry crossing, a bag of oranges, a cousin waving from shore, and a sudden change of weather.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a ferry crossing, a bag of oranges, a cousin waving from shore, and a sudden change of weather.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-05",
+      "seeds": "Dream about folding laundry, a shirt belonging to your childhood teacher, and someone knocking softly at the bedroom door.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about folding laundry, a shirt belonging to your childhood teacher, and someone knocking softly at the bedroom door.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-06",
+      "seeds": "Dream about a village bakery, flour on your sleeves, a customer waiting silently, and the oven turning into a window.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a village bakery, flour on your sleeves, a customer waiting silently, and the oven turning into a window.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-07",
+      "seeds": "Dream about a quiet museum, a painting of your kitchen, a guard removing a frame, and difficulty finding the exit.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a quiet museum, a painting of your kitchen, a guard removing a frame, and difficulty finding the exit.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-08",
+      "seeds": "Dream about a football field, shoes that feel too large, your brother keeping score, and everyone stopping to listen.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a football field, shoes that feel too large, your brother keeping score, and everyone stopping to listen.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-09",
+      "seeds": "Dream about a clinic corridor, a glass of milk, your grandmother carrying a newspaper, and an appointment you cannot remember.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a clinic corridor, a glass of milk, your grandmother carrying a newspaper, and an appointment you cannot remember.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-10",
+      "seeds": "Dream about a camping trip, a torn tent, a friend searching for matches, and a hillside that changes direction.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a camping trip, a torn tent, a friend searching for matches, and a hillside that changes direction.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-11",
+      "seeds": "Dream about a crowded tram, a bag left on a seat, a child counting stations, and a sudden moment of silence.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a crowded tram, a bag left on a seat, a child counting stations, and a sudden moment of silence.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-12",
+      "seeds": "Dream about a seaside laundromat, a missing sock, your mother reading beside a machine, and sand covering the floor.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a seaside laundromat, a missing sock, your mother reading beside a machine, and sand covering the floor.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-13",
+      "seeds": "Dream about a birthday party, candles that keep going out, an uncle arriving early, and a cake hidden under a table.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a birthday party, candles that keep going out, an uncle arriving early, and a cake hidden under a table.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-14",
+      "seeds": "Dream about a hardware shop, a box of bent nails, an assistant who knows your name, and sunlight through the ceiling.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a hardware shop, a box of bent nails, an assistant who knows your name, and sunlight through the ceiling.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-15",
+      "seeds": "Dream about a snowy courtyard, a cat watching from a shed, wet gloves, and someone leaving without saying goodbye.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a snowy courtyard, a cat watching from a shed, wet gloves, and someone leaving without saying goodbye.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-16",
+      "seeds": "Dream about a rehearsal room, a broken violin string, a friend changing seats, and an audience you can hear but cannot see.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a rehearsal room, a broken violin string, a friend changing seats, and an audience you can hear but cannot see.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-17",
+      "seeds": "Dream about an orchard, a bucket of green apples, your father on a low branch, and the ground becoming soft.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about an orchard, a bucket of green apples, your father on a low branch, and the ground becoming soft.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-18",
+      "seeds": "Dream about cleaning a classroom, a drawing beneath a desk, a former student returning, and chalk dust on your hands.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about cleaning a classroom, a drawing beneath a desk, a former student returning, and chalk dust on your hands.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-19",
+      "seeds": "Dream about a small airport, a passport with an unfamiliar photo, your sister waiting nearby, and a staircase behind the counter.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a small airport, a passport with an unfamiliar photo, your sister waiting nearby, and a staircase behind the counter.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-20",
+      "seeds": "Dream about a fishing pier, an empty thermos, a neighbor untangling a rope, and the water rising without making noise.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a fishing pier, an empty thermos, a neighbor untangling a rope, and the water rising without making noise.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-21",
+      "seeds": "Dream about a market stall, a scarf you remember losing, a seller refusing payment, and someone calling from an upstairs room.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a market stall, a scarf you remember losing, a seller refusing payment, and someone calling from an upstairs room.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-22",
+      "seeds": "Dream about a holiday cabin, a mattress in the hallway, cousins whispering outside, and a door opening onto another season.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a holiday cabin, a mattress in the hallway, cousins whispering outside, and a door opening onto another season.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-23",
+      "seeds": "Dream about a repair workshop, a watch missing its hands, a colleague offering tea, and a drawer that will not close.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a repair workshop, a watch missing its hands, a colleague offering tea, and a drawer that will not close.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    },
+    {
+      "problem_id": "v21-dev-24",
+      "seeds": "Dream about a long walk, a familiar dog following you, a path ending at a fence, and resting beside a stranger.",
+      "target_words": 100,
+      "prompt": "A conversation between User and Assistant. The user requests a dream, and the Assistant dreams it. The assistant first dreams in the mind and then tells the user the dream. The dream and its account are enclosed within <dream> </dream> and <answer> </answer> tags, respectively, i.e.,\n<dream> dream here </dream>\n<answer> dream account here </answer>.\n\nWrite the dream account in <answer> in approximately 100 words.\nUser: Dream about a long walk, a familiar dog following you, a path ending at a fence, and resting beside a stranger.\nAssistant:\n<dream>\n",
+      "source": "assistant-authored before generation, not derived from held-out reports"
+    }
+  ]
+}
