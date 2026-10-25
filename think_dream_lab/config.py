@@ -129,6 +129,7 @@ def implementation_manifest():
         "anchor_holdout.py",
         "dream_verification.py",
         "closed_judge.py",
+        "closed_transfer.py",
         "base_check.py",
         "closed_task.py",
         "uncertainty.py",

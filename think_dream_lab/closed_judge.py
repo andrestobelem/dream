@@ -27,6 +27,50 @@ RULES = (
     "Resolve ordinary paraphrases; do not demand identical wording or invent extra conditions. "
     "An unstated emotion is omitted. Track who does what and explicit negation. "
 )
+EXAMPLES = [
+    ("The narrator is in a boat.", "I was rowing across the lake.", "preserved"),
+    ("The narrator feels pleased.", "I felt happy to see my cousin.", "preserved"),
+    ("The narrator feels sad.", "I bought bread and walked home.", "omitted"),
+    ("The narrator sees a horse.", "Vocabulary: horse, seeing, narrator.", "omitted"),
+    ("The narrator opens the door.", "I did not open the door; it stayed shut.", "contradicted"),
+    (
+        "The child carries the narrator.",
+        "I carried the child; she did not carry me.",
+        "contradicted",
+    ),
+]
+
+
+def classification_messages(requirement, passage, rotation):
+    semantics = STATES[rotation:] + STATES[:rotation]
+    mapping = dict(zip(LETTERS, semantics, strict=True))
+    reverse = {state: letter for letter, state in mapping.items()}
+    system = (
+        BOUNDARY
+        + RULES
+        + " Use only facts asserted by the passage, never the requirement itself as evidence. "
+        + "Answer only one letter. Labels: "
+        + "; ".join(f"{letter}={state}" for letter, state in mapping.items())
+        + "."
+    )
+    messages = [{"role": "system", "content": system}]
+    for claim, text, state in EXAMPLES:
+        messages.extend(
+            [
+                {
+                    "role": "user",
+                    "content": protected_json({"requirement": claim, "passage": text}),
+                },
+                {"role": "assistant", "content": reverse[state]},
+            ]
+        )
+    messages.append(
+        {
+            "role": "user",
+            "content": protected_json({"requirement": requirement, "passage": passage}),
+        }
+    )
+    return messages, mapping
 
 
 def decide(probabilities, choice_mass, *, margin, min_choice_mass):
@@ -110,22 +154,7 @@ class ClosedJudge:
     def distribution(self, requirement, passage, rotation, *, use_cache=True):
         import mlx.core as mx
 
-        semantics = STATES[rotation:] + STATES[:rotation]
-        mapping = dict(zip(LETTERS, semantics, strict=True))
-        system = (
-            BOUNDARY
-            + RULES
-            + " Answer only one letter. Labels: "
-            + "; ".join(f"{letter}={state}" for letter, state in mapping.items())
-            + "."
-        )
-        messages = [
-            {"role": "system", "content": system},
-            {
-                "role": "user",
-                "content": protected_json({"requirement": requirement, "passage": passage}),
-            },
-        ]
+        messages, mapping = classification_messages(requirement, passage, rotation)
         tokenizer = self.judge.tokenizer
         prompt = tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
@@ -175,7 +204,7 @@ class ClosedJudge:
             "choice_mass": mass,
             "seconds": time.perf_counter() - start,
             "generated_tokens": 0,
-            "method": "closed-v1",
+            "method": "closed-fewshot-v1",
         }
         if use_cache:
             write_json(target, result)
@@ -218,6 +247,7 @@ class ClosedJudge:
 def check_closed(config, root):
     from .anchor_holdout import ANCHORS, BASE, CASES
     from .backend import fingerprint
+    from .closed_transfer import CASES as TRANSFER
     from .judge import Judge
 
     if config["judge"].get("rubric_version") != "dream-v4":
@@ -226,12 +256,22 @@ def check_closed(config, root):
     before = fingerprint(judge.model.parameters())
     scorer = ClosedJudge(judge)
     evaluations = {}
-    for name, (candidate, expected) in CASES.items():
-        result = scorer.assess(ANCHORS, candidate)
+    cases = {
+        **TRANSFER,
+        **{
+            name: {"candidate": candidate, "requirements": ANCHORS, "expected": expected}
+            for name, (candidate, expected) in CASES.items()
+        },
+    }
+    for name, case in cases.items():
+        result = scorer.assess(case["requirements"], case["candidate"])
         actual = {i["id"]: i["status"] for i in result["items"]}
-        result["matches_expected"] = actual == {
-            a["id"]: status for a, status in zip(ANCHORS, expected, strict=True)
+        result["expected"] = {
+            a["id"]: status
+            for a, status in zip(case["requirements"], case["expected"], strict=True)
         }
+        result["matches_expected"] = actual == result["expected"]
+        result["suite"] = "transfer" if name in TRANSFER else "development"
         evaluations[name] = result
         write_json(
             root / "dream" / "closed-check-partial.json",
@@ -249,6 +289,18 @@ def check_closed(config, root):
         "evaluations": evaluations,
         "expected_cases_passed": sum(e["matches_expected"] for e in evaluations.values()),
         "n_cases": len(evaluations),
+        "cases_hash": digest(cases),
+        "implementation": scorer.implementation,
+        "method": "closed-fewshot-v1",
+        "suites": {
+            suite: {
+                "n_cases": sum(e["suite"] == suite for e in evaluations.values()),
+                "passed": sum(
+                    e["suite"] == suite and e["matches_expected"] for e in evaluations.values()
+                ),
+            }
+            for suite in ["development", "transfer"]
+        },
         "semantic_controls_passed": all(e["matches_expected"] for e in evaluations.values()),
         "repeat_max_logit_delta": repeat_delta,
         "repeat_within_1e_6": repeat_delta <= 1e-6,
@@ -260,6 +312,7 @@ def check_closed(config, root):
         "limitation": "Umbrales provisionales. Repetibilidad medida en este equipo; pendiente corrección semántica y calibración humanas.",
     }
     write_json(root / "dream" / "closed-check.json", report)
+    write_json(root / "dream" / "closed-history" / f"{scorer.implementation}.json", report)
     write_json(root / "dream" / "closed-check-partial.json", report)
     print(
         "Casos coincidentes:", report["expected_cases_passed"], "/", report["n_cases"], flush=True

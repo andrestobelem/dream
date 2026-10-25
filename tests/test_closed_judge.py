@@ -1,15 +1,31 @@
+import json
 import math
 from types import SimpleNamespace
 
 import pytest
 
 from think_dream_lab.closed_judge import (
+    EXAMPLES,
     STATES,
     ClosedJudge,
     aggregate_passages,
     aggregate_requirements,
+    classification_messages,
     decide,
 )
+
+
+def test_demonstrations_rotate_with_labels_and_never_include_the_test_answer():
+    for rotation in range(3):
+        messages, mapping = classification_messages(
+            "UNSEEN REQUIREMENT", "UNSEEN PASSAGE", rotation
+        )
+        for index, (claim, text, state) in enumerate(EXAMPLES):
+            user, assistant = messages[1 + 2 * index : 3 + 2 * index]
+            assert json.loads(user["content"]) == {"requirement": claim, "passage": text}
+            assert mapping[assistant["content"]] == state
+        assert messages[-1]["role"] == "user"
+        assert json.loads(messages[-1]["content"])["passage"] == "UNSEEN PASSAGE"
 
 
 def test_uncertainty_is_not_a_zero_score():
