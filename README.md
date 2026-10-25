@@ -15,27 +15,28 @@ coincidencias textuales ni por diferencias de longitud. Un formato inválido rec
 
 ## Resultado actual
 
-Se continuó desde el checkpoint 64 hasta el **80**, con el mismo lote de ocho relatos,
+Se continuó desde el checkpoint 80 hasta el **96**, con el mismo lote de ocho relatos,
 restaurando optimizador y aleatoriedad. Los **24 relatos reservados de seis personas**
 quedaron fuera del entrenamiento y se evaluaron con tres generaciones por modelo y relato.
 
-| Medida | Base | Paso 64 | Paso 80 |
+| Medida | Base | Paso 80 | Paso 96 |
 | --- | ---: | ---: | ---: |
-| Coseno, sólo respuestas válidas | 0,6219 (n=52) | 0,6460 (n=67) | 0,6376 (n=69) |
-| Formato válido | 52/72 | 67/72 | 69/72 |
-| Score incluyendo fallos de formato | 0,5857 | 0,7659 | 0,7847 |
-| Truncamientos | 11 | 4 | 3 |
+| Coseno, sólo respuestas válidas | 0,6219 (n=52) | 0,6376 (n=69) | 0,6476 (n=68) |
+| Formato válido | 52/72 | 69/72 | 68/72 |
+| Score incluyendo fallos de formato | 0,5857 | 0,7847 | 0,7780 |
+| Truncamientos | 11 | 3 | 4 |
 
-En los **64 pares válidos del paso 64 y el 80**, el coseno pasó de 0,6483 a 0,6469:
-cambio de **−0,0013** calculado antes de redondear. Once medias por relato mejoraron y doce
-empeoraron; uno no tuvo pares válidos. La cercanía quedó prácticamente igual, sin mejora
-concluyente. El formato mejoró ligeramente, pero aumentó el error de longitud. Base y
-checkpoint 64 quedaron intactos. [Continuación y límites](docs/continuacion-v11.md),
-[datos numéricos](docs/resultados-v11.json).
+En los **66 pares válidos del paso 80 y el 96**, el coseno pasó de 0,6350 a 0,6469:
+ganancia observada de **+0,0119**. Doce medias por relato mejoraron y doce empeoraron.
+La incertidumbre por persona incluye cero: la mejora es pequeña y todavía no concluyente.
+El resultado general es mixto: formato y truncamientos retrocedieron ligeramente, mientras
+que mejoró el ajuste de longitud. Base y checkpoint 80 quedaron intactos.
+[Continuación y límites](docs/continuacion-v12.md), [datos numéricos](docs/resultados-v12.json).
 
-Las [rondas hasta el paso 64](docs/continuacion-v10.md), [paso 48](docs/continuacion-v9.md),
-[paso 32](docs/continuacion-v8.md), la [evaluación del paso 16](docs/evaluacion-ampliada-v7.md)
-y el [piloto con cuatro relatos](docs/resultado-entrenamiento-v6.md) se conservan aparte.
+Las [rondas hasta el paso 80](docs/continuacion-v11.md), [paso 64](docs/continuacion-v10.md),
+[paso 48](docs/continuacion-v9.md), [paso 32](docs/continuacion-v8.md), la
+[evaluación del paso 16](docs/evaluacion-ampliada-v7.md) y el
+[piloto con cuatro relatos](docs/resultado-entrenamiento-v6.md) se conservan aparte.
 Los 24 casos siguen siendo validación de desarrollo; los 200 de prueba permanecen sin usar.
 
 ## Datos y ejecución
@@ -47,7 +48,7 @@ los 200 de prueba no se utilizaron. El registro de
 alias y hogares está en [configs/dreambank-groups.json](configs/dreambank-groups.json).
 
 El piloto original usa [configs/dream-v6.yaml](configs/dream-v6.yaml); los comandos para
-continuarlo están en [continuación v11](docs/continuacion-v11.md). Con el lote
+continuarlo están en [continuación v12](docs/continuacion-v12.md). Con el lote
 local aprobado y las dependencias instaladas:
 
 ```sh
@@ -69,6 +70,7 @@ locales antes de ejecutar este ensayo.
 ## Método e historia
 
 - [Plan y estado](docs/plan.md).
+- [Continuación hasta el paso 96](docs/continuacion-v12.md).
 - [Continuación hasta el paso 80](docs/continuacion-v11.md).
 - [Continuación hasta el paso 64](docs/continuacion-v10.md).
 - [Continuación hasta el paso 48](docs/continuacion-v9.md).
