@@ -1,0 +1,19 @@
+[project]
+name = "dream-evals"
+version = "0.1.0"
+description = "Tareas y comparación de resultados de Dream con Inspect AI y Inspect Flow"
+requires-python = ">=3.11,<3.12"
+dependencies = ["inspect-ai==0.3.284", "inspect-flow==0.14.0"]
+
+[dependency-groups]
+dev = ["pytest>=9,<10"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dream_evals"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
