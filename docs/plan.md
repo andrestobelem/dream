@@ -1,6 +1,6 @@
 # Plan de implementación de Dream
 
-Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 64 y evaluación completadas.
+Estado al 25 de octubre de 2026: circuito implementado, continuación hasta el paso 80 y evaluación completadas.
 
 ## Alcance vigente
 
@@ -122,6 +122,21 @@ Formato 69/72 → 67/72; truncamientos 1 → 4. Esta ronda retrocedió en promed
 mejora respecto del paso 48; la incertidumbre incluye cero. Se terminó en el paso 64 y se
 conserva el 48. Los reservados siguen fuera de las actualizaciones y los 200 de prueba no se usaron.
 [Método y resultados](continuacion-v10.md), [datos numéricos](resultados-v10.json).
+
+## Continuación completada: paso 64 → 80
+
+- [x] Restauración completa del checkpoint 64; 16 pasos y 64 rollouts nuevos con el lote original.
+- [x] Personas y relatos reservados fuera de las actualizaciones; base y origen intactos.
+- [x] Recarga exacta del checkpoint 80 y 72 respuestas nuevas de evaluación congelada.
+- [x] Comparación con las salidas originales de base y paso 64, mismos prompts y semillas.
+- [x] Auditoría de 216 scores de evaluación y 64 de entrenamiento desde caché, sin cambios de código.
+
+En 64 pares válidos, coseno 0,6483 → 0,6469 (−0,0013 antes de redondear). Once medias por
+relato suben y doce bajan; uno no tiene pares válidos. El intervalo por relato/persona es
+[−0,0178; +0,0145]. Cercanía prácticamente sin cambio, sin mejora concluyente. Formato
+67/72 → 69/72; truncamientos 4 → 3; el error de longitud aumentó. Se terminó en el paso 80
+y se conserva el 64. Los reservados siguen fuera de las actualizaciones y los 200 de prueba no se usaron.
+[Método y resultados](continuacion-v11.md), [datos numéricos](resultados-v11.json).
 
 ## Recursos y recuperación del piloto inicial
 
