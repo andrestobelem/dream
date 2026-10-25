@@ -8,6 +8,8 @@ El módulo `closed_judge.py` calcula directamente los logits del siguiente token
 
 La auditoría comprueba las etiquetas como continuaciones del contexto exacto, sin cambios en el prefijo y con IDs distintos. En el Qwen3-8B fijado se observaron A=32, B=33 y C=34. Tres rotaciones del mapeo entre letras y clases permiten promediar una preferencia sistemática por una letra. Esto reduce un posible sesgo de salida, sin garantizar que el juicio sea correcto.
 
+La variante actual del prompt, `closed-fewshot-v1`, incluye seis ejemplos sintéticos breves: dos por clase. Sus respuestas rotan junto con el mapeo de letras. No hay ejemplos tomados del corpus ni de los controles nuevos dentro del prompt. Tanto los mensajes completos como los IDs de contexto y el hash de implementación se registran en cada forward.
+
 Se conserva tanto la distribución condicional entre A/B/C como su masa bajo el vocabulario completo. Una distribución aparentemente segura entre etiquetas no basta si el modelo casi no les asigna probabilidad total.
 
 ## Evidencia y abstención
@@ -22,11 +24,23 @@ Los umbrales actuales de margen 0,15 y masa 0,05 son provisionales. Requieren ca
 
 ## Qué se verificó
 
-La primera prueba real de clasificación cerrada coincidió con cuatro de ocho situaciones sintéticas; la última con cinco de ocho. La repetición de un forward sin usar caché produjo los mismos logits de etiquetas en este equipo y mantuvo los pesos del juez sin cambios. Se generaron cero tokens para la clasificación.
+Las pruebas sin demostraciones coincidieron primero con cuatro y después con cinco de ocho situaciones sintéticas. Con seis ejemplos breves en el prompt, Qwen3 pasó **7/8 controles conocidos y 3/4 controles nuevos**: diez de doce situaciones completas. Los nuevos controles se fijaron en el snapshot antes de ejecutar la prueba. Son controles de transferencia sintéticos; no constituyen una evaluación humana independiente.
+
+La variante con ejemplos corrigió la omisión de la emoción y las listas de palabras en los controles conocidos. Sigue equivocándose ante dos requisitos de la orden al evaluador y confunde con omisión una contradicción de participantes en el control nuevo. El cambio de participantes obtuvo 0,933 de probabilidad para la clase incorrecta: un margen alto tampoco garantiza un juicio correcto.
+
+La repetición de un forward sin usar caché produjo los mismos logits de etiquetas en este equipo y mantuvo los pesos del juez sin cambios. Se generaron cero tokens para la clasificación. La prueba supervisada consumió 121,92 segundos y el estado de entrenamiento continúa deshabilitado.
 
 La repetibilidad técnica no demuestra corrección semántica: hubo errores ante omisiones, cambios de roles, palabras sueltas e instrucciones al evaluador. El circuito no está validado para entrenar. Los resultados están en `results/dream-v4/dream/closed-check.json`; cada forward queda trazado en `closed-calls.jsonl` y las repeticiones en `closed-repeats.jsonl`.
 
 El carácter onírico permanece separado, con revisión humana pendiente. No se presentan las evaluaciones automáticas como estados mentales, autenticidad humana o una escala clínica.
+
+## Pares preparados para revisión humana
+
+El paquete `results/dream-v4/dream/review-pairs/7c803087be40/revision.csv` contiene 29 pares de requisito y relato, agrupados en 14 fuentes. Incluye los ocho pares de los controles nuevos, primera y última oración de nueve escenas válidas producidas por SmolLM2 y tres requisitos de la evaluación real de cumplimiento. Las respuestas humanas están vacías; no se presentan etiquetas sintéticas como anotaciones de personas.
+
+Se completa `etiqueta_humana` con `preservado`, `omitido`, `contradicho` o `no_se`, y se pueden agregar notas. No muestra predicciones del juez. La clave de procedencia se mantiene aparte; no debe abrirse antes de revisar. El script [prepare_pair_review.py](../experiments/prepare_pair_review.py) verifica el texto inmutable y conserva las anotaciones al repetir la exportación.
+
+Este paquete permite revisar discrepancias y preparar una calibración posterior. Todavía no es un conjunto de calibración validado. Debe separarse por fuente antes de ajustar y evaluar umbrales; una revisión pequeña tampoco prueba precisión general. La revisión de oniricidad de seis relatos sigue siendo un archivo distinto.
 
 ## Contraste con un clasificador especializado
 
@@ -38,9 +52,17 @@ Se ejecutó en CPU, float32, dos hilos y sin gradientes, con PyTorch 2.10.0 y Tr
 
 El código está en [experiments/nli_probe.py](../experiments/nli_probe.py). Los datos de entrada, probabilidades por par, hashes y versiones están en `results/dream-v4/dream/nli-probe/`. Este contraste usa controles sintéticos ya inspeccionados durante desarrollo; no es una validación independiente ni una calibración humana. La correspondencia entre NLI y narración de experiencias tiene límites: una lista de palabras puede activar implicación sin constituir un sueño relatado.
 
+## Contraste de etiquetas cerradas con Phi
+
+Se repitieron las doce situaciones, con el mismo prompt y ejemplos, usando `mlx-community/Phi-4-mini-instruct-4bit`, revisión `ac1c269cb4222a4e136a3d09edad301056c1f36a`, ya disponible localmente. Este contraste no generó texto ni utilizó las respuestas JSON del ensayo anterior.
+
+El resultado fue **cero de doce situaciones completas**, con 14 de 40 pares correctamente decididos, 17 abstenciones y nueve decisiones incorrectas. La repetición de logits tuvo diferencia cero y los pesos permanecieron intactos. Se comprobaron las tres etiquetas como continuaciones de un token. Esto tampoco lo habilita como juez de entrenamiento.
+
+Los resultados se guardaron separados en `results/dream-v4-phi/dream/closed-check.json`. Los 43,17 segundos de ejecución se cargaron al presupuesto Phi existente en `results/dream-v3-phi/budget.json`; no se creó un presupuesto nuevo ni se descargó otro modelo. El generador sigue siendo SmolLM2 y el juez configurado por defecto continúa siendo Qwen3, pendiente de validación.
+
 ## Próximos pasos
 
 1. Mejorar la corrección del clasificador y verificar los cambios con ejemplos independientes. El primer contraste especializado no resolvió los errores.
-2. Preparar pares para anotación humana y calibrar umbrales, sesgos de etiquetas y cobertura; congelar el protocolo antes de la comparación.
+2. Anotar los pares preparados y calibrar umbrales, sesgos de etiquetas y cobertura; congelar el protocolo antes de entrenar.
 3. Revisar la integración de cumplimiento y fidelidad con los pares anotados; las reglas de abstención ya están implementadas.
 4. Repetir el piloto con SmolLM2 y verificar reanudación antes de ampliar el entrenamiento.

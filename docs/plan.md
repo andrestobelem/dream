@@ -19,11 +19,11 @@ La única condición activa es **D: Soñar + `<dream>`**. Las variantes A/B/C y 
 - [x] Implementación local de GRPO con LoRA, checkpoints y límites de recursos. El piloto ejecutado corresponde al modelo Qwen3 anterior, no demuestra aprendizaje en SmolLM2.
 - [x] Integración del clasificador cerrado en cumplimiento y fidelidad; una abstención se conserva como ausencia de score. Un grupo con recompensa desconocida se detiene antes de actualizar adaptadores.
 - [x] Informes y revisión humana ciega preparados; los resultados históricos se pueden revisar con Inspect.
-- [x] [Presentación del proyecto publicada](https://del-think-al-drean.andrestobelem.chatgpt.site/proyecto-dream). La versión 8 publicada muestra sólo D en el método activo y retira la comparación de doce entrenamientos de los próximos pasos.
+- [x] [Presentación del proyecto publicada](https://del-think-al-drean.andrestobelem.chatgpt.site/proyecto-dream). La versión 8 acotó el método a D; la versión 9 registra los controles nuevos del juez y el diagnóstico de formato de diez generaciones.
 
 ## Lo que falta para entrenar y evaluar Dream
 
-1. **Validar la evaluación.** El clasificador cerrado acertó cinco de ocho controles en la última prueba. Faltan corregir los errores relevantes y calibrar sus umbrales con ejemplos revisados por humanos. El paquete de seis relatos para evaluar carácter onírico está preparado y todavía no fue puntuado. No equivale a calibrar cumplimiento o fidelidad.
+1. **Validar la evaluación.** La variante con ejemplos del clasificador cerrado pasó siete de ocho controles conocidos y tres de cuatro nuevos. Siguen pendientes errores relevantes y calibración humana. Se prepararon 29 pares de requisitos y relatos para revisar cumplimiento y fidelidad; no tienen anotaciones humanas. El paquete anterior de seis relatos para evaluar carácter onírico tampoco fue puntuado y es una revisión distinta.
 2. **Estabilizar generación D.** La nueva prueba de diez consignas sintéticas obtuvo nueve respuestas completas y una sin cierre de `<dream>`; no aprobó el criterio fijado de 10/10. Falta revisar calidad, copia y diversidad con relatos del corpus.
 3. **Ejecutar un piloto pequeño de entrenamiento D con SmolLM2**, una vez que la evaluación sea utilizable. Comparar relatos antes y después, conservar componentes del score y comprobar que sólo cambien los adaptadores.
 4. **Verificar recuperación** del piloto de sueños y documentar resultados y límites. La prueba completa de interrupción y reanudación anterior corresponde a aritmética.
@@ -37,8 +37,10 @@ El piloto histórico de Qwen3 tuvo cinco actualizaciones, con dos muestras de ev
 
 El contraste posterior con DeBERTa NLI acertó 26/32 pares y cinco de ocho situaciones completas, con errores en paráfrasis y listas de palabras. No se adoptó como reemplazo del juez. El [diagnóstico del evaluador](rubrica-v4.md) conserva revisión del modelo, procedimiento y límites.
 
+El contraste de etiquetas cerradas con Phi tampoco pasó: cero de doce situaciones completas, 17 abstenciones y nueve decisiones incorrectas entre 40 pares. Se mantiene Qwen3 como configuración de desarrollo; ninguno de estos resultados habilita entrenamiento.
+
 DreamViews tiene suficientes relatos para esta etapa. Los textos surrealistas quedan como alternativa posterior si hicieran falta, con procedencia y evaluación separadas. La semejanza textual no demuestra experiencia subjetiva del modelo.
 
 Detalles: [modelo base](modelo-base.md), [rúbrica actual](rubrica-v4.md) y [validación técnica histórica](validacion-tecnica.md).
 
-Verificación anterior: 99 pruebas del proyecto y ocho de la integración opcional de Inspect aprobadas. Se agregó una regresión que comprueba que el diagnóstico D no incorpore neutral ni oculte fallos de formato. La nueva inferencia a través de Inspect todavía no se probó con modelos reales y no es requisito del próximo piloto D.
+Verificación actual: 103 pruebas del proyecto y ocho de la integración opcional de Inspect aprobadas, incluyendo rotación de ejemplos y preservación de anotaciones humanas. La nueva inferencia a través de Inspect todavía no se probó con modelos reales y no es requisito del próximo piloto D.

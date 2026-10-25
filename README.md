@@ -5,7 +5,7 @@ Entrenar un modelo para **imaginar una escena dentro de `<dream>` y después con
 El [plan actualizado](docs/plan.md) distingue implementación y validación pendiente.
 El protocolo actual en desarrollo es [dream-v4](docs/rubrica-v4.md): generador base sin
 posentrenamiento de razonamiento y juez de etiquetas cerradas. Su entrenamiento está
-deshabilitado hasta completar integración y validación. Los pilotos con Qwen3 son históricos.
+deshabilitado hasta validar el evaluador. Los pilotos con Qwen3 son históricos.
 
 ## Diseño definido
 
@@ -38,7 +38,8 @@ hacer la revisión ciega.
 Esta sección describe `dream-v2`. La nueva [clasificación cerrada](docs/rubrica-v4.md)
 reemplaza las notas libres de cumplimiento y fidelidad por probabilidades de clases,
 agregación fija y abstención. Su primera comprobación técnica pasó, pero sólo coincidió
-con cinco de ocho controles semánticos en la última prueba: no está habilitada para entrenar.
+con cinco de ocho controles semánticos sin ejemplos. La variante con ejemplos pasó
+siete de ocho controles conocidos y tres de cuatro nuevos; todavía no está habilitada para entrenar.
 
 El juez hace tres pasadas independientes:
 
